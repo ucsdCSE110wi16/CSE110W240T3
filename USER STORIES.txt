@@ -1,0 +1,35 @@
+User Stories:
+As a fridge owner, I want to manage my fridge so that I reduce the amount
+of food that expires.
+
+Notes from Client Meeting (Wednesday January 20, 2015):
+Version they want us to target: KitKat (spanning versions from 4.4 - 4.4.4)
+Input System: Ideally: Scanner, Otherwise Manual
+Notification: notifying user a certain product is about to expire
+                Configurable &#8594; 1 - 14 days
+Demographic: household: all members of the family, all roommates
+Publically shared products vs. Privately shared products
+Sections: Fridge, Freezer, Pantry
+Categories: 1. Fruits
+                2. Vegetables
+        3. Protein
+                4. Dairy
+                5. Grains
+                6. Oils
+
+Features
+Scanner
+        -Image parser (from API)
+        -Request data from database
+Manual
+        -Input box or another way of input (i.e voice)
+        -Backend: add value to a list or group of items
+                a global read file in internal storage
+Notification
+        -Android Notification API (chronological notification)
+        -settings page
+Shore List
+        -bluetooth invite, wifi invite (done in parse or local database)
+Labels
+        -a page for food departments
+                stored in internal storage or parse

@@ -1,6 +1,6 @@
 
 # _Tentative_ _Schedule_
-
+// Feel free to edit this.
 
 
 ## _WEEK_ _4_
@@ -10,8 +10,8 @@
   - [ ] Input box for food entry.
   - [ ] Create categories (as boxes, circles, or ordered in someway)
   - [ ] Work with Material Design and custom animations
-    - [ ] CardViews
-    - [ ] Use ListView or RecyclerViews
+   - [ ] CardViews
+   - [ ] Use ListView or RecyclerViews
   
 ### Backend
 - [ ] Integrate Parse.

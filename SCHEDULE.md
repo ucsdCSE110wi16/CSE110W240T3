@@ -43,6 +43,5 @@
 - [ ] Recipes
   - [ ] Scrape data from a website containing info on food recipes.
   - [ ] 2nd option: Find databases and integrate them with app if needed.
-  - 
   
 

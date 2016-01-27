@@ -3,28 +3,16 @@
 ### Schedule
   Schedule can be found [here](https://github.com/ucsdCSE110wi16/CSE110W240T3/blob/master/SCHEDULE.md).
 
-### Current Tasks by team members:
+### Member Positions and Current Tasks
 
-- Brian Kim             --  
-- Phuong Nguyen         --  List Mechanics (Recycler Views and Cards)
-- David Zech            --  Parse (Database Handling)
-- Kevin Wong            --  
-- Jimmy Gong            --
-- Theano Georgoulakis   --
-
-### Positions
-
-#### Frontend Devs
-  - Theano
-
-#### Backend Devs
-  - Brian
-  - Kevin
-  - Jimmy
-
-#### Fullstack Devs
-  - Phuong
-  - David
+_Member_            | _Position_     | _Current Task_                            |
+:------------------ | :------------- | :---------------------------------------- |
+Brain Kim           | Backend Dev    |                                           |
+Phuong Nguyen       | Full Stack Dev | List Mechanics (Recycler Views and Cards) |
+David Zech          | Full Stack Dev |                                           |
+Kevin Wong          | Backend Dev    |                                           |
+Theano Georgoulakis | Frontend Dev   |                                           |
+Jimmy Gong          | Backend Dev    |                                           |
 
 ### Building
 Build instructions here

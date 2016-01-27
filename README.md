@@ -1,5 +1,8 @@
 # README
-Information here
+
+### Schedule
+  Schedule can be found [here](https://github.com/ucsdCSE110wi16/CSE110W240T3/blob/master/SCHEDULE.md).
+
 ### Building
 Build instructions here
 ### Tools

@@ -9,8 +9,9 @@ public class FoodItem {
     public boolean card;
 
     private Bitmap mImage;
-    private CharSequence mName;
-    private CharSequence experationDate;
+    private CharSequence mH1;
+    private CharSequence mH2;
+    private CharSequence mH3;
 
     public Bitmap getImage() {
         return mImage;
@@ -20,12 +21,28 @@ public class FoodItem {
         this.mImage = mImage;
     }
 
-    public CharSequence getName() {
-        return mName;
+    public CharSequence getHeaderText() {
+        return mH1;
     }
 
-    public void name(CharSequence text) {
-        this.mName = text;
+    public CharSequence getHeaderText2() {
+        return mH2;
+    }
+
+    public CharSequence getHeaderText3() {
+        return mH3;
+    }
+
+    public void setHeader(CharSequence text) {
+        this.mH1 = text;
+    }
+
+    public void setHeader2(CharSequence text) {
+        this.mH2 = text;
+    }
+
+    public void setHeader3(CharSequence text) {
+        this.mH3 = text;
     }
 
     public boolean isFood() {
@@ -39,5 +56,7 @@ public class FoodItem {
     public boolean isCard() {
         return card;
     }
+
+
 }
 

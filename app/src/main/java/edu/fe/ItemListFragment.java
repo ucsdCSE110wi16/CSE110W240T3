@@ -81,7 +81,13 @@ public class ItemListFragment extends Fragment {
             for (int i = 0; i < 10; i++) {
                 FoodItem item = new FoodItem();
                 item.food = true;
-                item.name("pasta");
+                item.setHeader("Lorem ipsum dolor sit amet");
+                item.setHeader2("Aenean dapibus efficitur cursus. Vestibulum aliquam tellus id " +
+                        "metus consequat, at varius odio suscipit. Nam aliquet lectus sed ex " +
+                        "suscipit, sit amet vehicula ligula accumsan. Vivamus aliquam diam sed " +
+                        "purus congue placerat.");
+                item.setHeader3("Nunc et nibh vel lectus eleifend commodo et ut lorem. Donec " +
+                        "malesuada et nulla ac luctus.");
                 mFoodItems.add(item);
             }
 
@@ -95,7 +101,7 @@ public class ItemListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.d("DEBUG", "Class: " + context.getClass());
+        Log.d("DEBUG", "Attach[context] - Class: " + context.getClass());
         if (context instanceof OnListFragmentInteractionListener) {
             Log.d("DEBUG", "Listener from MainActivity is connected to adapter");
             mListener = (OnListFragmentInteractionListener) context;
@@ -110,7 +116,7 @@ public class ItemListFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        Log.d("DEBUG", "Class: " + activity.getClass());
+        Log.d("DEBUG", "Attach[activity] - Class: " + activity.getClass());
         if (activity instanceof OnListFragmentInteractionListener) {
             Log.d("DEBUG", "Listener from MainActivity is connected to adapter");
             mListener = (OnListFragmentInteractionListener) activity;

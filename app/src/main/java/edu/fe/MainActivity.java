@@ -13,12 +13,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 
 import edu.fe.util.FoodItem;
+import edu.fe.util.ResUtils;
 
 public class MainActivity
         extends AppCompatActivity
@@ -34,12 +34,16 @@ public class MainActivity
         ExceptionHandler.Embed(ExceptionHandler.DEFAULT_LOG_TYPE);
 
         setContentView(R.layout.activity_main);
-
         Log.d("DEBUG", "Initializing variables");
         // Initialize and resolves variables
         mContainerView = (ViewGroup) findViewById(R.id.container_content);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Load all sample resources.
+        // TODO New Thread to initialize resources, since loading bitmaps and refactoring
+        // TODO them to be a certain size takes a bit of time.
+        ResUtils.initialize(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -57,7 +61,7 @@ public class MainActivity
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Fragment fragment = ItemListFragment.newInstance(1);
-        fragmentTransaction.replace(R.id.container, fragment, "list")
+        fragmentTransaction.add(R.id.container, fragment, "list")
                            .addToBackStack("list")
                            .commit();
     }
@@ -90,7 +94,7 @@ public class MainActivity
 
     @Override
     public void onListFragmentInteraction(FoodItem item) {
-        Log.d("DEBUG", "Item " + item.getName());
-        Alert.snackLong(mContainerView, "Item: " + item.getName());
+        Log.d("DEBUG", "Item " + item.getHeaderText());
+        Alert.snackLong(mContainerView, "Item: " + item.getHeaderText());
     }
 }

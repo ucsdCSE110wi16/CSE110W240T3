@@ -1,5 +1,6 @@
 package edu.fe;
 
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,10 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
 import java.util.List;
+import java.util.Random;
 
 import edu.fe.ItemListFragment.OnListFragmentInteractionListener;
 import edu.fe.util.FoodItem;
+import edu.fe.util.ResUtils;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link FoodItem} and makes a call to the
@@ -21,10 +25,12 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
 
     private final List<FoodItem> mFoodList;
     private final OnListFragmentInteractionListener mListener;
+    private final Random mRandom;
 
     public ItemRecyclerAdapter(List<FoodItem> items, OnListFragmentInteractionListener listener) {
         mFoodList = items;
         mListener = listener;
+        mRandom = new Random(System.nanoTime());
     }
 
     @Override
@@ -39,11 +45,17 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, int position) {
         FoodItem item = mFoodList.get(position);
-
         holder.foodItem = item;
-        if (item.getImage() != null)
-            holder.imageView.setImageBitmap(item.getImage());
-        holder.nameView.setText(item.getName());
+
+        // use sample images for now:
+        final List<Bitmap> imageList = ResUtils.LOADED_BITMAPS;
+        final int maxSize = imageList.size();
+        holder.imageView.setImageBitmap(imageList.get(mRandom.nextInt(maxSize)));
+
+        // Load all information to card
+        holder.nameView.setText(item.getHeaderText());
+        holder.expirationView.setText(item.getHeaderText2());
+        holder.extraInfoView.setText(item.getHeaderText3());
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,17 +84,20 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
         public final View view;
 
         public final ImageView imageView;
+
         public final TextView nameView;
         public final TextView expirationView;
+        public final TextView extraInfoView;
 
         public FoodItem foodItem;
 
         public ItemViewHolder(View view) {
             super(view);
             this.view = view;
-            nameView = (TextView) view.findViewById(R.id.food_name);
-            imageView = (ImageView) view.findViewById(R.id.food_image);
-            expirationView = (TextView) view.findViewById(R.id.food_expiration_date);
+            this.imageView = (ImageView) view.findViewById(R.id.food_image);
+            this.nameView = (TextView) view.findViewById(R.id.header);
+            this.expirationView = (TextView) view.findViewById(R.id.header_2);
+            this.extraInfoView = (TextView) view.findViewById(R.id.header_3);
         }
 
         @Override

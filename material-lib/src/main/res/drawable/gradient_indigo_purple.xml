@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<item>
+    <shape>
+        <gradient
+            android:angle="90"
+            android:startColor="@color/dark_purple_400"
+            android:endColor="@color/indigo_500"  
+            android:alpha="1"
+            android:type="linear" />
+    </shape>
+</item>
+</selector>
+
+<!--  #indigo_500 -->
+<!--  #FF1F282D -->
+<!-- #FF682860 -->
+
+<!-- DEEP_PURPLE_400 -->
+<!-- #FF9575CD -->
+<!-- #FF5C6BC0 -->

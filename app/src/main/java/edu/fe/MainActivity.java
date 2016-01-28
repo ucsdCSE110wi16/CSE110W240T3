@@ -9,18 +9,22 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 
-import edu.fe.backend.DummyContent;
+import edu.fe.util.FoodItem;
 
-public class MainActivity extends AppCompatActivity implements ItemListFragment.OnListFragmentInteractionListener {
+public class MainActivity
+        extends AppCompatActivity
+        implements ItemListFragment.OnListFragmentInteractionListener {
 
-    Button mCategoryButton;
+    ViewGroup mContainerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,10 @@ public class MainActivity extends AppCompatActivity implements ItemListFragment.
         ExceptionHandler.Embed(ExceptionHandler.DEFAULT_LOG_TYPE);
 
         setContentView(R.layout.activity_main);
+
+        Log.d("DEBUG", "Initializing variables");
+        // Initialize and resolves variables
+        mContainerView = (ViewGroup) findViewById(R.id.container_content);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -41,27 +49,17 @@ public class MainActivity extends AppCompatActivity implements ItemListFragment.
                         .setAction("Action", null).show();
             }
         });
-
-        mCategoryButton = (Button) findViewById(R.id.category_btn);
-        mCategoryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onCategorySelecteed();
-            }
-        });
     }
 
-    public void onCategorySelecteed() {
+    private void onCategorySelected() {
+        Log.d("DEBUG", "Opening list fragment");
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        Fragment fragment = ItemListFragment.newInstance(5);
-        fragmentTransaction.replace(R.id.container, fragment, "list");
-        fragmentTransaction.commit();
-    }
-
-    public void init() {
+        Fragment fragment = ItemListFragment.newInstance(1);
+        fragmentTransaction.replace(R.id.container, fragment, "list")
+                           .addToBackStack("list")
+                           .commit();
     }
 
     @Override
@@ -82,12 +80,17 @@ public class MainActivity extends AppCompatActivity implements ItemListFragment.
         if (id == R.id.action_settings) {
             return true;
         }
+        else if(id == R.id.action_show_list) {
+            onCategorySelected();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
-        Log.d("DEBUG", "Item " + item.content);
+    public void onListFragmentInteraction(FoodItem item) {
+        Log.d("DEBUG", "Item " + item.getName());
+        Alert.snackLong(mContainerView, "Item: " + item.getName());
     }
 }

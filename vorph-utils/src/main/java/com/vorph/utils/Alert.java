@@ -3,6 +3,8 @@ package com.vorph.utils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 import android.widget.Toast;
 
 public class Alert {
@@ -46,5 +48,15 @@ public class Alert {
 
     public static void toastShort(Context context, String text) {
         toastShort((Activity) context, text);
+    }
+
+    public static void snackLong(View view, String text) {
+        Snackbar.make(view, text, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+    }
+
+    public static void snackShort(View view, String text) {
+        Snackbar.make(view, text, Snackbar.LENGTH_SHORT)
+                .setAction("Action", null).show();
     }
 }

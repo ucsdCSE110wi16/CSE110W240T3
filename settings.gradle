@@ -1,1 +1,1 @@
-include ':app', ':material-lib', ':vorph-utils'
+include ':app', ':material-lib', ':vorph-utils', ':nineold-androids'

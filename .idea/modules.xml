@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/ProjectFE.iml" filepath="$PROJECT_DIR$/ProjectFE.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/material-lib/material-lib.iml" filepath="$PROJECT_DIR$/material-lib/material-lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nineold-androids/nineold-androids.iml" filepath="$PROJECT_DIR$/nineold-androids/nineold-androids.iml" />
       <module fileurl="file://$PROJECT_DIR$/vorph-utils/vorph-utils.iml" filepath="$PROJECT_DIR$/vorph-utils/vorph-utils.iml" />
     </modules>
   </component>

@@ -8,11 +8,12 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import io.codetail.animation.RevealAnimator;
-import io.codetail.animation.SupportAnimator;
-import io.codetail.animation.ViewAnimationUtils;
+import lib.material.anim.animation.RevealAnimator;
+import lib.material.anim.animation.SupportAnimator;
+import lib.material.anim.animation.ViewAnimationUtils;
 
-public class RevealLinearLayout extends LinearLayout implements RevealAnimator{
+
+public class RevealLinearLayout extends LinearLayout implements RevealAnimator {
 
     private Path mRevealPath;
     private final Rect mTargetBounds = new Rect();

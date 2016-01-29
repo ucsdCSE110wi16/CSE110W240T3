@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Project FE</string>
     <string name="action_settings">Settings</string>
+
+    <string name="action_select_category">Category</string>
+    <string name="action_show_list">Test: Show List</string>
 </resources>

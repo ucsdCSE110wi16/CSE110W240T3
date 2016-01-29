@@ -60,7 +60,15 @@ public class AnimUtils {
 				}
 			}).start();
 	}
-	
+
+	public static AnimBuilder fadeIn(final Context context) {
+		return AnimBuilder.create(context, android.R.anim.fade_in);
+	}
+
+	public static AnimBuilder fadeOut(final Context context) {
+		return AnimBuilder.create(context, android.R.anim.fade_out);
+	}
+
 	public static Animation anim(int intRes) {
 		return AnimationUtils.loadAnimation(context, intRes);
 	}
@@ -109,13 +117,19 @@ public class AnimUtils {
 			this.view = view;
 			return this;
 		}
-		
+
+
 		public void start() {
 			Animation anim = AnimationUtils.loadAnimation(context, res);
 			anim.setDuration(duration);
 			anim.setStartOffset(delayOffset);
 			anim.setAnimationListener(listener);
 			view.startAnimation(anim);			  
+		}
+
+		private static AnimBuilder create(Context context,
+										  @AnimRes int res) {
+			return new AnimBuilder().context(context).res(res);
 		}
 
 		// Stop outside instantiation with just default constructor.

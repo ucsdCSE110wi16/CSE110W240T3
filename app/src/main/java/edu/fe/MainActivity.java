@@ -26,11 +26,13 @@ public class MainActivity
 
     ViewGroup mContainerView;
 
+    boolean mIsCategorySelected = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Captures and forwards all log calls to DEBUG tag in LogCat.
+        // Captures and forwards all log calls to DEBUG tagged in LogCat.
         ExceptionHandler.Embed(ExceptionHandler.DEFAULT_LOG_TYPE);
 
         setContentView(R.layout.activity_main);
@@ -44,6 +46,7 @@ public class MainActivity
         // TODO New Thread to initialize resources, since loading bitmaps and refactoring
         // TODO them to be a certain size takes a bit of time.
         ResUtils.initialize(this);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +63,15 @@ public class MainActivity
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        if (mIsCategorySelected) {
+            mIsCategorySelected = false;
+            Fragment fragment = fragmentManager.findFragmentByTag("list");
+            fragmentTransaction.remove(fragment).commit();
+            return;
+        }
+        mIsCategorySelected = true;
+
         Fragment fragment = ItemListFragment.newInstance(1);
         fragmentTransaction.add(R.id.container, fragment, "list")
                            .addToBackStack("list")

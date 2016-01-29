@@ -8,7 +8,6 @@ import android.util.Log;
 public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 
     public final static String DEFAULT_LOG_TYPE = "DEBUG";
-
     private String mLogType = DEFAULT_LOG_TYPE;
 
     public static void Embed() {
@@ -25,8 +24,10 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
         PrintWriter pw = new PrintWriter(sw);
         e.printStackTrace(pw);
 
+        // For debugging
         Log.d(DEFAULT_LOG_TYPE, "Message: " + e.getMessage());
         Log.d(DEFAULT_LOG_TYPE, "\nStackTrace:\n" + sw.toString());
+
     }
 
     private ExceptionHandler() {}

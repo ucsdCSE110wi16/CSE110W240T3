@@ -91,7 +91,7 @@ public class ItemListFragment extends Fragment {
                 mFoodItems.add(item);
             }
 
-            mAdapter = new ItemRecyclerAdapter(mFoodItems, mListener);
+            mAdapter = new ItemRecyclerAdapter(mFoodItems, mListener, this.getActivity());
             recyclerView.setAdapter(mAdapter);
         }
         return view;

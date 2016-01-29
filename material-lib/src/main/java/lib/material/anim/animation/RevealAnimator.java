@@ -6,10 +6,11 @@ import android.os.Build;
 import android.view.View;
 
 
-import java.lang.ref.WeakReference;
-
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.util.FloatProperty;
+
+import java.lang.ref.WeakReference;
+
 
 import static lib.material.anim.animation.ViewAnimationUtils.SimpleAnimationListener;
 
@@ -107,8 +108,7 @@ public interface RevealAnimator{
             mReference = new WeakReference<>(target);
         }
 
-
-                @Override
+        @Override
         public void onAnimationStart(Animator animation) {
             RevealAnimator target = mReference.get();
             target.onRevealAnimationStart();

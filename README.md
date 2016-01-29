@@ -1,5 +1,7 @@
 # README
 
+# PLEASE ADD ALL MANAGEMENT RELATED CONTENT TO THE WIKI. THEY WILL BE REMOVED FROM THE CODEBASE SOON.
+
 ### Schedule
   Schedule can be found [here](https://github.com/ucsdCSE110wi16/CSE110W240T3/blob/master/SCHEDULE.md).
 

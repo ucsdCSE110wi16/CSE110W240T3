@@ -65,6 +65,7 @@ public abstract class ParseRecyclerQueryAdapter<T extends ParseObject, U extends
 
         setHasStableIds(hasStableIds);
         loadObjects();
+
     }
 
     // ALTERNATE CONSTRUCTOR
@@ -107,10 +108,6 @@ public abstract class ParseRecyclerQueryAdapter<T extends ParseObject, U extends
     public T getItem(int position) { return mItems.get(position); }
 
     public List<T> getItems() { return mItems; }
-
-
-
-
 
     /**
      * Apply alterations to query prior to running findInBackground.

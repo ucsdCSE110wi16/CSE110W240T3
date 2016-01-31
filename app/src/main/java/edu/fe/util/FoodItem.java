@@ -2,6 +2,7 @@ package edu.fe.util;
 
 import android.graphics.Bitmap;
 
+@Deprecated
 public class FoodItem {
 
     public boolean food;

@@ -12,10 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.parse.Parse;
+import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.fe.util.FoodItem;
+import edu.fe.backend.FoodItem;
 
 /**
  * A fragment representing a list of Items.
@@ -30,8 +34,7 @@ public class ItemListFragment extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
-    private List<FoodItem> mFoodItems;
-    private ItemRecyclerAdapter mAdapter;
+    private FoodItemRecyclerAdapter mAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -52,8 +55,7 @@ public class ItemListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mFoodItems = new ArrayList<>();
+        
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -78,20 +80,16 @@ public class ItemListFragment extends Fragment {
             else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            for (int i = 0; i < 10; i++) {
-                FoodItem item = new FoodItem();
-                item.food = true;
-                item.setHeader("Lorem ipsum dolor sit amet");
-                item.setHeader2("Aenean dapibus efficitur cursus. Vestibulum aliquam tellus id " +
-                        "metus consequat, at varius odio suscipit. Nam aliquet lectus sed ex " +
-                        "suscipit, sit amet vehicula ligula accumsan. Vivamus aliquam diam sed " +
-                        "purus congue placerat.");
-                item.setHeader3("Nunc et nibh vel lectus eleifend commodo et ut lorem. Donec " +
-                        "malesuada et nulla ac luctus.");
-                mFoodItems.add(item);
-            }
 
-            mAdapter = new ItemRecyclerAdapter(mFoodItems, mListener, this.getActivity());
+            mAdapter = new FoodItemRecyclerAdapter(new ParseQueryAdapter.QueryFactory<FoodItem>() {
+
+                @Override
+                public ParseQuery<FoodItem> create() {
+                    ParseQuery<FoodItem> query = new ParseQuery<FoodItem>("FoodItem");
+                    query.orderByAscending("expirationDate");
+                    return query;
+                }
+            }, false, mListener, this.getActivity());
             recyclerView.setAdapter(mAdapter);
         }
         return view;

@@ -24,6 +24,7 @@ import edu.fe.util.ResUtils;
  * {@link RecyclerView.Adapter} that can display a {@link FoodItem} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  */
+@Deprecated
 public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapter.ItemViewHolder> {
 
     private final List<FoodItem> mFoodList;

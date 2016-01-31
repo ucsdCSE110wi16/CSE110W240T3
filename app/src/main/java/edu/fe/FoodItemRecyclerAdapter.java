@@ -65,7 +65,8 @@ public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem,
             }
         });
         holder.nameView.setText(item.getName());
-        holder.expirationView.setText(item.getExpirationDate().toString());
+        if(item.getExpirationDate() != null)
+            holder.expirationView.setText(item.getExpirationDate().toString());
         holder.extraInfoView.setText("Extra Info");
 
 

@@ -72,6 +72,9 @@ public class FoodItem extends ParseObject {
 
     public Task<Bitmap> getImageInBackground() {
         final ParseFile file = getParseFile("image");
+        if(file == null) {
+            return Task.forError(new ParseException(ParseException.OBJECT_NOT_FOUND, "image field is null"));
+        }
         Task<Bitmap> bitmapTask = file.getDataInBackground().onSuccess(new Continuation<byte[], Bitmap>() {
             @Override
             public Bitmap then(Task<byte[]> task) throws Exception {

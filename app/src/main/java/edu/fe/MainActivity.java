@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 
-import edu.fe.util.FoodItem;
+import edu.fe.backend.FoodItem;
 import edu.fe.util.ResUtils;
 
 public class MainActivity
@@ -106,7 +106,7 @@ public class MainActivity
 
     @Override
     public void onListFragmentInteraction(FoodItem item) {
-        Log.d("DEBUG", "Item " + item.getHeaderText());
-        Alert.snackLong(mContainerView, "Item: " + item.getHeaderText());
+        Log.d("DEBUG", "Item " + item.getName());
+        Alert.snackLong(mContainerView, "Item: " + item.getName());
     }
 }

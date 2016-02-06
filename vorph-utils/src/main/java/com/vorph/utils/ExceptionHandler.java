@@ -1,9 +1,9 @@
 package com.vorph.utils;
 
+import android.util.Log;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
-import android.util.Log;
 
 public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 

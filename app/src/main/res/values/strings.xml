@@ -4,4 +4,8 @@
 
     <string name="action_select_category">Category</string>
     <string name="action_show_list">Test: Show List</string>
+    <string name="title_activity_dust">DustActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

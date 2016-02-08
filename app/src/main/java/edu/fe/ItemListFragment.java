@@ -86,7 +86,7 @@ public class ItemListFragment extends Fragment {
                 @Override
                 public ParseQuery<FoodItem> create() {
                     ParseQuery<FoodItem> query = new ParseQuery<FoodItem>(FoodItem.class);
-                    query.orderByAscending("expirationDate");
+                    query.orderByAscending(FoodItem.EXPIRATION_DATE);
 
                     return query;
                 }

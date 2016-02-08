@@ -18,60 +18,67 @@ import bolts.Task;
  */
 @ParseClassName("FoodItem")
 public class FoodItem extends ParseObject {
+    public final static String NAME = "name";
+    public final static String DESCRIPTION = "description";
+    public final static String CATEGORY = "category";
+    public final static String CREATION_DATE = "creationDate";
+    public final static String EXPIRATION_DATE = "expirationDate";
+    public final static String IMAGE = "image";
+
     public FoodItem() {
 
     }
 
     public String getName() {
-        return getString("name");
+        return getString(NAME);
     }
 
     public void setName(String name) {
-        put("name", name);
+        put(NAME, name);
     }
 
     public Task<Category> getCategoryInBackground() {
-        return getParseObject("category").fetchInBackground();
+        return getParseObject(CATEGORY).fetchInBackground();
     }
 
     public Category getCategoryLazy() {
-        return (Category)getParseObject("category");
+        return (Category)getParseObject(CATEGORY);
     }
 
     public Category getCategory() throws ParseException {
-        Category o = (Category)getParseObject("category");
+        Category o = (Category)getParseObject(CATEGORY);
         o.fetchIfNeeded();
         return o;
     }
 
     public Date getCreationDate() {
-        return getDate("creationDate");
+        return getDate(CREATION_DATE);
     }
 
     public void setCreationDate(Date date) {
-        put("creationDate", date);
+        put(CREATION_DATE, date);
     }
 
     public Date getExpirationDate() {
-        return getDate("expirationDate");
+        return getDate(EXPIRATION_DATE);
     }
 
     public void setExpirationDate(Date date) {
-        put("expirationDate", date);
+        put(EXPIRATION_DATE, date);
     }
 
     public Bitmap getImage() throws ParseException {
-        final ParseFile file = getParseFile("image");
+        final ParseFile file = getParseFile(IMAGE);
         byte[] buffer = file.getData();
         return BitmapFactory.decodeByteArray(buffer, 0, buffer.length);
     }
 
     public ParseFile getImageLazy() {
-        return getParseFile("image");
+        return getParseFile(IMAGE);
     }
 
     public Task<Bitmap> getImageInBackground() {
-        final ParseFile file = getParseFile("image");
+        final ParseFile file = getParseFile(IMAGE);
         if(file == null) {
             return Task.forError(new ParseException(ParseException.OBJECT_NOT_FOUND, "image field is null"));
         }

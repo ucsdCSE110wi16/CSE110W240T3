@@ -3,21 +3,13 @@
 # PLEASE ADD ALL MANAGEMENT RELATED CONTENT TO THE WIKI. THEY WILL BE REMOVED FROM THE CODEBASE SOON.
 
 ### Schedule
-  Schedule can be found [here](https://github.com/ucsdCSE110wi16/CSE110W240T3/blob/master/SCHEDULE.md).
+Schedule can be found [here](https://github.com/ucsdCSE110wi16/CSE110W240T3/wiki/Schedule).
 
 ### Member Positions and Current Tasks
+Current tasks can be found [here](https://github.com/ucsdCSE110wi16/CSE110W240T3/wiki)
 
-_Member_            | _Position_     | _Current Task_                            |
-:------------------ | :------------- | :---------------------------------------- |
-Brain Kim           | Backend Dev    |                                           |
-Phuong Nguyen       | Full Stack Dev | List Mechanics (Recycler Views and Cards) |
-David Zech          | Full Stack Dev |                                           |
-Kevin Wong          | Backend Dev    |                                           |
-Theano Georgoulakis | Frontend Dev   |                                           |
-Jimmy Gong          | Backend Dev    |                                           |
-
-### Building
-Build instructions here
+### User Stories
+User Stories can be found [here](https://github.com/ucsdCSE110wi16/CSE110W240T3/wiki/User-Stories)
 
 ### Tools
 Android studio is recommended, but not required.

@@ -21,6 +21,10 @@
         <item>Grain</item>
         <item>Oils</item>
         <item>Processed</item>
+        <item>Water</item>
+        <item>Juice</item>
+        <item>Soda</item>
+        <item>Alcohol</item>
     </string-array>
 
 </resources>

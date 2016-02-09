@@ -49,22 +49,16 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
         category.getThumbnailInBackground().onSuccess(new Continuation<Bitmap, Object>() {
             @Override
             public Object then(Task<Bitmap> task) throws Exception {
-                Bitmap bmp = task.getResult();
-                if (bmp != null) {
-                    holder.thumbnailView.setImageBitmap(bmp);
-                }
+                holder.thumbnailView.setImageBitmap(task.getResult());
                 return null;
             }
         });
+
         String name = category.getName();
         String description = category.getDescription();
 
-        if(name != null) {
-            holder.nameView.setText(name);
-        }
-        if(description != null) {
-            holder.descriptionView.setText(description);
-        }
+        holder.nameView.setText(name != null ? name : "");
+        holder.descriptionView.setText(description != null ? description : "");
     }
 
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {

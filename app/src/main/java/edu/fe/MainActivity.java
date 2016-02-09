@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        loadCategories();
     }
 
     @Override
@@ -81,6 +83,14 @@ public class MainActivity extends AppCompatActivity
         }
 
         super.onBackPressed();
+    }
+
+    private void loadCategories() {
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        Fragment categoryFragment = new CategoryListFragment();
+        fragmentTransaction.add(R.id.container, categoryFragment, "categoryList").commit();
     }
 
     private void onCategorySelected() {
@@ -119,10 +129,6 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
-        }
-        else if(id == R.id.action_show_list) {
-            onCategorySelected();
             return true;
         }
 

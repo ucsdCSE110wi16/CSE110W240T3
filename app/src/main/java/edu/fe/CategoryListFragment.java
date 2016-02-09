@@ -41,7 +41,7 @@ public class CategoryListFragment extends Fragment {
                 @Override
                 public void onItemClick(View view, int position) {
                     // Push new Activity Here
-                    Category category = (Category)mAdapter.getItem(position);
+                    Category category = (Category) mAdapter.getItem(position);
 
                 }
             }));
@@ -56,6 +56,7 @@ public class CategoryListFragment extends Fragment {
                             return query;
                         }
                     }, false, this.getActivity());
+            recyclerView.setAdapter(mAdapter);
         }
         return view;
     }

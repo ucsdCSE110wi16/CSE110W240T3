@@ -45,6 +45,7 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
     public void onBindViewHolder(final CategoryViewHolder holder, int position) {
         Category category = getItem(position);
         holder.category = category;
+        holder.thumbnailView.setImageResource(0);
         category.getThumbnailInBackground().onSuccess(new Continuation<Bitmap, Object>() {
             @Override
             public Object then(Task<Bitmap> task) throws Exception {

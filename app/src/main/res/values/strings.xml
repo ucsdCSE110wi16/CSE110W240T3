@@ -14,17 +14,17 @@
     <string name="Category">Select a category</string>
 
     <string-array name="category_array">
-        <item>Fruits</item>
+        <item>Meat</item>
+        <item>Poultry</item>
+        <item>Fish</item>
+        <item>Fruit</item>
         <item>Vegetables</item>
+        <item>Herbs/Spices</item>
+        <item>Grains/Carbs</item>
         <item>Dairy</item>
-        <item>Protein</item>
-        <item>Grain</item>
-        <item>Oils</item>
-        <item>Processed</item>
-        <item>Water</item>
-        <item>Juice</item>
-        <item>Soda</item>
+        <item>Condiments</item>
         <item>Alcohol</item>
+        <item>Misc</item>
     </string-array>
 
 </resources>

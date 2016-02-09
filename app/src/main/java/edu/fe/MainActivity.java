@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 
-import edu.fe.util.FoodItem;
+import edu.fe.backend.FoodItem;
 import edu.fe.util.ResUtils;
 
 public class MainActivity extends AppCompatActivity
@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        loadCategories();
     }
 
     @Override
@@ -81,6 +83,14 @@ public class MainActivity extends AppCompatActivity
         }
 
         super.onBackPressed();
+    }
+
+    private void loadCategories() {
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        Fragment categoryFragment = new CategoryListFragment();
+        fragmentTransaction.add(R.id.container, categoryFragment, "categoryList").commit();
     }
 
     private void onCategorySelected() {
@@ -121,10 +131,6 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
-        else if(id == R.id.action_show_list) {
-            onCategorySelected();
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -156,8 +162,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(FoodItem item) {
-        Log.d("DEBUG", "Item " + item.getHeaderText());
-        Alert.snackLong(mContainerView, "Item: " + item.getHeaderText());
+        Log.d("DEBUG", "Item " + item.getName());
+        Alert.snackLong(mContainerView, "Item: " + item.getName());
     }
 
 

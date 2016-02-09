@@ -1,5 +1,6 @@
 package edu.fe;
 
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,13 +67,7 @@ public class MainActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                //         .setAction("Action", null).show();
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                Fragment fragment = EntryFragment.newInstance();
-                ft.replace(R.id.container, fragment);
-                ft.commit();
+                showDialog();
             }
         });
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -131,7 +127,7 @@ public class MainActivity
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onDialogFragmentInteraction(Uri uri) {
         Log.d("DEBUG", "onFragmentInteraction");
     }
 
@@ -173,5 +169,24 @@ public class MainActivity
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
+    }
+
+    void showDialog() {
+        //mStackLevel++;
+
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        DialogFragment newFragment = EntryFragment.newInstance(DialogFragment.STYLE_NORMAL);
+        newFragment.show(ft, "dialog");
+        ft.addToBackStack(null);
     }
 }

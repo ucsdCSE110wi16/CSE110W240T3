@@ -4,4 +4,20 @@
 
     <string name="action_select_category">Category</string>
     <string name="action_show_list">Test: Show List</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="Category">Select a category</string>
+
+    <string-array name="category_array">
+        <item>Fruits</item>
+        <item>Vegetables</item>
+        <item>Dairy</item>
+        <item>Protein</item>
+        <item>Grain</item>
+        <item>Oils</item>
+        <item>Processed</item>
+    </string-array>
+
 </resources>

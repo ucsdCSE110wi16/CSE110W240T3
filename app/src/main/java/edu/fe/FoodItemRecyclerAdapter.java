@@ -11,64 +11,64 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.ParseQueryAdapter;
 import com.vorph.anim.AnimUtils;
 
 import java.util.List;
 import java.util.Random;
 
-import edu.fe.ItemListFragment.OnListFragmentInteractionListener;
-import edu.fe.util.FoodItem;
-import edu.fe.util.ResUtils;
+import bolts.Continuation;
+import bolts.Task;
+import edu.fe.backend.FoodItem;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link FoodItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * Created by david on 1/29/2016.
  */
-@Deprecated
-public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapter.ItemViewHolder> {
+public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem, FoodItemRecyclerAdapter.FoodItemViewHolder> {
 
-    private final List<FoodItem> mFoodList;
-    private final OnListFragmentInteractionListener mListener;
-    private final Random mRandom;
+    private final ItemListFragment.OnListFragmentInteractionListener mListener;
+    private final Random mRandom = new Random();
     private final Context mContext;
 
     private static final int ANIM_DELAY_INCREMENTER = 200;
     private static final int ANIM_DURATION = 400;
 
-    public ItemRecyclerAdapter
-            (final List<FoodItem> items,
-             final OnListFragmentInteractionListener listener,
-             final Context context)
-    {
-        mFoodList = items;
+
+    public FoodItemRecyclerAdapter(ParseQueryAdapter.QueryFactory<FoodItem> factory,
+                                   boolean hasStableIds,
+                                   final ItemListFragment.OnListFragmentInteractionListener listener,
+                                   final Context context
+                                   ) {
+        super(factory, hasStableIds);
         mListener = listener;
-        mRandom = new Random(System.nanoTime());
         mContext = context;
     }
 
     @Override
-    public ItemViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+    public FoodItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View rootView =
                 LayoutInflater
-                    .from(parent.getContext())
-                    .inflate(R.layout.entity_food_item, parent, false);
-        return new ItemViewHolder(rootView);
+                        .from(parent.getContext())
+                        .inflate(R.layout.entity_food_item, parent, false);
+        return new FoodItemViewHolder(rootView);
     }
 
     @Override
-    public void onBindViewHolder(final ItemViewHolder holder, final int position) {
-        FoodItem item = mFoodList.get(position);
+    public void onBindViewHolder(final FoodItemViewHolder holder, int position) {
+        FoodItem item = getItem(position);
         holder.foodItem = item;
+        item.getImageInBackground().onSuccess(new Continuation<Bitmap, Object>() {
+            @Override
+            public Object then(Task<Bitmap> task) throws Exception {
+                holder.imageView.setImageBitmap(task.getResult());
+                return null;
+            }
+        });
+        holder.nameView.setText(item.getName());
+        if(item.getExpirationDate() != null)
+            holder.expirationView.setText(item.getExpirationDate().toString());
+        holder.extraInfoView.setText("Extra Info");
 
-        // use sample images for now:
-        final List<Bitmap> imageList = ResUtils.LOADED_BITMAPS;
-        final int maxSize = imageList.size();
-        holder.imageView.setImageBitmap(imageList.get(mRandom.nextInt(maxSize)));
-
-        // Load all information to card
-        holder.nameView.setText(item.getHeaderText());
-        holder.expirationView.setText(item.getHeaderText2());
-        holder.extraInfoView.setText(item.getHeaderText3());
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +77,7 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    //mListener.onListFragmentInteraction(holder.foodItem);
+                    mListener.onListFragmentInteraction(holder.foodItem);
                 }
             }
         });
@@ -112,24 +112,10 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
         }
     }
 
-    // Must be implemented to get end of list.
-    @Override
-    public int getItemCount() {
-        return mFoodList.size();
-    }
-
     /**
-     * Add to the list of fooditems without having to use the list.
-     * Remember to call notifyDataSetHasChanged afterwards.
-     * @param item - the item to be added to the list.
+     * Created by davidzech on 1/30/16.
      */
-    public void addItem(FoodItem item) {
-        mFoodList.add(item);
-    }
-
-
-    // View holder holding the contents of an item in the list.
-    public class ItemViewHolder extends RecyclerView.ViewHolder {
+    public static class FoodItemViewHolder extends RecyclerView.ViewHolder {
         // Layout containing all items.
         // This is a CardView in the xml file.
         public final View view;
@@ -137,12 +123,12 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
         public final TextView nameView;
         public final TextView expirationView;
         public final TextView extraInfoView;
-        public FoodItem foodItem;
+        public edu.fe.backend.FoodItem foodItem;
 
         // Makes it so that it does not fade the item in again
         public boolean isDisplayed = false;
 
-        public ItemViewHolder(View view) {
+        public FoodItemViewHolder(View view) {
             super(view);
             this.view = view;
             this.imageView = (ImageView) view.findViewById(R.id.food_image);
@@ -151,9 +137,5 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
             this.extraInfoView = (TextView) view.findViewById(R.id.header_3);
         }
 
-        @Override
-        public String toString() {
-            return super.toString() + " '" + nameView.getText() + "'";
-        }
     }
 }

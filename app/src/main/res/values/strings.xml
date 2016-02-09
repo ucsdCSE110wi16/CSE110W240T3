@@ -5,8 +5,11 @@
     <string name="action_select_category">Category</string>
     <string name="action_show_list">Test: Show List</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="parse_app_id">mE1RpPA2zD90drr2MIKz47aproJX4EKlH7rBy5gq</string>
+    <string name="parse_client_key">zUPOHCccmree3fSoTKeKvzzOJCCrOyxbvo8yY0OF</string>
+    <string name="title_activity_dust">DustActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="Category">Select a category</string>
 
@@ -21,3 +24,4 @@
     </string-array>
 
 </resources>
+

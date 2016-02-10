@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.parse.Parse;
+import com.parse.ParseInstallation;
 import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 

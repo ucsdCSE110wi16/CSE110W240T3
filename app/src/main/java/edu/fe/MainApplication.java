@@ -5,7 +5,9 @@ import android.app.Application;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -28,6 +30,9 @@ public class MainApplication extends Application {
 
         ParseObject.registerSubclass(FoodItem.class);
         ParseObject.registerSubclass(Category.class);
+
+        ParseInstallation.getCurrentInstallation().saveInBackground();
+        ParsePush.subscribeInBackground("general");
 
     }
 }

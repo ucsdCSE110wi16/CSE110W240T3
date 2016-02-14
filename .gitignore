@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 *.iml
 .gradle
 /local.properties
-/.idea/workspace.xml
-/.idea/libraries
 .DS_Store
 /build
 /captures
@@ -40,5 +37,4 @@ proguard/
 
 # Android Studio captures folder
 captures/
->>>>>>> b3b221244c7fe7f1c20700b6b5e35bbe0448bcd0
 .idea/modules.xml

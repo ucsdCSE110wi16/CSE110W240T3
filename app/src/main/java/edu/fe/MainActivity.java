@@ -1,8 +1,10 @@
 package edu.fe;
 
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -17,16 +19,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 
 import edu.fe.backend.FoodItem;
 import edu.fe.util.ResUtils;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity
+        extends AppCompatActivity
         implements ItemListFragment.OnListFragmentInteractionListener,
-        NavigationView.OnNavigationItemSelectedListener{
+        NavigationView.OnNavigationItemSelectedListener,
+        EntryFragment.OnFragmentInteractionListener {
 
     ViewGroup mContainerView;
 
@@ -54,10 +57,10 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                showDialog();
             }
         });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle =
@@ -109,8 +112,8 @@ public class MainActivity extends AppCompatActivity
 
         Fragment fragment = ItemListFragment.newInstance(1);
         fragmentTransaction.add(R.id.container, fragment, "list")
-                           .addToBackStack("list")
-                           .commit();
+                .addToBackStack("list")
+                .commit();
     }
 
     @Override
@@ -166,5 +169,28 @@ public class MainActivity extends AppCompatActivity
         Alert.snackLong(mContainerView, "Item: " + item.getName());
     }
 
+    @Override
+    public void onDialogFragmentInteraction(Uri uri) {
+        Log.d("DEBUG", "onFragmentInteraction");
+    }
+
+    void showDialog() {
+        //mStackLevel++;
+
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        DialogFragment newFragment = EntryFragment.newInstance(DialogFragment.STYLE_NORMAL);
+        newFragment.show(ft, "dialog");
+        ft.addToBackStack(null);
+    }
 
 }

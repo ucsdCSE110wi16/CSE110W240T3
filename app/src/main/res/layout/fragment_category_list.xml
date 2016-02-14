@@ -13,9 +13,9 @@
         android:name="edu.fe.CategoryListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        app:layoutManager="LinearLayoutManager"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        app:layoutManager="GridLayoutManager"
         tools:context="edu.fe.ItemListFragment"
         tools:listitem="@layout/entity_category" />
 

@@ -317,6 +317,11 @@
     <color name="black">#000000</color>
     <!-- Black -->
 
-    <!-- White -->
+    <color name="black_p50">#80000000</color>
+    <color name="black_p40">#66000000</color>
+    <color name="black_p30">#4D000000</color>
+    <color name="black_p20">#33000000</color>
+
+
 </resources>
 

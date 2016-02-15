@@ -1,13 +1,35 @@
 <resources>
     <string name="app_name">Project FE</string>
     <string name="action_settings">Settings</string>
+    <string name="default_title">Title</string>
+    <string name="default_body">Body</string>
+    <string name="default_desc">Faded</string>
 
     <string name="action_select_category">Category</string>
     <string name="action_show_list">Test: Show List</string>
+
     <string name="parse_app_id">mE1RpPA2zD90drr2MIKz47aproJX4EKlH7rBy5gq</string>
     <string name="parse_client_key">zUPOHCccmree3fSoTKeKvzzOJCCrOyxbvo8yY0OF</string>
-    <string name="title_activity_dust">DustActivity</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="Category">Select a category</string>
+
+
+    <string-array name="category_array">
+        <item>Meat</item>
+        <item>Poultry</item>
+        <item>Fish</item>
+        <item>Fruit</item>
+        <item>Vegetables</item>
+        <item>Herbs/Spices</item>
+        <item>Grains/Carbs</item>
+        <item>Dairy</item>
+        <item>Condiments</item>
+        <item>Alcohol</item>
+        <item>Misc</item>
+    </string-array>
+
 </resources>
 

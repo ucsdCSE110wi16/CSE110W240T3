@@ -1,28 +1,21 @@
 package edu.fe;
 
-import android.app.ActionBar;
+
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.ContextThemeWrapper;
-import android.view.Display;
-import android.view.Gravity;
+import android.support.annotation.NonNull;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.app.Fragment;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import edu.fe.util.FoodItem;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 
 
 /**
@@ -30,20 +23,10 @@ import edu.fe.util.FoodItem;
  * Activities that contain this fragment must implement the
  * {@link EntryFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link EntryFragment#newInstance} factory method to
+ * Use the {@link EntryFragment#create} factory method to
  * create an instance of this fragment.
  */
 public class EntryFragment extends DialogFragment {
-
-    int mNum;
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -58,41 +41,55 @@ public class EntryFragment extends DialogFragment {
      * @return A new instance of fragment EntryFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static EntryFragment newInstance(int num) {
+    public static EntryFragment create(boolean darkTheme, int accentColor) {
         EntryFragment fragment = new EntryFragment();
         Bundle args = new Bundle();
-        args.putInt("num",num);
+        args.putBoolean("dark_theme", darkTheme);
+        args.putInt("accent_color",accentColor);
         fragment.setArguments(args);
         return fragment;
     }
 
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        final View customView;
+        try {
+            customView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_entry, null);
+        } catch (InflateException e) {
+            throw new IllegalStateException("This device does not support Web Views.");
+        }
+
+        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
+                .theme(getArguments().getBoolean("dark_theme") ? Theme.DARK : Theme.LIGHT)
+                .title(R.string.entryPopUp)
+                .customView(R.layout.fragment_entry, true)
+                .positiveText(android.R.string.ok)
+                .negativeText(android.R.string.cancel)
+                .build();
+
+
+        Spinner spinner = (Spinner) customView.findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.category_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setDropDownWidth(200);
+        spinner.setSelection(0);
+
+        return dialog;
+    }
+
+    //ignore for now
+/*
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mNum = getArguments().getInt("num");
-        int style = DialogFragment.STYLE_NORMAL, theme =android.R.style.Theme_Holo_Light_Dialog;
-        switch ((mNum-1)%6) {
-            case 1: style = DialogFragment.STYLE_NO_TITLE; break;
-            case 2: style = DialogFragment.STYLE_NO_FRAME; break;
-            case 3: style = DialogFragment.STYLE_NO_INPUT; break;
-            case 4: style = DialogFragment.STYLE_NORMAL; break;
-            case 5: style = DialogFragment.STYLE_NORMAL; break;
-            case 6: style = DialogFragment.STYLE_NO_TITLE; break;
-            case 7: style = DialogFragment.STYLE_NO_FRAME; break;
-            case 8: style = DialogFragment.STYLE_NORMAL; break;
-        }
-        //TODO These don't seem to work, will come back to update to material
-        switch ((mNum-1)%6) {
-            case 4: theme = android.R.style.Theme_Material; break;
-            case 5: theme = android.R.style.Theme_Material_Light_Dialog; break;
-            case 6: theme = android.R.style.Theme_Material_Light; break;
-            case 7: theme = android.R.style.Theme_Material_Light_Panel; break;
-            case 8: theme = android.R.style.Theme_Material_Light; break;
-        }
-        setStyle(style, theme);
 
     }
+    */
 
+    /*
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -100,7 +97,7 @@ public class EntryFragment extends DialogFragment {
         View view = null;
         view = inflater.inflate(R.layout.fragment_entry, container, false);
 
-        getDialog().setTitle("Food entry");
+        //getDialog().setTitle("Food entry");
         getDialog().setCanceledOnTouchOutside(true);
         Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.category_array, android.R.layout.simple_spinner_item);
@@ -118,14 +115,7 @@ public class EntryFragment extends DialogFragment {
 
         return view;
     }
-
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onDialogFragmentInteraction(uri);
-        }
-    }
+*/
 
 
     @Override
@@ -151,12 +141,6 @@ public class EntryFragment extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        //DisplayMetrics metrics = new DisplayMetrics();
-        //Window window = getDialog().getWindow();
-        //window.setGravity(Gravity.CENTER);
-        //window.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        //getDialog().getWindow().setLayout(1000, 1500);
     }
 
     /**

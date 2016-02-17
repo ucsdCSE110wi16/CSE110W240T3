@@ -3,59 +3,79 @@
     android:layout_gravity="center"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#F5F5F5"
     tools:context="edu.fe.EntryFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/foodEntry"
+        android:id="@+id/textView1"
+        android:layout_alignParentStart="true" />
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="8"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:ems="20"
         android:gravity="center_horizontal"
-        android:id="@+id/editText"
         android:layout_marginTop="20dp"
-        android:hint="Enter Item"
+        android:id="@+id/editText"
+        android:hint="@string/hintFoodEntry"
         android:inputType="text"
-        android:layout_alignParentTop="true"
-         />
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/categorySelect"
+        android:layout_marginTop="20dp"
+        android:id="@+id/textView2"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/editText"/>
 
     <Spinner
         android:id="@+id/spinner"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:spinnerMode="dropdown"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="170dp"
-        android:prompt ="@string/Category"
-        android:layout_alignParentTop="true"
+        android:minWidth="400dp"
+        android:entries="@array/category_array"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/textView2"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/expirationEntry"
+        android:layout_marginTop="20dp"
+        android:id="@+id/textView3"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/editText" />
+        android:layout_below="@+id/spinner"/>
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="date"
-        android:ems="10"
+        android:ems="20"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
         android:gravity="center_horizontal"
         android:id="@+id/editText2"
-        android:hint="Expiration Date"
+        android:hint="@string/expirationEntryDate"
         android:layout_alignParentStart="true"
         android:layout_alignStart="@+id/editText"
-        android:layout_below="@+id/spinner" />
+        android:layout_below="@+id/textView3" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Submit"
-        android:id="@+id/btnSubmit"
-        android:layout_below="@+id/editText2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp" />
+
+
+
+
+
+
+
 
 
 

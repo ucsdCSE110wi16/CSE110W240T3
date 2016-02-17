@@ -14,8 +14,13 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="Category">Select a category</string>
-
+    <string name="entryPopUp">Input a food item</string>\
+    <string name="foodEntry">Enter a food item</string>
+    <string name="categorySelect">Please select a category</string>
+    <string name="expirationEntry">Set expiration date</string>
+    <string name="hintFoodEntry"> e.g Milk, Honey, Lasagna</string>
+    <string name="submitEntry">Submit</string>
+    <string name="cancelEntry">Cancel</string>
 
     <string-array name="category_array">
         <item>Meat</item>
@@ -30,6 +35,9 @@
         <item>Alcohol</item>
         <item>Misc</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
 

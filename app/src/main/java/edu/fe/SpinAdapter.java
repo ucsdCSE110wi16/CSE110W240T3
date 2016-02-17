@@ -16,7 +16,7 @@ import edu.fe.backend.Category;
  * Created by david on 2/17/2016.
  */
 public class SpinAdapter extends ArrayAdapter<String> {
-    private final List<String> categories = new ArrayList<String>();
+    private final List<Category> categories = new ArrayList<Category>();
 
     public SpinAdapter(Context context, int resource) {
         super(context, resource);
@@ -29,9 +29,7 @@ public class SpinAdapter extends ArrayAdapter<String> {
             @Override
             public Object then(Task<List<Category>> task) throws Exception {
                 categories.clear();
-                for (Category c : task.getResult()) {
-                    categories.add(c.getName());
-                }
+                categories.addAll(task.getResult());
                 notifyDataSetChanged();
                 return null;
             }
@@ -45,6 +43,10 @@ public class SpinAdapter extends ArrayAdapter<String> {
 
     @Override
     public String getItem(int position) {
+        return categories.get(position).getName();
+    }
+
+    public Category getCategory(int position) {
         return categories.get(position);
     }
 

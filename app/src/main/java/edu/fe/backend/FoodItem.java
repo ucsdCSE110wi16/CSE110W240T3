@@ -51,6 +51,10 @@ public class FoodItem extends ParseObject {
         return o;
     }
 
+    public void setCategory(Category category) {
+        put(FoodItem.CATEGORY, category);
+    }
+
     public Date getCreationDate() {
         return getDate(CREATION_DATE);
     }

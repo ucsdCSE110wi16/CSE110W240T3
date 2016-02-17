@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +25,9 @@ import com.vorph.utils.ExceptionHandler;
 
 import edu.fe.backend.FoodItem;
 import edu.fe.util.ResUtils;
+import lib.material.Material;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 
 public class MainActivity
         extends AppCompatActivity
@@ -180,6 +184,7 @@ public class MainActivity
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
+
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag("dialog");
         if (prev != null) {
@@ -188,9 +193,10 @@ public class MainActivity
         ft.addToBackStack(null);
 
         // Create and show the dialog.
-        DialogFragment newFragment = EntryFragment.newInstance(DialogFragment.STYLE_NORMAL);
+        DialogFragment newFragment = EntryFragment.create(false, R.color.material_teal_a400);
         newFragment.show(ft, "dialog");
         ft.addToBackStack(null);
+
     }
 
 }

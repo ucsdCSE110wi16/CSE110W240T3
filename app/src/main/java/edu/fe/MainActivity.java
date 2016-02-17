@@ -193,7 +193,7 @@ public class MainActivity
         ft.addToBackStack(null);
 
         // Create and show the dialog.
-        DialogFragment newFragment = EntryFragment.create(false, R.color.material_teal_a400);
+        DialogFragment newFragment = EntryFragment.create(false, 0);
         newFragment.show(ft, "dialog");
         ft.addToBackStack(null);
 

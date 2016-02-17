@@ -1,5 +1,6 @@
 package edu.fe;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ public class CategoryListFragment extends Fragment {
     public static final int COLUMN_COUNT = 2;
     private CategoryRecyclerAdapter mAdapter;
 
+    OnCategorySelectedHandler mListener;
 
     SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -48,6 +50,7 @@ public class CategoryListFragment extends Fragment {
                 Log.d("DEBUG", "Refreshing categories");
                 // TODO data has changed
                 mAdapter.notifyDataSetChanged();
+                mAdapter.fireOnDataSetChanged();
                 // TODO onFinishDataChanged, call
                 mSwipeRefreshLayout.setRefreshing(false);
             }
@@ -59,15 +62,7 @@ public class CategoryListFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, COLUMN_COUNT);
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(gridLayoutManager);
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(context,
-                new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        // Push new Activity Here
-                        Category category = mAdapter.getItem(position);
 
-                    }
-                }));
 
         mAdapter = new CategoryRecyclerAdapter(
                 new ParseQueryAdapter.QueryFactory<Category>() {
@@ -75,12 +70,47 @@ public class CategoryListFragment extends Fragment {
                     public ParseQuery<Category> create() {
                         ParseQuery<Category> query = new ParseQuery<>(Category.class);
                         query.orderByAscending(Category.NAME);
-
                         return query;
                     }
-                }, false, this.getActivity());
+                }, false, mListener, this.getActivity());
         recyclerView.setAdapter(mAdapter);
 
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Log.d("DEBUG", "Attach[context] - Class: " + context.getClass());
+        if (context instanceof OnCategorySelectedHandler) {
+            Log.d("DEBUG", "Listener from MainActivity is connected to adapter");
+            mListener = (OnCategorySelectedHandler) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement " + OnCategorySelectedHandler.class.toString());
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        Log.d("DEBUG", "Attach[activity] - Class: " + activity.getClass());
+        if (activity instanceof OnCategorySelectedHandler) {
+            Log.d("DEBUG", "Listener from MainActivity is connected to adapter");
+            mListener = (OnCategorySelectedHandler)activity;
+        } else {
+            throw new RuntimeException(activity.toString()
+                    + " must implement " + OnCategorySelectedHandler.class.toString());
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnCategorySelectedHandler {
+        public void onCategorySelected(Category category);
     }
 }

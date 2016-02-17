@@ -26,7 +26,7 @@ public class Category extends ParseObject {
 
     }
 
-    public Bitmap getImage() throws ParseException {
+    public Bitmap getThumbnail() throws ParseException {
         final ParseFile file = getParseFile(THUMBNAIL);
         byte[] buffer = file.getData();
         return BitmapFactory.decodeByteArray(buffer, 0, buffer.length);

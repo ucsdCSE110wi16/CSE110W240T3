@@ -94,11 +94,8 @@ public class EntryFragment extends DialogFragment {
                         Category c = adapter.getCategory(spinner.getSelectedItemPosition());
                         f.setCategory(c);
                         f.setName(nameField.getText().toString());
-                        try {
-                            f.save();
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+                        f.saveInBackground();
+                        // todo add snackbar message
                     }
                 })
                 .build();

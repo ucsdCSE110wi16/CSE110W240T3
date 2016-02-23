@@ -20,6 +20,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.parse.ui.ParseLoginBuilder;
 import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 
@@ -76,6 +78,7 @@ public class MainActivity
                     R.string.navigation_drawer_open,
                     R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
+
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -141,18 +144,10 @@ public class MainActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            Log.d("DEBUG", "Drawer: camera");
-        } else if (id == R.id.nav_gallery) {
-            Log.d("DEBUG", "Drawer: gallery");
-        } else if (id == R.id.nav_slideshow) {
-            Log.d("DEBUG", "Drawer: slideshow");
-        } else if (id == R.id.nav_manage) {
-            Log.d("DEBUG", "Drawer: manage");
-        } else if (id == R.id.nav_share) {
-            Log.d("DEBUG", "Drawer: share");
-        } else if (id == R.id.nav_send) {
-            Log.d("DEBUG", "Drawer: send");
+        if(id == R.id.nav_login) {
+            // LOGIN BOYS
+            ParseLoginBuilder builder = new ParseLoginBuilder(this);
+            startActivityForResult(builder.build(), 0);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

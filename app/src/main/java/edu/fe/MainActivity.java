@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 
+import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
 import edu.fe.util.ResUtils;
 import lib.material.Material;
@@ -32,12 +33,14 @@ import com.afollestad.materialdialogs.Theme;
 public class MainActivity
         extends AppCompatActivity
         implements ItemListFragment.OnListFragmentInteractionListener,
+        CategoryListFragment.OnCategorySelectedHandler,
         NavigationView.OnNavigationItemSelectedListener,
         EntryFragment.OnFragmentInteractionListener {
 
     ViewGroup mContainerView;
 
     boolean mIsCategorySelected = false;
+    Category mSelectedCategory = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,35 +92,25 @@ public class MainActivity
             return;
         }
 
-        super.onBackPressed();
-    }
+        int count = getFragmentManager().getBackStackEntryCount();
+        if(count > 0) {
+            getFragmentManager().popBackStackImmediate();
+        } else {
+            super.onBackPressed();
+        }
+}
 
     private void loadCategories() {
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         Fragment categoryFragment = new CategoryListFragment();
-        fragmentTransaction.add(R.id.container, categoryFragment, "categoryList").commit();
+        fragmentTransaction.replace(R.id.container, categoryFragment, "categoryList").
+                commit();
     }
 
     private void onCategorySelected() {
         Log.d("DEBUG", "Opening list fragment");
-
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        if (mIsCategorySelected) {
-            mIsCategorySelected = false;
-            Fragment fragment = fragmentManager.findFragmentByTag("list");
-            fragmentTransaction.remove(fragment).commit();
-            return;
-        }
-        mIsCategorySelected = true;
-
-        Fragment fragment = ItemListFragment.newInstance(1);
-        fragmentTransaction.add(R.id.container, fragment, "list")
-                .addToBackStack("list")
-                .commit();
     }
 
     @Override
@@ -199,4 +192,10 @@ public class MainActivity
 
     }
 
+    @Override
+    public void onCategorySelected(Category category) {
+        ItemListFragment fragment = ItemListFragment.newInstance(category);
+        getFragmentManager().beginTransaction().add(R.id.container, fragment, "item-list").
+                addToBackStack(null).commit();
+    }
 }

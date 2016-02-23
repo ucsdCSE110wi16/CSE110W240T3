@@ -11,11 +11,21 @@ import android.support.annotation.NonNull;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
+
+import edu.fe.backend.Category;
+import edu.fe.backend.FoodItem;
 
 
 /**
@@ -61,21 +71,37 @@ public class EntryFragment extends DialogFragment {
             throw new IllegalStateException("This device does not support Web Views.");
         }
 
+        final Spinner spinner = (Spinner) customView.findViewById(R.id.spinner);
+        final EditText nameField = (EditText)customView.findViewById(R.id.editText);
+        EditText dateField = (EditText)customView.findViewById(R.id.editText2);
+
+
+        //ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.category_array, android.R.layout.simple_spinner_item);
+        final SpinAdapter adapter = new SpinAdapter(this.getActivity(), android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                 .theme(getArguments().getBoolean("dark_theme") ? Theme.DARK : Theme.LIGHT)
                 .title(R.string.entryPopUp)
-                .customView(R.layout.fragment_entry, true)
+                .customView(customView, true)
                 .positiveText(android.R.string.ok)
                 .negativeText(android.R.string.cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        FoodItem f = new FoodItem();
+                        Category c = adapter.getCategory(spinner.getSelectedItemPosition());
+                        f.setCategory(c);
+                        f.setName(nameField.getText().toString());
+                        try {
+                            f.save();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                })
                 .build();
-
-
-        Spinner spinner = (Spinner) customView.findViewById(R.id.spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.category_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setDropDownWidth(200);
-        spinner.setSelection(0);
 
         return dialog;
     }

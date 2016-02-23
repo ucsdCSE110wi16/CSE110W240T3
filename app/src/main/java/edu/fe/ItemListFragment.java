@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,13 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.parse.Parse;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
 
 /**
@@ -29,12 +26,11 @@ import edu.fe.backend.FoodItem;
  */
 public class ItemListFragment extends Fragment {
 
-    private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String ARG_CATEGORY_ID = "category-id";
 
-    private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
-
+    private String mCategoryId = "";
     private FoodItemRecyclerAdapter mAdapter;
+    private OnListFragmentInteractionListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -43,11 +39,15 @@ public class ItemListFragment extends Fragment {
     public ItemListFragment() {
     }
 
-    public static ItemListFragment newInstance(int columnCount) {
+    public static ItemListFragment newInstance(Category category) {
+        return newInstance(category.getObjectId());
+    }
+
+    public static ItemListFragment newInstance(String categoryId ) {
         ItemListFragment fragment = new ItemListFragment();
         Bundle args = new Bundle();
 
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putString(ARG_CATEGORY_ID, categoryId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,8 +57,9 @@ public class ItemListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            mCategoryId = getArguments().getString(ARG_CATEGORY_ID);
         }
+
     }
 
     @Override
@@ -67,34 +68,38 @@ public class ItemListFragment extends Fragment {
     {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
-        // Set the adapter
+        mAdapter = new FoodItemRecyclerAdapter(new ParseQueryAdapter.QueryFactory<FoodItem>() {
+
+            @Override
+            public ParseQuery<FoodItem> create() {
+                ParseQuery<FoodItem> query = new ParseQuery<FoodItem>(FoodItem.class);
+                Category c = ParseObject.createWithoutData(Category.class, mCategoryId);
+                query.whereEqualTo(FoodItem.CATEGORY, c);
+                query.orderByAscending(FoodItem.EXPIRATION_DATE);
+                return query;
+            }
+        }, false, mListener, getActivity());
+
+
         if (view instanceof RecyclerView) {
-            Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-
-            if (mColumnCount <= 1) {
-                LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-                layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                recyclerView.setLayoutManager(layoutManager);
-            }
-            else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-
-            mAdapter = new FoodItemRecyclerAdapter(new ParseQueryAdapter.QueryFactory<FoodItem>() {
-
-                @Override
-                public ParseQuery<FoodItem> create() {
-                    ParseQuery<FoodItem> query = new ParseQuery<FoodItem>(FoodItem.class);
-                    query.orderByAscending(FoodItem.EXPIRATION_DATE);
-
-                    return query;
-                }
-            }, false, mListener, this.getActivity());
             recyclerView.setAdapter(mAdapter);
         }
         return view;
     }
+
+    @Override
+    public void onResume() {
+        //
+        super.onResume();
+    }
+
+    @Override
+    public void onStart() {
+        //mAdapter.fireOnDataSetChanged();
+        super.onStart();
+    }
+
 
 
     @Override
@@ -129,6 +134,7 @@ public class ItemListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mAdapter = null;
     }
 
     /**

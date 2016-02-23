@@ -16,7 +16,7 @@
         android:paddingStart="4dp"
         android:paddingEnd="4dp"
         app:layoutManager="GridLayoutManager"
-        tools:context="edu.fe.ItemListFragment"
+        tools:context="edu.fe.CategoryListFragment"
         tools:listitem="@layout/entity_category" />
 
 </android.support.v4.widget.SwipeRefreshLayout>

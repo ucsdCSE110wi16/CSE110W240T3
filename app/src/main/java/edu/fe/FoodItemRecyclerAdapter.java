@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.ParseImageView;
 import com.parse.ParseQueryAdapter;
 import com.vorph.anim.AnimUtils;
 
@@ -57,13 +58,8 @@ public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem,
     public void onBindViewHolder(final FoodItemViewHolder holder, int position) {
         FoodItem item = getItem(position);
         holder.foodItem = item;
-        item.getImageInBackground().onSuccess(new Continuation<Bitmap, Object>() {
-            @Override
-            public Object then(Task<Bitmap> task) throws Exception {
-                holder.imageView.setImageBitmap(task.getResult());
-                return null;
-            }
-        });
+        holder.imageView.setParseFile(item.getImageLazy());
+        holder.imageView.loadInBackground();
         holder.nameView.setText(item.getName());
         if(item.getExpirationDate() != null)
             holder.expirationView.setText(item.getExpirationDate().toString());
@@ -81,7 +77,7 @@ public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem,
                 }
             }
         });
-
+    /*
         if (!holder.isDisplayed) {
             holder.isDisplayed = true;
             holder.view.setVisibility(View.INVISIBLE);
@@ -110,6 +106,7 @@ public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem,
                     })
                     .start();
         }
+        */
     }
 
     /**
@@ -119,7 +116,7 @@ public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem,
         // Layout containing all items.
         // This is a CardView in the xml file.
         public final View view;
-        public final ImageView imageView;
+        public final ParseImageView imageView;
         public final TextView nameView;
         public final TextView expirationView;
         public final TextView extraInfoView;
@@ -131,7 +128,7 @@ public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem,
         public FoodItemViewHolder(View view) {
             super(view);
             this.view = view;
-            this.imageView = (ImageView) view.findViewById(R.id.food_image);
+            this.imageView = (ParseImageView) view.findViewById(R.id.food_image);
             this.nameView = (TextView) view.findViewById(R.id.header);
             this.expirationView = (TextView) view.findViewById(R.id.header_2);
             this.extraInfoView = (TextView) view.findViewById(R.id.header_3);

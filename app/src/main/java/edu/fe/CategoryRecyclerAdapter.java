@@ -10,15 +10,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.parse.ParseQuery;
+import com.parse.ParseImageView;
 import com.parse.ParseQueryAdapter;
-
-import java.util.Random;
 
 import bolts.Continuation;
 import bolts.Task;
 import edu.fe.backend.Category;
-import edu.fe.backend.FoodItem;
 
 /**
  * Created by david on 2/8/2016.
@@ -26,11 +23,14 @@ import edu.fe.backend.FoodItem;
 public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category, CategoryRecyclerAdapter.CategoryViewHolder> {
 
     private final Context mContext;
+    private final CategoryListFragment.OnCategorySelectedHandler mListener;
 
     public CategoryRecyclerAdapter(ParseQueryAdapter.QueryFactory<Category> factory,
                                    boolean hasStableIds,
+                                   CategoryListFragment.OnCategorySelectedHandler listener,
                                    final Context context) {
         super(factory, hasStableIds);
+        mListener = listener;
         mContext = context;
     }
 
@@ -45,27 +45,34 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
     public void onBindViewHolder(final CategoryViewHolder holder, int position) {
         Category category = getItem(position);
         holder.category = category;
-        holder.thumbnailView.setImageResource(0);
-        category.getThumbnailInBackground().onSuccess(new Continuation<Bitmap, Object>() {
-            @Override
-            public Object then(Task<Bitmap> task) throws Exception {
-                holder.thumbnailView.setImageBitmap(task.getResult());
-                return null;
-            }
-        });
+        // TODO
+        //holder.thumbnailView.setPlaceholder()
+        holder.thumbnailView.setParseFile(category.getThumbnailLazy());
+        holder.thumbnailView.loadInBackground();
 
         String name = category.getName();
         String description = category.getDescription();
 
         holder.nameView.setText(name != null ? name : "");
         holder.descriptionView.setText(description != null ? description : "");
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("DEBUG", "Calling list-click-listener");
+                if (null != mListener) {
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+                    mListener.onCategorySelected(holder.category);
+                }
+            }
+        });
     }
 
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
         // Layout containing all items.
         // This is a CardView in the xml file.
         public final View view;
-        public final ImageView thumbnailView;
+        public final ParseImageView thumbnailView;
         public final TextView nameView;
         public final TextView descriptionView;
         public Category category;
@@ -76,7 +83,7 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
         public CategoryViewHolder(View view) {
             super(view);
             this.view = view;
-            this.thumbnailView = (ImageView) view.findViewById(R.id.category_thumbnail);
+            this.thumbnailView = (ParseImageView) view.findViewById(R.id.category_thumbnail);
             this.nameView = (TextView) view.findViewById(R.id.category_name);
             this.descriptionView = (TextView) view.findViewById(R.id.category_description);
         }

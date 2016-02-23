@@ -21,6 +21,7 @@
     <string name="hintFoodEntry"> e.g Milk, Honey, Lasagna</string>
     <string name="submitEntry">Submit</string>
     <string name="cancelEntry">Cancel</string>
+    <string name="expirationEntryDate">MM/DD/YY</string>
 
     <string-array name="category_array">
         <item>Meat</item>

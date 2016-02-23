@@ -22,13 +22,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.borax12.materialdaterangepicker.date.DatePickerDialog;
 import com.parse.ParseException;
 import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
+
+import java.util.Calendar;
 
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
@@ -97,7 +101,7 @@ public class MainActivity
         }
 
         int count = getFragmentManager().getBackStackEntryCount();
-        if(count > 0) {
+        if (count > 0) {
             getFragmentManager().popBackStackImmediate();
         } else {
             super.onBackPressed();
@@ -191,6 +195,38 @@ public class MainActivity
         final SpinAdapter adapter = new SpinAdapter(this, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
+        final TextView textView = (TextView) customView.findViewById(R.id.editText2);
+        final DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePickerDialog view,
+                                  int year,
+                                  int monthOfYear,
+                                  int dayOfMonth,
+                                  int yearEnd,
+                                  int monthOfYearEnd,
+                                  int dayOfMonthEnd) {
+                String date = String.format("%d/%d/%d", dayOfMonth, monthOfYear, year);
+                textView.setText(date);
+            }
+        };
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar now = Calendar.getInstance();
+                DatePickerDialog dpd = DatePickerDialog.newInstance(
+                        onDateSetListener,
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.show(getFragmentManager(), "Datepickerdialog");
+
+
+
+            }
+        });
 
         new MaterialDialog.Builder(this)
                 .theme(Theme.LIGHT)

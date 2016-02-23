@@ -1,34 +1,38 @@
 package edu.fe;
 
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.util.Log;
+import android.view.InflateException;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Spinner;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
+import com.parse.ParseException;
 import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
 import edu.fe.util.ResUtils;
-import lib.material.Material;
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.Theme;
 
 public class MainActivity
         extends AppCompatActivity
@@ -172,30 +176,53 @@ public class MainActivity
     }
 
     void showDialog() {
-        //mStackLevel++;
-
-        // DialogFragment.show() will take care of adding the fragment
-        // in a transaction.  We also want to remove any currently showing
-        // dialog, so make our own transaction and take care of that here.
-
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
-        if (prev != null) {
-            ft.remove(prev);
+        final View customView;
+        try {
+            customView = LayoutInflater.from(this).inflate(R.layout.fragment_entry, null);
+        } catch (InflateException e) {
+            throw new IllegalStateException("This device does not support Web Views.");
         }
-        ft.addToBackStack(null);
 
-        // Create and show the dialog.
-        DialogFragment newFragment = EntryFragment.create(false, 0);
-        newFragment.show(ft, "dialog");
-        ft.addToBackStack(null);
+        if (customView == null) return;
+
+        final Spinner spinner = (Spinner) customView.findViewById(R.id.spinner);
+        final EditText nameField = (EditText)customView.findViewById(R.id.editText);
+
+        final SpinAdapter adapter = new SpinAdapter(this, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        new MaterialDialog.Builder(this)
+                .theme(Theme.LIGHT)
+                .title(R.string.entryPopUp)
+                .customView(customView, true)
+                .positiveText(android.R.string.ok)
+                .negativeText(android.R.string.cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        FoodItem f = new FoodItem();
+                        Category c = adapter.getCategory(spinner.getSelectedItemPosition());
+                        f.setCategory(c);
+                        f.setName(nameField.getText().toString());
+                        try {
+                            f.save();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                })
+                .show();
 
     }
 
     @Override
     public void onCategorySelected(Category category) {
         ItemListFragment fragment = ItemListFragment.newInstance(category);
-        getFragmentManager().beginTransaction().add(R.id.container, fragment, "item-list").
-                addToBackStack(null).commit();
+        getFragmentManager()
+                .beginTransaction()
+                .add(R.id.container, fragment, "item-list")
+                .addToBackStack(null)
+                .commit();
     }
 }

@@ -31,8 +31,13 @@ import com.parse.ParseException;
 import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.concurrent.Callable;
 
+import bolts.Continuation;
+import bolts.Task;
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
 import edu.fe.util.ResUtils;
@@ -89,7 +94,21 @@ public class MainActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        loadCategories();
+        FoodItem.cacheToLocalDBInBackground();
+
+        Task<Void> loadCategoryTask = Category.cacheToLocalDBInBackground();
+        Task<Void> waitTimeOutTask = Task.delay(500);
+        Collection<Task<Void>> c = new ArrayList<>();
+        c.add(loadCategoryTask);
+        c.add(waitTimeOutTask);
+        Task.whenAny(c).continueWith(new Continuation<Task<?>, Void>() {
+            @Override
+            public Void then(Task<Task<?>> task) throws Exception {
+                loadCategories();
+                return null;
+            }
+        });
+
     }
 
     @Override
@@ -229,11 +248,8 @@ public class MainActivity
                         Category c = adapter.getCategory(spinner.getSelectedItemPosition());
                         f.setCategory(c);
                         f.setName(nameField.getText().toString());
-                        try {
-                            f.save();
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+                        f.pinInBackground();
+                        f.saveEventually();
                     }
                 })
                 .show();

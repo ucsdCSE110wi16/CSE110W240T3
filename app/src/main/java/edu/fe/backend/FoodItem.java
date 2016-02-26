@@ -3,15 +3,20 @@ package edu.fe.backend;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.parse.FindCallback;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 import java.util.Date;
+import java.util.List;
 
 import bolts.Continuation;
 import bolts.Task;
+import bolts.TaskCompletionSource;
 
 /**
  * Created by david on 1/29/2016.
@@ -27,6 +32,33 @@ public class FoodItem extends ParseObject {
 
     public FoodItem() {
 
+    }
+
+    public static Task<Void> cacheToLocalDBInBackground() {
+        final TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+        ParseQuery<FoodItem> query = ParseQuery.getQuery(FoodItem.class);
+        query.findInBackground(new FindCallback<FoodItem>() {
+            @Override
+            public void done(List<FoodItem> objects, ParseException e) {
+                if(e != null) {
+                    tcs.setError(e);
+                    return;
+                } else {
+                    Category.pinAllInBackground("foodItems", objects, new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if(e != null) {
+                                tcs.setError(e);
+                                return;
+                            } else {
+                                tcs.setResult(null);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+        return tcs.getTask();
     }
 
     public String getName() {

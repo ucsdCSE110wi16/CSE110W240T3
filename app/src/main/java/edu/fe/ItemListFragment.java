@@ -74,6 +74,7 @@ public class ItemListFragment extends Fragment {
             public ParseQuery<FoodItem> create() {
                 ParseQuery<FoodItem> query = new ParseQuery<FoodItem>(FoodItem.class);
                 Category c = ParseObject.createWithoutData(Category.class, mCategoryId);
+                query.fromLocalDatastore();
                 query.whereEqualTo(FoodItem.CATEGORY, c);
                 query.orderByAscending(FoodItem.EXPIRATION_DATE);
                 return query;

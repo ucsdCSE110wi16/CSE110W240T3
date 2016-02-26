@@ -170,13 +170,26 @@ public class DatePickerDialog
     public interface OnDateSetListener {
 
         /**
+         * @param set The set of data that contains the info that the user inputted
+         */
+        void onDateSet(DateAttributeSet set);
+    }
+
+    public static class DateAttributeSet {
+        /**
          * @param view The view associated with this listener.
          * @param year The year that was set.
          * @param monthOfYear The month that was set (0-11) for compatibility
          *            with {@link Calendar}.
          * @param dayOfMonth The day of the month that was set.
          */
-        void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth, int yearEnd, int monthOfYearEnd, int dayOfMonthEnd);
+        public DatePickerDialog view;
+        public int year;
+        public int month;
+        public int day;
+        public int yearEnd;
+        public int monthYearEnd;
+        public int dayOfMonthEnd;
     }
 
     /**
@@ -366,7 +379,9 @@ public class DatePickerDialog
         mYearPickerDescription = res.getString(R.string.mdtp_year_picker_description);
         mSelectYear = res.getString(R.string.mdtp_select_year);
 
-        int bgColorResource = mThemeDark ? R.color.mdtp_date_picker_view_animator_dark_theme : R.color.mdtp_date_picker_view_animator;
+        int bgColorResource = mThemeDark
+                ? R.color.mdtp_date_picker_view_animator_dark_theme
+                : R.color.mdtp_date_picker_view_animator;
         view.setBackgroundColor(activity.getResources().getColor(bgColorResource));
 
         mAnimator = (AccessibleDateAnimator) view.findViewById(R.id.animator);
@@ -403,9 +418,15 @@ public class DatePickerDialog
             public void onClick(View v) {
                 tryVibrate();
                 if (mCallBack != null) {
-                    mCallBack.onDateSet(DatePickerDialog.this, mCalendar.get(Calendar.YEAR),
-                            mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH),mCalendarEnd.get(Calendar.YEAR),
-                            mCalendarEnd.get(Calendar.MONTH), mCalendarEnd.get(Calendar.DAY_OF_MONTH));
+                    DateAttributeSet set = new DateAttributeSet();
+                    set.view = DatePickerDialog.this;
+                    set.year = mCalendar.get(Calendar.YEAR);
+                    set.month = mCalendar.get(Calendar.MONTH);
+                    set.day = mCalendar.get(Calendar.DAY_OF_MONTH);
+                    set.yearEnd = mCalendarEnd.get(Calendar.YEAR);
+                    set.monthYearEnd = mCalendarEnd.get(Calendar.MONTH);
+                    set.dayOfMonthEnd = mCalendarEnd.get(Calendar.DAY_OF_MONTH);
+                    mCallBack.onDateSet(set);
                 }
                 dismiss();
             }

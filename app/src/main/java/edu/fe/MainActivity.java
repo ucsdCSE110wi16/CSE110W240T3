@@ -199,14 +199,8 @@ public class MainActivity
         final TextView textView = (TextView) customView.findViewById(R.id.editText2);
         final DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePickerDialog view,
-                                  int year,
-                                  int monthOfYear,
-                                  int dayOfMonth,
-                                  int yearEnd,
-                                  int monthOfYearEnd,
-                                  int dayOfMonthEnd) {
-                String date = String.format("%d/%d/%d", dayOfMonth, monthOfYear, year);
+            public void onDateSet(DatePickerDialog.DateAttributeSet set) {
+                String date = String.format("%d/%d/%d", set.day, set.month + 1, set.year);
                 textView.setText(date);
             }
         };
@@ -222,9 +216,6 @@ public class MainActivity
                         now.get(Calendar.DAY_OF_MONTH)
                 );
                 dpd.show(getFragmentManager(), "Datepickerdialog");
-
-
-
             }
         });
 

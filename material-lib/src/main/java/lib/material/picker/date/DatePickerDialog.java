@@ -196,13 +196,56 @@ public class DatePickerDialog
      * The callback used to notify other date picker components of a change in selected date.
      */
     public interface OnDateChangedListener {
-
         void onDateChanged();
     }
 
-
     public DatePickerDialog() {
         // Empty constructor required for dialog fragment.
+    }
+
+    public static class Builder {
+        DatePickerDialog.OnDateSetListener listener;
+        int year, month, day;
+        Activity activity;
+
+        public Builder(Activity activity) {
+            this.activity = activity;
+        }
+
+        public void show() {
+            this.build().show(activity.getFragmentManager(), "date-picker");
+        }
+
+        public DatePickerDialog build() {
+            return DatePickerDialog.newInstance(listener, year, month, day);
+        }
+
+        public Builder listener(OnDateSetListener listener) {
+            this.listener = listener;
+            return this;
+        }
+
+        public Builder setCalendar(Calendar calendar) {
+            this.year = calendar.get(Calendar.YEAR);
+            this.month = calendar.get(Calendar.MONTH);
+            this.day = calendar.get(Calendar.DAY_OF_MONTH);
+            return this;
+        }
+
+        public Builder setDate(int day) {
+            this.day = day;
+            return this;
+        }
+
+        public Builder setMonth(int month) {
+            this.month = month;
+            return this;
+        }
+
+        public Builder setYear(int year) {
+            this.year = year;
+            return this;
+        }
     }
 
     /**

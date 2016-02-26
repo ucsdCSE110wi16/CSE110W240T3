@@ -197,7 +197,8 @@ public class MainActivity
         spinner.setAdapter(adapter);
 
         final TextView textView = (TextView) customView.findViewById(R.id.editText2);
-        final DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+        final DatePickerDialog.OnDateSetListener onDateSetListener =
+                new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePickerDialog.DateAttributeSet set) {
                 String date = String.format("%d/%d/%d", set.day, set.month + 1, set.year);
@@ -208,14 +209,10 @@ public class MainActivity
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar now = Calendar.getInstance();
-                DatePickerDialog dpd = DatePickerDialog.newInstance(
-                        onDateSetListener,
-                        now.get(Calendar.YEAR),
-                        now.get(Calendar.MONTH),
-                        now.get(Calendar.DAY_OF_MONTH)
-                );
-                dpd.show(getFragmentManager(), "Datepickerdialog");
+                new DatePickerDialog.Builder(MainActivity.this)
+                        .listener(onDateSetListener)
+                        .setCalendar(Calendar.getInstance())
+                        .show();
             }
         });
 

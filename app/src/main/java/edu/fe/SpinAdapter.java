@@ -1,6 +1,6 @@
 package edu.fe;
 
-import android.content.Context;
+import android.app.Activity;
 import android.widget.ArrayAdapter;
 
 import com.parse.ParseQuery;
@@ -18,19 +18,28 @@ import edu.fe.backend.Category;
 public class SpinAdapter extends ArrayAdapter<String> {
     private final List<Category> categories = new ArrayList<Category>();
 
-    public SpinAdapter(Context context, int resource) {
-        super(context, resource);
-        loadCategories();
+    final Activity mActivity;
+
+    public SpinAdapter(Activity activity, int resource) {
+        super(activity.getApplicationContext(), resource);
+        this.mActivity = activity;
+        this.loadCategories();
     }
 
     private void loadCategories() {
         ParseQuery<Category> q = new ParseQuery<Category>(Category.class);
+        q.fromLocalDatastore();
         q.findInBackground().onSuccess(new Continuation<List<Category>, Object>() {
             @Override
             public Object then(Task<List<Category>> task) throws Exception {
                 categories.clear();
                 categories.addAll(task.getResult());
-                notifyDataSetChanged();
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SpinAdapter.this.notifyDataSetChanged();
+                    }
+                });
                 return null;
             }
         });

@@ -1,4 +1,4 @@
-package lib.material.dialogs.util;
+package lib.material.util;
 
 import android.content.Context;
 import android.graphics.Typeface;

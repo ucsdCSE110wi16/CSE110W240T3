@@ -27,7 +27,6 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import com.borax12.materialdaterangepicker.date.DatePickerDialog;
 import com.parse.ParseException;
 import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
@@ -37,6 +36,7 @@ import java.util.Calendar;
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
 import edu.fe.util.ResUtils;
+import lib.material.picker.date.DatePickerDialog;
 
 public class MainActivity
         extends AppCompatActivity

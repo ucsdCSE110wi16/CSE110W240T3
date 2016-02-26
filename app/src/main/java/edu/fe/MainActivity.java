@@ -222,6 +222,7 @@ public class MainActivity
             loginEmailView.setText(currentUser.getEmail());
             loginMenuItem.setVisible(false);
             signoutMenuItem.setVisible(true);
+            FoodItem.cacheToLocalDBInBackground();
         }
         else {
             loginNameView.setText(R.string.navigation_drawer_default_name);

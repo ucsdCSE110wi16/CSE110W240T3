@@ -29,6 +29,7 @@ public class FoodItem extends ParseObject {
     public final static String CREATION_DATE = "creationDate";
     public final static String EXPIRATION_DATE = "expirationDate";
     public final static String IMAGE = "image";
+    public final static String QUANTITY = "quantity";
 
     public FoodItem() {
 
@@ -67,6 +68,14 @@ public class FoodItem extends ParseObject {
 
     public void setName(String name) {
         put(NAME, name);
+    }
+
+    public int getQuantity() {
+        return getInt(QUANTITY);
+    }
+
+    public void setQuantity(int quantity) {
+        put(QUANTITY, quantity);
     }
 
     public Task<Category> getCategoryInBackground() {

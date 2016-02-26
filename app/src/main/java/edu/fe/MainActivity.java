@@ -1,18 +1,22 @@
 package edu.fe;
 
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
@@ -28,6 +32,10 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.parse.ParseException;
+import com.parse.Parse;
+import com.parse.ParseAnonymousUtils;
+import com.parse.ParseUser;
+import com.parse.ui.ParseLoginBuilder;
 import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 
@@ -51,6 +59,10 @@ public class MainActivity
         EntryFragment.OnFragmentInteractionListener {
 
     ViewGroup mContainerView;
+    TextView loginNameView;
+    TextView loginEmailView;
+    MenuItem loginMenuItem;
+    MenuItem signoutMenuItem;
 
     boolean mIsCategorySelected = false;
     Category mSelectedCategory = null;
@@ -94,7 +106,17 @@ public class MainActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        FoodItem.cacheToLocalDBInBackground();
+        // hack because of an AppCompat Change https://code.google.com/p/android/issues/detail?id=190786
+        // http://stackoverflow.com/questions/33161345/android-support-v23-1-0-update-breaks-navigationview-get-find-header
+        View header = LayoutInflater.from(this).inflate(R.layout.nav_header_dust, null);
+        navigationView.addHeaderView(header);
+        Menu menu = navigationView.getMenu();
+        loginNameView = (TextView)header.findViewById(R.id.drawer_parse_name);
+        loginEmailView = (TextView)header.findViewById(R.id.drawer_parse_email);
+        loginMenuItem = menu.findItem(R.id.nav_login);
+        signoutMenuItem = menu.findItem(R.id.nav_signout);
+
+	FoodItem.cacheToLocalDBInBackground();
 
         Task<Void> loadCategoryTask = Category.cacheToLocalDBInBackground();
         Task<Void> waitTimeOutTask = Task.delay(500);
@@ -108,8 +130,9 @@ public class MainActivity
                 return null;
             }
         });
-
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -120,7 +143,7 @@ public class MainActivity
         }
 
         int count = getFragmentManager().getBackStackEntryCount();
-        if (count > 0) {
+        if(count > 0) {
             getFragmentManager().popBackStackImmediate();
         } else {
             super.onBackPressed();
@@ -134,10 +157,6 @@ public class MainActivity
         Fragment categoryFragment = new CategoryListFragment();
         fragmentTransaction.replace(R.id.container, categoryFragment, "categoryList").
                 commit();
-    }
-
-    private void onCategorySelected() {
-        Log.d("DEBUG", "Opening list fragment");
     }
 
     @Override
@@ -162,29 +181,54 @@ public class MainActivity
         return super.onOptionsItemSelected(item);
     }
 
+    final static int LOGIN_REQUEST_CODE = 0;
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            Log.d("DEBUG", "Drawer: camera");
-        } else if (id == R.id.nav_gallery) {
-            Log.d("DEBUG", "Drawer: gallery");
-        } else if (id == R.id.nav_slideshow) {
-            Log.d("DEBUG", "Drawer: slideshow");
-        } else if (id == R.id.nav_manage) {
-            Log.d("DEBUG", "Drawer: manage");
-        } else if (id == R.id.nav_share) {
-            Log.d("DEBUG", "Drawer: share");
-        } else if (id == R.id.nav_send) {
-            Log.d("DEBUG", "Drawer: send");
+        if(id == R.id.nav_login) {
+            // LOGIN BOYS
+            ParseLoginBuilder builder = new ParseLoginBuilder(this);
+            startActivityForResult(builder.build(), LOGIN_REQUEST_CODE);
+        } else
+        if(id == R.id.nav_signout) {
+            ParseUser.logOut();
+            checkLoginInformation();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode) {
+            case LOGIN_REQUEST_CODE:
+                if(resultCode == RESULT_OK) {
+                    checkLoginInformation();
+                }
+        }
+    }
+
+    private void checkLoginInformation() {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if(currentUser != null && currentUser.isAuthenticated() && !ParseAnonymousUtils.isLinked(currentUser)) {
+            // we are logged in
+            loginNameView.setText("Hello " + currentUser.getString("name"));
+            loginEmailView.setText(currentUser.getEmail());
+            loginMenuItem.setVisible(false);
+            signoutMenuItem.setVisible(true);
+        }
+        else {
+            loginNameView.setText(R.string.navigation_drawer_default_name);
+            loginEmailView.setText(R.string.navigation_drawer_default_email);
+            loginMenuItem.setVisible(true);
+            signoutMenuItem.setVisible(false);
+        }
     }
 
     @Override

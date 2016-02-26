@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:id="@+id/nav_login"
-          android:icon="@drawable/ic_menu_manage"
-          android:title="Login"/>
+    <group android:checkableBehavior="single"/>
+    <group android:checkableBehavior="none">
+        <item android:id="@+id/nav_login"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/navigation_drawer_login"/>
+        <item android:id="@+id/nav_signout"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="@string/navigation_drawer_signout"
+            android:visible="false"/>
+    </group>
 
 
 </menu>

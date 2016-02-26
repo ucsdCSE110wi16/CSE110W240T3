@@ -49,6 +49,7 @@ public class CategoryListFragment extends Fragment {
             public void onRefresh() {
                 Log.d("DEBUG", "Refreshing categories");
                 // TODO data has changed
+                mAdapter.loadObjects();
                 mAdapter.notifyDataSetChanged();
                 mAdapter.fireOnDataSetChanged();
                 // TODO onFinishDataChanged, call
@@ -69,6 +70,7 @@ public class CategoryListFragment extends Fragment {
                     @Override
                     public ParseQuery<Category> create() {
                         ParseQuery<Category> query = new ParseQuery<>(Category.class);
+                        query.fromLocalDatastore();
                         query.orderByAscending(Category.NAME);
                         return query;
                     }

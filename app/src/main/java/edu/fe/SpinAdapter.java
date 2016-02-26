@@ -28,6 +28,7 @@ public class SpinAdapter extends ArrayAdapter<String> {
 
     private void loadCategories() {
         ParseQuery<Category> q = new ParseQuery<Category>(Category.class);
+        q.fromLocalDatastore();
         q.findInBackground().onSuccess(new Continuation<List<Category>, Object>() {
             @Override
             public Object then(Task<List<Category>> task) throws Exception {

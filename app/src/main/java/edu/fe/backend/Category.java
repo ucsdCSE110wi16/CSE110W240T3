@@ -3,13 +3,19 @@ package edu.fe.backend;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.parse.FindCallback;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.SaveCallback;
+
+import java.util.List;
 
 import bolts.Continuation;
 import bolts.Task;
+import bolts.TaskCompletionSource;
 
 /**
  * Created by david on 1/29/2016.
@@ -24,6 +30,33 @@ public class Category extends ParseObject {
 
     public Category() {
 
+    }
+
+    public static Task<Void> cacheToLocalDBInBackground() {
+        final TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+        ParseQuery<Category> query = ParseQuery.getQuery(Category.class);
+        query.findInBackground(new FindCallback<Category>() {
+            @Override
+            public void done(List<Category> objects, ParseException e) {
+                if(e != null) {
+                    tcs.setError(e);
+                    return;
+                } else {
+                    Category.pinAllInBackground("categories", objects, new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if(e != null) {
+                                tcs.setError(e);
+                                return;
+                            } else {
+                                tcs.setResult(null);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+        return tcs.getTask();
     }
 
     public Bitmap getThumbnail() throws ParseException {

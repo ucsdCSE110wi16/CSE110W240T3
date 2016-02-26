@@ -15,6 +15,7 @@ import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -36,6 +37,7 @@ import edu.fe.backend.FoodItem;
  * Use the {@link EntryFragment#create} factory method to
  * create an instance of this fragment.
  */
+@Deprecated
 public class EntryFragment extends DialogFragment {
 
     private OnFragmentInteractionListener mListener;
@@ -73,7 +75,7 @@ public class EntryFragment extends DialogFragment {
 
         final Spinner spinner = (Spinner) customView.findViewById(R.id.spinner);
         final EditText nameField = (EditText)customView.findViewById(R.id.editText);
-        EditText dateField = (EditText)customView.findViewById(R.id.editText2);
+        TextView dateField = (TextView)customView.findViewById(R.id.editText2);
 
 
         //ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.category_array, android.R.layout.simple_spinner_item);
@@ -94,11 +96,8 @@ public class EntryFragment extends DialogFragment {
                         Category c = adapter.getCategory(spinner.getSelectedItemPosition());
                         f.setCategory(c);
                         f.setName(nameField.getText().toString());
-                        try {
-                            f.save();
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+                        f.pinInBackground();
+                        f.saveEventually();
                     }
                 })
                 .build();

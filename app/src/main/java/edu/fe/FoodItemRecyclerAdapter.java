@@ -11,9 +11,11 @@ import android.widget.TextView;
 import com.parse.ParseImageView;
 import com.parse.ParseQueryAdapter;
 
+import java.util.Date;
 import java.util.Random;
 
 import edu.fe.backend.FoodItem;
+import edu.fe.util.ResUtils;
 
 /**
  * Created by david on 1/29/2016.
@@ -54,8 +56,10 @@ public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem,
         holder.imageView.setParseFile(item.getImageLazy());
         holder.imageView.loadInBackground();
         holder.nameView.setText(item.getName());
-        if(item.getExpirationDate() != null)
-            holder.expirationView.setText(item.getExpirationDate().toString());
+        if(item.getExpirationDate() != null) {
+            //[holder.expirationView.setText(item.getExpirationDate().toString());
+            ResUtils.formatExpirationDate(mContext, holder.expirationView, item.getExpirationDate());
+        }
         holder.extraInfoView.setText("Extra Info");
 
 

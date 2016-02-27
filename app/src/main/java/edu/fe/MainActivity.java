@@ -116,8 +116,8 @@ public class MainActivity
         loginMenuItem = menu.findItem(R.id.nav_login);
         signoutMenuItem = menu.findItem(R.id.nav_signout);
 
-	FoodItem.cacheToLocalDBInBackground();
-
+        checkLoginInformation();
+	    FoodItem.cacheToLocalDBInBackground();
         Task<Void> loadCategoryTask = Category.cacheToLocalDBInBackground();
         Task<Void> waitTimeOutTask = Task.delay(500);
         Collection<Task<Void>> c = new ArrayList<>();
@@ -194,13 +194,24 @@ public class MainActivity
                 // LOGIN BOYS
                 ParseLoginBuilder builder = new ParseLoginBuilder(this);
                 startActivityForResult(builder.build(), LOGIN_REQUEST_CODE);
+                break;
             }
             case R.id.nav_signout: {
                 ParseUser.logOut();
                 checkLoginInformation();
+                break;
             }
             case R.id.nav_about: {
                 showAboutDialog();
+                break;
+            }
+            case R.id.nav_categories: {
+                // clear fragment stacks and replace
+                break;
+            }
+            case R.id.nav_expiring: {
+                // clear fragment stacks and replace
+                break;
             }
         }
 

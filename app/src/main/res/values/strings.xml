@@ -14,6 +14,9 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="navigation_drawer_categories">Categories</string>
+    <string name="navigation_drawer_expiring">Expiring Soon</string>
+
     <string name="navigation_drawer_login">Login</string>
     <string name="navigation_drawer_signout">Sign Out</string>
     <string name="navigation_drawer_about">About</string>

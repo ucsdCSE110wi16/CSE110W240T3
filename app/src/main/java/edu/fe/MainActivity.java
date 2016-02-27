@@ -189,14 +189,19 @@ public class MainActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if(id == R.id.nav_login) {
-            // LOGIN BOYS
-            ParseLoginBuilder builder = new ParseLoginBuilder(this);
-            startActivityForResult(builder.build(), LOGIN_REQUEST_CODE);
-        } else
-        if(id == R.id.nav_signout) {
-            ParseUser.logOut();
-            checkLoginInformation();
+        switch(id) {
+            case R.id.nav_login: {
+                // LOGIN BOYS
+                ParseLoginBuilder builder = new ParseLoginBuilder(this);
+                startActivityForResult(builder.build(), LOGIN_REQUEST_CODE);
+            }
+            case R.id.nav_signout: {
+                ParseUser.logOut();
+                checkLoginInformation();
+            }
+            case R.id.nav_about: {
+                showAboutDialog();
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -241,6 +246,14 @@ public class MainActivity
     @Override
     public void onDialogFragmentInteraction(Uri uri) {
         Log.d("DEBUG", "onFragmentInteraction");
+    }
+
+    void showAboutDialog() {
+        new MaterialDialog.Builder(this)
+                .title("About Project FE")
+                .content(R.string.about_popup_content)
+                .positiveText("Close")
+                .show();
     }
 
     void showDialog() {

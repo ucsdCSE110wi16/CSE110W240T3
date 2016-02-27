@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single"/>
-    <group android:checkableBehavior="none">
+    <group android:id="@+id/nav_items_group" android:checkableBehavior="single"/>
+    <group android:id="@+id/nav_account_group" android:checkableBehavior="none">
         <item android:id="@+id/nav_login"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/navigation_drawer_login"/>
@@ -9,6 +9,11 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/navigation_drawer_signout"
             android:visible="false"/>
+    </group>
+    <group android:id="@+id/nav_about_group">
+        <item android:id="@+id/nav_about"
+              android:icon ="@drawable/ic_menu_manage"
+              android:title="@string/navigation_drawer_about"/>
     </group>
 
 

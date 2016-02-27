@@ -1,25 +1,18 @@
 package edu.fe;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.parse.ParseImageView;
 import com.parse.ParseQueryAdapter;
-import com.vorph.anim.AnimUtils;
 
-import java.util.List;
 import java.util.Random;
 
-import bolts.Continuation;
-import bolts.Task;
 import edu.fe.backend.FoodItem;
 
 /**

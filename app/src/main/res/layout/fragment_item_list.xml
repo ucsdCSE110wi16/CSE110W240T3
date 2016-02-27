@@ -11,6 +11,6 @@
     android:paddingRight="16dp"
     android:background="#ffffff"
     app:layoutManager="LinearLayoutManager"
-    tools:context="edu.fe.ItemListFragment"
+    tools:context=".ItemListFragment"
     tools:listitem="@layout/entity_food_item" />
 

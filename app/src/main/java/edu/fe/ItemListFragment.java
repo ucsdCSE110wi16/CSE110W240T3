@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +13,8 @@ import android.view.ViewGroup;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
+
+import java.util.Date;
 
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
@@ -26,9 +27,60 @@ import edu.fe.backend.FoodItem;
  */
 public class ItemListFragment extends Fragment {
 
-    private static final String ARG_CATEGORY_ID = "category-id";
+    public static class Builder {
+        private String mCategoryId = null;
+        private int mLimit = 0;
+        private String mSearchTerm = null;
+        private String mMaxDate = null;
 
-    private String mCategoryId = "";
+        public Builder() {
+        }
+
+        public Builder setCategory(Category category) {
+            if(category != null)
+                mCategoryId = category.getObjectId();
+
+            return this;
+        }
+
+        public Builder setQueryLimit(int limit) {
+            if(limit > 0)
+                mLimit = limit;
+
+            return this;
+        }
+
+        public Builder setSearchTerm(String search) {
+            mSearchTerm = search;
+            return this;
+        }
+
+        public Builder setMaxDate(Date date) {
+            mMaxDate = date.toString();
+            return this;
+        }
+
+        public ItemListFragment build() {
+            ItemListFragment fragment = new ItemListFragment();
+            Bundle args = new Bundle();
+            args.putString(ARG_CATEGORY_ID, mCategoryId);
+            args.putInt(ARG_QUERY_LIMIT, mLimit);
+            args.putString(ARG_SEARCH_TERM, mSearchTerm);
+            args.putString(ARG_MAX_DATE, mMaxDate);
+            fragment.setArguments(args);
+            return fragment;
+        }
+    }
+
+    private static final String ARG_CATEGORY_ID = "category-id";
+    private static final String ARG_QUERY_LIMIT = "query-limit";
+    private static final String ARG_SEARCH_TERM = "search-term";
+    private static final String ARG_MAX_DATE = "max-date";
+
+    private String mCategoryId = null;
+    private String mSearchTerm = null;
+    private Date mMaxDate = null;
+    private int mQueryLimit = 0;
     private FoodItemRecyclerAdapter mAdapter;
     private OnListFragmentInteractionListener mListener;
 
@@ -39,25 +91,14 @@ public class ItemListFragment extends Fragment {
     public ItemListFragment() {
     }
 
-    public static ItemListFragment newInstance(Category category) {
-        return newInstance(category.getObjectId());
-    }
-
-    public static ItemListFragment newInstance(String categoryId ) {
-        ItemListFragment fragment = new ItemListFragment();
-        Bundle args = new Bundle();
-
-        args.putString(ARG_CATEGORY_ID, categoryId);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         if (getArguments() != null) {
             mCategoryId = getArguments().getString(ARG_CATEGORY_ID);
+            mQueryLimit = getArguments().getInt(ARG_QUERY_LIMIT);
+            mSearchTerm = getArguments().getString(ARG_SEARCH_TERM);
         }
 
     }
@@ -75,7 +116,16 @@ public class ItemListFragment extends Fragment {
                 ParseQuery<FoodItem> query = new ParseQuery<FoodItem>(FoodItem.class);
                 Category c = ParseObject.createWithoutData(Category.class, mCategoryId);
                 query.fromLocalDatastore();
-                query.whereEqualTo(FoodItem.CATEGORY, c);
+                if(mCategoryId != null && !mCategoryId.isEmpty())
+                    query.whereEqualTo(FoodItem.CATEGORY, c);
+                if(mQueryLimit > 0) {
+                    query.setLimit(mQueryLimit);
+                }
+                if(mSearchTerm != null && !mSearchTerm.isEmpty())
+                    query.whereMatches(FoodItem.NAME, mSearchTerm);
+                if(mMaxDate != null) {
+                    query.whereLessThanOrEqualTo(FoodItem.EXPIRATION_DATE, mMaxDate);
+                }
                 query.orderByAscending(FoodItem.EXPIRATION_DATE);
                 return query;
             }

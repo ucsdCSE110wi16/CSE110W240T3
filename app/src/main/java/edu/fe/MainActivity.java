@@ -201,8 +201,18 @@ public class MainActivity
                 break;
             }
             case R.id.nav_signout: {
-                ParseUser.logOut();
-                checkLoginInformation();
+                new MaterialDialog.Builder(this)
+                        .title("Are you sure?")
+                        .positiveText(android.R.string.yes)
+                        .negativeText(android.R.string.cancel)
+                        .content("Your data will no longer be saved to the cloud")
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                ParseUser.logOut();
+                                checkLoginInformation();
+                            }
+                        }).build().show();
                 break;
             }
             case R.id.nav_about: {

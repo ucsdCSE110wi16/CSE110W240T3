@@ -6,13 +6,49 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.TypedValue;
+import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import edu.fe.R;
 
 public class ResUtils {
+
+    final static int SEVENDAYS = 604800;
+    final static int ONEDAY = 86400;
+    final static int SEVENDAYS_MS = SEVENDAYS * 1000;
+    final static int ONEDAY_MS = ONEDAY * 1000;
+
+    public static void formatExpirationDate(Context context, TextView textView, Date date) {
+        Date current = new Date();
+
+        if(current.compareTo(date) <= 0) {
+            // expired already
+            textView.setText("Expired");
+            textView.setTextColor(context.getResources().getColor(R.color.red_500));
+            return;
+        }
+
+        long delta = date.getTime() - current.getTime();
+        if(delta > SEVENDAYS_MS) {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy");
+            textView.setText("Expires on " + sdf.format(date));
+            textView.setTextColor(context.getResources().getColor(R.color.grey_500));
+            return;
+        } else if (delta > ONEDAY_MS){
+            // find how many days we have
+            long numDays = delta / ONEDAY_MS;
+            textView.setText("Expires in " + numDays + " days");
+            textView.setTextColor(context.getResources().getColor(R.color.grey_500));
+            return;
+        } else {
+            textView.setText("Expires Today");
+            textView.setTextColor(context.getResources().getColor(R.color.red_300));
+        }
+    }
 
     public static int getPrimaryColor(Context context) {
         return fetchColor(context, R.attr.colorPrimary);

@@ -193,7 +193,6 @@ public class MainActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         switch(id) {
             case R.id.nav_login: {
                 // LOGIN BOYS

@@ -29,10 +29,12 @@
     <string name="categorySelect">Please select a category</string>
     <string name="expirationEntry">Set expiration date</string>
     <string name="hintFoodEntry"> e.g Milk, Honey, Lasagna</string>
-    <string name="submitEntry">Submit</string>
-    <string name="cancelEntry">Cancel</string>
+    <string name="submitEntry">Submit item</string>
+    <string name="cancelEntry">Cancel entry</string>
     <string name="expirationEntryDate">MM/DD/YY</string>
-
+    <string name="quantityText">Enter quantity</string>
+    <string name="enterHereText">Enter Here</string>
+    <string name="takePicture">Add a photo</string>
     <string name="about_popup_title">About Project FE</string>
     <string name="about_popup_content">
         General Development:\n
@@ -66,6 +68,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_entry">entryActivity</string>
+    <string name="title_activity_camera">CameraActivity</string>
 
 </resources>
 

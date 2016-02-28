@@ -32,13 +32,13 @@ import edu.fe.backend.FoodItem;
 import lib.material.picker.date.DatePickerDialog;
 import lib.material.util.TypefaceHelper;
 
-public class entryActivity extends AppCompatActivity {
+public class EntryActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int ACTION_TAKE_PHOTO_B = 1;
     private static final String JPEG_FILE_PREFIX = "IMG_";
     private static final String JPEG_FILE_SUFFIX = ".jpg";
-    private static final String TAG = entryActivity.class.getSimpleName();
+    private static final String TAG = EntryActivity.class.getSimpleName();
 
     private ImageButton mImageView;
     private String mCurrentPhotoPath;
@@ -81,7 +81,7 @@ public class entryActivity extends AppCompatActivity {
         dateField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog.Builder(entryActivity.this)
+                new DatePickerDialog.Builder(EntryActivity.this)
                         .listener(onDateSetListener)
                         .setCalendar(Calendar.getInstance())
                         .show();

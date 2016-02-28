@@ -83,7 +83,9 @@ public class MainActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDialog();
+                //showDialog();
+                Intent i = new Intent(getApplicationContext(), entryActivity.class);
+                startActivity(i);
             }
         });
 

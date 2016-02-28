@@ -84,7 +84,7 @@ public class MainActivity
             @Override
             public void onClick(View view) {
                 //showDialog();
-                Intent i = new Intent(getApplicationContext(), entryActivity.class);
+                Intent i = new Intent(getApplicationContext(), EntryActivity.class);
                 startActivity(i);
             }
         });

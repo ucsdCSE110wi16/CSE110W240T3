@@ -26,4 +26,10 @@
         <item name="colorControlHighlight">@color/pink_100</item>
     </style>
 
+    <style name="picCustomButton" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">@color/indigo_100</item>
+        <item name="colorButtonNormal">@color/indigo_400</item>
+    </style>
+
+
 </resources>

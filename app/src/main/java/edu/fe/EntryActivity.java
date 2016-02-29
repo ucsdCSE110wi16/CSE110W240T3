@@ -82,8 +82,8 @@ public class EntryActivity extends AppCompatActivity {
             }
         });
 
-        final SpinAdapter adapter = new SpinAdapter(this, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        final SpinAdapter adapter = new SpinAdapter(this, R.layout.custom_spinner);
+        adapter.setDropDownViewResource(R.layout.custom_dropdown_item);
         spinner.setAdapter(adapter);
 
         mImageView.getLayoutParams().height = 800;

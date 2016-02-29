@@ -117,6 +117,7 @@ public class EntryActivity extends AppCompatActivity {
                         Category c = adapter.getCategory(spinner.getSelectedItemPosition());
                         f.setCategory(c);
                         f.setName(nameField.getText().toString());
+                        f.setQuantity(Integer.parseInt(quantityField.getText().toString()));
                         f.pinInBackground();
                         f.saveEventually();
                         finish();

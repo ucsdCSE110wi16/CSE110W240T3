@@ -1,25 +1,21 @@
 package edu.fe;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.ParseImageView;
 import com.parse.ParseQueryAdapter;
-import com.vorph.anim.AnimUtils;
 
-import java.util.List;
+import java.util.Date;
 import java.util.Random;
 
-import bolts.Continuation;
-import bolts.Task;
 import edu.fe.backend.FoodItem;
+import edu.fe.util.ResUtils;
 
 /**
  * Created by david on 1/29/2016.
@@ -57,16 +53,13 @@ public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem,
     public void onBindViewHolder(final FoodItemViewHolder holder, int position) {
         FoodItem item = getItem(position);
         holder.foodItem = item;
-        item.getImageInBackground().onSuccess(new Continuation<Bitmap, Object>() {
-            @Override
-            public Object then(Task<Bitmap> task) throws Exception {
-                holder.imageView.setImageBitmap(task.getResult());
-                return null;
-            }
-        });
+        holder.imageView.setParseFile(item.getImageLazy());
+        holder.imageView.loadInBackground();
         holder.nameView.setText(item.getName());
-        if(item.getExpirationDate() != null)
-            holder.expirationView.setText(item.getExpirationDate().toString());
+        if(item.getExpirationDate() != null) {
+            //[holder.expirationView.setText(item.getExpirationDate().toString());
+            ResUtils.formatExpirationDate(mContext, holder.expirationView, item.getExpirationDate());
+        }
         holder.extraInfoView.setText("Extra Info");
 
 
@@ -81,7 +74,7 @@ public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem,
                 }
             }
         });
-
+    /*
         if (!holder.isDisplayed) {
             holder.isDisplayed = true;
             holder.view.setVisibility(View.INVISIBLE);
@@ -110,6 +103,7 @@ public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem,
                     })
                     .start();
         }
+        */
     }
 
     /**
@@ -119,7 +113,7 @@ public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem,
         // Layout containing all items.
         // This is a CardView in the xml file.
         public final View view;
-        public final ImageView imageView;
+        public final ParseImageView imageView;
         public final TextView nameView;
         public final TextView expirationView;
         public final TextView extraInfoView;
@@ -131,7 +125,7 @@ public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem,
         public FoodItemViewHolder(View view) {
             super(view);
             this.view = view;
-            this.imageView = (ImageView) view.findViewById(R.id.food_image);
+            this.imageView = (ParseImageView) view.findViewById(R.id.food_image);
             this.nameView = (TextView) view.findViewById(R.id.header);
             this.expirationView = (TextView) view.findViewById(R.id.header_2);
             this.extraInfoView = (TextView) view.findViewById(R.id.header_3);

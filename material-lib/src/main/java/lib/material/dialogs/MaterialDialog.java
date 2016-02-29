@@ -53,7 +53,7 @@ import lib.material.dialogs.internal.MDTintHelper;
 import lib.material.dialogs.internal.ThemeSingleton;
 import lib.material.dialogs.util.DialogUtils;
 import lib.material.dialogs.util.RippleHelper;
-import lib.material.dialogs.util.TypefaceHelper;
+import lib.material.util.TypefaceHelper;
 
 /**
  * @author Aidan Follestad (afollestad)

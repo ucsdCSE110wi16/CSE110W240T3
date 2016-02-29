@@ -7,9 +7,10 @@
     android:name="edu.fe.ItemListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:background="#ffffff"
     app:layoutManager="LinearLayoutManager"
-    tools:context="edu.fe.ItemListFragment"
+    tools:context=".ItemListFragment"
     tools:listitem="@layout/entity_food_item" />
 

@@ -4,21 +4,19 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.parse.Parse;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
+import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
 
 /**
@@ -29,12 +27,62 @@ import edu.fe.backend.FoodItem;
  */
 public class ItemListFragment extends Fragment {
 
-    private static final String ARG_COLUMN_COUNT = "column-count";
+    public static class Builder {
+        private String mCategoryId = null;
+        private int mLimit = 0;
+        private String mSearchTerm = null;
+        private String mMaxDate = null;
 
-    private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+        public Builder() {
+        }
 
+        public Builder setCategory(Category category) {
+            if(category != null)
+                mCategoryId = category.getObjectId();
+
+            return this;
+        }
+
+        public Builder setQueryLimit(int limit) {
+            if(limit > 0)
+                mLimit = limit;
+
+            return this;
+        }
+
+        public Builder setSearchTerm(String search) {
+            mSearchTerm = search;
+            return this;
+        }
+
+        public Builder setMaxDate(Date date) {
+            mMaxDate = date.toString();
+            return this;
+        }
+
+        public ItemListFragment build() {
+            ItemListFragment fragment = new ItemListFragment();
+            Bundle args = new Bundle();
+            args.putString(ARG_CATEGORY_ID, mCategoryId);
+            args.putInt(ARG_QUERY_LIMIT, mLimit);
+            args.putString(ARG_SEARCH_TERM, mSearchTerm);
+            args.putString(ARG_MAX_DATE, mMaxDate);
+            fragment.setArguments(args);
+            return fragment;
+        }
+    }
+
+    private static final String ARG_CATEGORY_ID = "category-id";
+    private static final String ARG_QUERY_LIMIT = "query-limit";
+    private static final String ARG_SEARCH_TERM = "search-term";
+    private static final String ARG_MAX_DATE = "max-date";
+
+    private String mCategoryId = null;
+    private String mSearchTerm = null;
+    private Date mMaxDate = null;
+    private int mQueryLimit = 0;
     private FoodItemRecyclerAdapter mAdapter;
+    private OnListFragmentInteractionListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -43,22 +91,16 @@ public class ItemListFragment extends Fragment {
     public ItemListFragment() {
     }
 
-    public static ItemListFragment newInstance(int columnCount) {
-        ItemListFragment fragment = new ItemListFragment();
-        Bundle args = new Bundle();
-
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            mCategoryId = getArguments().getString(ARG_CATEGORY_ID);
+            mQueryLimit = getArguments().getInt(ARG_QUERY_LIMIT);
+            mSearchTerm = getArguments().getString(ARG_SEARCH_TERM);
         }
+
     }
 
     @Override
@@ -67,34 +109,48 @@ public class ItemListFragment extends Fragment {
     {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+        mAdapter = new FoodItemRecyclerAdapter(new ParseQueryAdapter.QueryFactory<FoodItem>() {
 
-            if (mColumnCount <= 1) {
-                LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-                layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                recyclerView.setLayoutManager(layoutManager);
-            }
-            else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-
-            mAdapter = new FoodItemRecyclerAdapter(new ParseQueryAdapter.QueryFactory<FoodItem>() {
-
-                @Override
-                public ParseQuery<FoodItem> create() {
-                    ParseQuery<FoodItem> query = new ParseQuery<FoodItem>(FoodItem.class);
-                    query.orderByAscending(FoodItem.EXPIRATION_DATE);
-
-                    return query;
+            @Override
+            public ParseQuery<FoodItem> create() {
+                ParseQuery<FoodItem> query = new ParseQuery<FoodItem>(FoodItem.class);
+                Category c = ParseObject.createWithoutData(Category.class, mCategoryId);
+                query.fromLocalDatastore();
+                if(mCategoryId != null && !mCategoryId.isEmpty())
+                    query.whereEqualTo(FoodItem.CATEGORY, c);
+                if(mQueryLimit > 0) {
+                    query.setLimit(mQueryLimit);
                 }
-            }, false, mListener, this.getActivity());
+                if(mSearchTerm != null && !mSearchTerm.isEmpty())
+                    query.whereMatches(FoodItem.NAME, mSearchTerm);
+                if(mMaxDate != null) {
+                    query.whereLessThanOrEqualTo(FoodItem.EXPIRATION_DATE, mMaxDate);
+                }
+                query.orderByAscending(FoodItem.EXPIRATION_DATE);
+                return query;
+            }
+        }, false, mListener, getActivity());
+
+
+        if (view instanceof RecyclerView) {
+            RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setAdapter(mAdapter);
         }
         return view;
     }
+
+    @Override
+    public void onResume() {
+        //
+        super.onResume();
+    }
+
+    @Override
+    public void onStart() {
+        //mAdapter.fireOnDataSetChanged();
+        super.onStart();
+    }
+
 
 
     @Override
@@ -129,6 +185,7 @@ public class ItemListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mAdapter = null;
     }
 
     /**

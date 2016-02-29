@@ -323,5 +323,16 @@
     <color name="black_p20">#33000000</color>
 
 
+    <!-- Color style -->
+    <color name="ssd_orange">#D69677</color>
+    <color name="ssd_blue_gray">#537992</color>
+    <color name="ssd_tan">#D9D4C2</color>
+    <color name="ssd_dark_blue">#4D6070</color>
+    <color name="ssd_brown">#A1847A</color>
+    <color name="ssd_gray">#C1BEB1</color>
+
+
+
+
 </resources>
 

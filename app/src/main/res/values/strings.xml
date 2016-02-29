@@ -14,13 +14,41 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="navigation_drawer_categories">Categories</string>
+    <string name="navigation_drawer_expiring">Expiring Soon</string>
+
+    <string name="navigation_drawer_login">Login</string>
+    <string name="navigation_drawer_signout">Sign Out</string>
+    <string name="navigation_drawer_about">About</string>
+
+    <string name="navigation_drawer_default_name">Local User</string>
+    <string name="navigation_drawer_default_email">Please login or sign up</string>
+
     <string name="entryPopUp">Input a food item</string>\
     <string name="foodEntry">Enter a food item</string>
     <string name="categorySelect">Please select a category</string>
     <string name="expirationEntry">Set expiration date</string>
     <string name="hintFoodEntry"> e.g Milk, Honey, Lasagna</string>
-    <string name="submitEntry">Submit</string>
-    <string name="cancelEntry">Cancel</string>
+    <string name="submitEntry">Submit item</string>
+    <string name="cancelEntry">Cancel entry</string>
+    <string name="expirationEntryDate">MM/DD/YY</string>
+    <string name="quantityText">Enter quantity</string>
+    <string name="enterHereText">Enter Here</string>
+    <string name="takePicture">Add a photo</string>
+    <string name="about_popup_title">About Project FE</string>
+    <string name="about_popup_content">
+        General Development:\n
+        Phuong Nguyen\n
+        David Zech\n
+        \n
+        Backend Development:\n
+        Brian Kim\n
+        Kevin Wong\n
+        \n
+        UI Development:\n
+        Jimmy Gong\n
+        Theano Georgoulakis
+    </string>
 
     <string-array name="category_array">
         <item>Meat</item>
@@ -36,8 +64,12 @@
         <item>Misc</item>
     </string-array>
 
+    <string name="expired_date">Expired</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_entry">entryActivity</string>
+    <string name="title_activity_camera">CameraActivity</string>
 
 </resources>
 

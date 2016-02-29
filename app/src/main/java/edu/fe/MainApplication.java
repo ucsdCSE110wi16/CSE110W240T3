@@ -13,6 +13,7 @@ import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
 
 /**
+ *
  * Created by david on 1/28/2016.
  */
 public class MainApplication extends Application {

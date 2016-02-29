@@ -16,7 +16,7 @@
         android:minHeight="156dp"
         android:orientation="vertical">
 
-        <ImageView
+        <com.parse.ParseImageView
             android:id="@+id/category_thumbnail"
             android:layout_width="match_parent"
             android:layout_height="156dp" />

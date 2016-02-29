@@ -16,7 +16,7 @@
         android:orientation="horizontal"
         android:weightSum="1.0">
 
-        <ImageView
+        <com.parse.ParseImageView
             android:id="@+id/food_image"
             android:layout_height="128dp"
             android:layout_width="128dp"

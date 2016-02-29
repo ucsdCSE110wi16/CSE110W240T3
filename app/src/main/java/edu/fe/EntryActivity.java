@@ -115,9 +115,11 @@ public class EntryActivity extends AppCompatActivity {
                     case R.id.submitEntry:
                         FoodItem f = new FoodItem();
                         Category c = adapter.getCategory(spinner.getSelectedItemPosition());
+                        if( quantityField.getText().toString().trim().length() >0) {
+                            f.setQuantity(Integer.parseInt(quantityField.getText().toString()));
+                        }
                         f.setCategory(c);
                         f.setName(nameField.getText().toString());
-                        f.setQuantity(Integer.parseInt(quantityField.getText().toString()));
                         f.pinInBackground();
                         f.saveEventually();
                         finish();

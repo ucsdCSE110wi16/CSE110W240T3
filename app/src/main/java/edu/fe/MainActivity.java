@@ -296,7 +296,7 @@ public class MainActivity
         if (customView == null) return;
 
         final Spinner spinner = (Spinner) customView.findViewById(R.id.spinner);
-        final EditText nameField = (EditText)customView.findViewById(R.id.editText);
+        final EditText nameField = (EditText)customView.findViewById(R.id.itemEditText);
 
         final SpinAdapter adapter = new SpinAdapter(this, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

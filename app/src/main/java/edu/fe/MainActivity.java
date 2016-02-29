@@ -248,9 +248,14 @@ public class MainActivity
         }
     }
 
+    public boolean isLoggedIn() {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        return currentUser != null && currentUser.isAuthenticated() && !ParseAnonymousUtils.isLinked(currentUser);
+    }
+
     private void checkLoginInformation() {
         ParseUser currentUser = ParseUser.getCurrentUser();
-        if(currentUser != null && currentUser.isAuthenticated() && !ParseAnonymousUtils.isLinked(currentUser)) {
+        if(isLoggedIn()) {
             // we are logged in
             loginNameView.setText("Hello " + currentUser.getString("name"));
             loginEmailView.setText(currentUser.getEmail());

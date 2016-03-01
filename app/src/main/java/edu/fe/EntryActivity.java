@@ -6,17 +6,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Activity;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -30,7 +27,6 @@ import java.util.Date;
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
 import lib.material.picker.date.DatePickerDialog;
-import lib.material.util.TypefaceHelper;
 
 public class EntryActivity extends AppCompatActivity {
 

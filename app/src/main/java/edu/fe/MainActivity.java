@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -128,6 +129,22 @@ public class MainActivity
         });
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        this.getFragmentManager()
+                .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+
+        // OnOrientationChanges:
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+        }
+        else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+
+        }
+    }
 
 
     @Override
@@ -139,7 +156,8 @@ public class MainActivity
         }
 
         int count = getFragmentManager().getBackStackEntryCount();
-        if(count > 0) {
+        boolean hasAtLeastOneBackEntry = count > 0;
+        if (hasAtLeastOneBackEntry) {
             getFragmentManager().popBackStackImmediate();
         } else {
             super.onBackPressed();
@@ -147,23 +165,22 @@ public class MainActivity
 }
 
     private void loadExpiringSoon() {
-        FragmentManager fm = getFragmentManager();
-        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        FragmentTransaction transaction = fm.beginTransaction();
+        FragmentManager fragmentManager = getFragmentManager();
+
         Fragment itemFragment = new ItemListFragment.Builder()
-                                    .setQueryLimit(10) // set max date
-                                    .build();
+                                            .setQueryLimit(10) // set max date
+                                            .build();
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.container, itemFragment, "expiringList").commit();
     }
 
     private void loadCategories() {
-        FragmentManager fm = getFragmentManager();
-        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        fm.beginTransaction();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        FragmentManager fragmentManager = getFragmentManager();
+
         Fragment categoryFragment = new CategoryListFragment();
-        fragmentTransaction.replace(R.id.container, categoryFragment, "categoryList").
-                commit();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container, categoryFragment, "categoryList").commit();
     }
 
     @Override

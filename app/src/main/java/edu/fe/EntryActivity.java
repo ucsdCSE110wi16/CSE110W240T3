@@ -3,22 +3,35 @@ package edu.fe;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatImageButton;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
+import edu.fe.backend.FoodItem;
 import lib.material.picker.date.DatePickerDialog;
 
 public class EntryActivity extends AppCompatActivity {
@@ -27,39 +40,91 @@ public class EntryActivity extends AppCompatActivity {
     private static final int ACTION_TAKE_PHOTO_B = 1;
     private static final String TAG = EntryActivity.class.getSimpleName();
 
-    private ImageButton mImageView;
+    private ImageView mImageView;
     private String mCurrentPhotoPath;
 
+    Button mCategoryButton;
+    AppCompatImageButton mCameraButton;
+    EditText mNameField;
+    EditText mQuantityField;
+    TextView mDateText;
+
+    Date mSelectedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_entry);
+        setContentView(R.layout.activity_entry);
+
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.entry_toolbar);
+        setSupportActionBar(mToolbar);
+//        mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
         setTitle("Add an item");
 
-//        final Spinner spinner = (Spinner) findViewById(R.id.categorySpinner);
-//        final EditText nameField = (EditText) findViewById(R.id.itemEditText);
-//        final EditText quantityField = (EditText) findViewById(R.id.quantityAmtEditText);
-//        final TextView dateField = (TextView) findViewById(R.id.expirationDateTextView);
-//        mImageView = (ImageButton) findViewById(R.id.foodImageView);
-//        String currentDateTimeString = DateFormat.getDateInstance().format(new Date());
-//        dateField.setText(currentDateTimeString);
-//        dateField.setTypeface(null, Typeface.BOLD);
+        mImageView = (ImageView) findViewById(R.id.entry_thumbnail);
 
-//        Toolbar mToolbar = (Toolbar) findViewById(R.id.entryToolbar);
-//        setSupportActionBar(mToolbar);
-//        mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        // Set the current date to the Date Field.
+        mSelectedDate = new Date();
+        String currentDateTime = DateFormat.getDateInstance().format(new Date());
+        mDateText = (TextView) findViewById(R.id.item_date_text);
+        mDateText.setText(currentDateTime);
+        mDateText.setTypeface(null, Typeface.BOLD);
 
-//        mImageView.setImageResource(R.drawable.ic_menu_camera);
+        mNameField = (EditText) findViewById(R.id.item_name_edit);
+        mQuantityField = (EditText) findViewById(R.id.item_quantity_edit);
 
-//        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                finish();
-//            }
-//        });
+        mCategoryButton = (Button) findViewById(R.id.item_select_category);
+        mCameraButton = (AppCompatImageButton) findViewById(R.id.item_camera_button);
+        AppCompatImageButton dateButton = (AppCompatImageButton) findViewById(R.id.item_date_button);
+
+        final DatePickerDialog.OnDateSetListener onDateSetListener =
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override public void onDateSet(DatePickerDialog.DateAttributeSet set) {
+//                        String date = String.format("%d/%d/%d", set.month + 1, set.day, set.year);
+                        mSelectedDate.setDate(set.day);
+                        mSelectedDate.setMonth(set.month + 1);
+                        mSelectedDate.setYear(set.year);
+                        mDateText.setText(DateFormat.getDateInstance().format(mSelectedDate));
+                    }
+                };
+
+        dateButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                new DatePickerDialog.Builder(EntryActivity.this)
+                        .listener(onDateSetListener)
+                        .setCalendar(Calendar.getInstance())
+                        .show();
+            }
+        });
+
+        mCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dispatchTakePictureIntent(ACTION_TAKE_PHOTO_B);
+            }
+        });
+
+        mCategoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new MaterialDialog.Builder(EntryActivity.this)
+                        .theme(Theme.LIGHT)
+                        .title(R.string.entry_selectable_category)
+                        .items(R.array.category_array)
+                        .itemsCallback(new MaterialDialog.ListCallback() {
+                            @Override
+                            public void onSelection(MaterialDialog dialog,
+                                                    View view,
+                                                    int which,
+                                                    CharSequence text) {
+                                mCategoryButton.setText(text);
+                            }
+                        })
+                        .show();
+            }
+        });
 
 //        final SpinAdapter adapter = new SpinAdapter(this, R.layout.custom_spinner);
 //        adapter.setDropDownViewResource(R.layout.custom_dropdown_item);
@@ -67,53 +132,6 @@ public class EntryActivity extends AppCompatActivity {
 
 //        mImageView.getLayoutParams().height = 800;
 //        mImageView.getLayoutParams().width = 600;
-
-        final DatePickerDialog.OnDateSetListener onDateSetListener =
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePickerDialog.DateAttributeSet set) {
-                        String date = String.format("%d/%d/%d", set.month + 1, set.day, set.year);
-//                        dateField.setText(date);
-                    }
-                };
-
-//        dateField.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                new DatePickerDialog.Builder(EntryActivity.this)
-//                        .listener(onDateSetListener)
-//                        .setCalendar(Calendar.getInstance())
-//                        .show();
-//            }
-//        });
-
-//        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                switch (item.getItemId()) {
-//                    case R.id.submitEntry:
-//                        FoodItem f = new FoodItem();
-//                        Category c = adapter.getCategory(spinner.getSelectedItemPosition());
-//                        if( quantityField.getText().toString().trim().length() >0) {
-//                            f.setQuantity(Integer.parseInt(quantityField.getText().toString()));
-//                        }
-//                        f.setCategory(c);
-//                        f.setName(nameField.getText().toString());
-//                        f.pinInBackground();
-//                        f.saveEventually();
-//                        finish();
-//                        return true;
-//                }
-//                return false;
-//            }
-//        });
-
-//        mImageView.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v) {
-//                dispatchTakePictureIntent(ACTION_TAKE_PHOTO_B);
-//            }
-//        });
     }
 
     @Override
@@ -123,6 +141,26 @@ public class EntryActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.entry_submit) {
+            FoodItem foodItem = new FoodItem();
+//            Category category = mCategoryButton.getText();
+//            Category c = adapter.getCategory(spinner.getSelectedItemPosition());
+            if(mQuantityField.getText().toString().trim().length() >0) {
+                foodItem.setQuantity(Integer.parseInt(mQuantityField.getText().toString()));
+            }
+//            foodItem.setCategory(category);
+            foodItem.setExpirationDate(mSelectedDate);
+            foodItem.setName(mNameField.getText().toString());
+            foodItem.pinInBackground();
+            foodItem.saveEventually();
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     private void dispatchTakePictureIntent(int actionCode) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -137,7 +175,6 @@ public class EntryActivity extends AppCompatActivity {
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                     } catch (IOException e) {
                         e.printStackTrace();
-                        f = null;
                         mCurrentPhotoPath = null;
                     }
                     break;

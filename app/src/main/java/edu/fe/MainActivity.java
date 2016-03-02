@@ -22,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -318,7 +317,7 @@ public class MainActivity
         if (customView == null) return;
 
         final Spinner spinner = (Spinner) customView.findViewById(R.id.spinner);
-        final EditText nameField = (EditText)customView.findViewById(R.id.itemEditText);
+//        final EditText nameField = (EditText)customView.findViewById(R.id.itemEditText);
 
         final SpinAdapter adapter = new SpinAdapter(this, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -356,7 +355,7 @@ public class MainActivity
                         FoodItem f = new FoodItem();
                         Category c = adapter.getCategory(spinner.getSelectedItemPosition());
                         f.setCategory(c);
-                        f.setName(nameField.getText().toString());
+//                        f.setName(nameField.getText().toString());
                         f.pinInBackground();
                         f.saveEventually();
                     }

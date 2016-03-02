@@ -23,8 +23,10 @@
 
     <string name="entry_food_name">Enter your food</string>
     <string name="entry_food_quantity">Enter a quantity</string>
-    <string name="option_select_category">select a category</string>
-    <string name="option_select_thumbnail">Select your thumbnail</string>
+    <string name="entry_selectable_category">Select a category</string>
+    <string name="entry_selectable_thumbnail">Select your thumbnail</string>
+    <string name="entry_expiration_date">Expiration date</string>
+    <string name="entry_selectable_date">MM/DD/YY</string>
 
 
     <string name="entryPopUp">Input a food item</string>\

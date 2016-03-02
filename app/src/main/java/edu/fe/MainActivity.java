@@ -175,6 +175,14 @@ public class MainActivity
         fragmentTransaction.replace(R.id.container, categoryFragment, "categoryList").commit();
     }
 
+    private void loadRecipes() {
+        FragmentManager fragmentManager = getFragmentManager();
+
+        Fragment recipeFragment = new RecipeListFragment();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container, recipeFragment, "recipeList").commit();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -236,6 +244,11 @@ public class MainActivity
             case R.id.nav_expiring: {
                 // clear fragment stacks and replace
                 loadExpiringSoon();
+                break;
+            }
+            case R.id.nav_find_recipes: {
+                // clear fragment stacks and replace
+                loadRecipes();
                 break;
             }
         }

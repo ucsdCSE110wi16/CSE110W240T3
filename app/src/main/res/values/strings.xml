@@ -20,6 +20,7 @@
     <string name="navigation_drawer_about">About</string>
     <string name="navigation_drawer_default_name">Local User</string>
     <string name="navigation_drawer_default_email">Please login or sign up</string>
+    <string name="navigation_drawer_find_recipes">Find Recipes</string>
 
     <string name="entry_food_name">Enter your food</string>
     <string name="entry_food_quantity">Enter a quantity</string>

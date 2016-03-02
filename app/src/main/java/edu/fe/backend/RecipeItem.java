@@ -7,15 +7,15 @@ import java.io.IOException;
 public class RecipeItem {
     private String name;
     private String missingIngredients;
-    private URL url;
+    private String url;
     private String cookingTime = "";
 
     public RecipeItem(String nm, String missIng, String cTime,
-                      String addr) throws IOException{
+                      String addr) {
         name = nm;
         missingIngredients = missIng;
         cookingTime = cTime;
-        url = new URL(addr);
+        url = addr;
     }
 
     public String getName() {
@@ -27,7 +27,7 @@ public class RecipeItem {
         return missingIngredients;
     }
 
-    public URL getUrl() {
+    public String getUrl() {
         return url;
     }
 

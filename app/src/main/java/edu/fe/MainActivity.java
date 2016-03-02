@@ -84,8 +84,8 @@ public class MainActivity
             @Override
             public void onClick(View view) {
                 //showDialog();
-                Intent i = new Intent(getApplicationContext(), EntryActivity.class);
-                startActivity(i);
+                Intent intent = new Intent(MainActivity.this, EntryActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -132,16 +132,12 @@ public class MainActivity
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        this.getFragmentManager()
-                .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
-
         // OnOrientationChanges:
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-
+            this.getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
         else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-
+            this.getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
     }
 
@@ -161,7 +157,7 @@ public class MainActivity
         } else {
             super.onBackPressed();
         }
-}
+    }
 
     private void loadExpiringSoon() {
         FragmentManager fragmentManager = getFragmentManager();

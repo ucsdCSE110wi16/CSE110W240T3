@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -58,10 +57,11 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry);
 
+        Log.d("DEBUG", "[Entry] Initializing entry");
+
         Toolbar mToolbar = (Toolbar) findViewById(R.id.entry_toolbar);
-        mToolbar.setNavigationOnClickListener(this);
+        mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setTitle("Add an item");
 
@@ -100,6 +100,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
     // Handles all onClick requests:
     @Override
     public void onClick(View view) {
+        Log.d("DEBUG", "calling nav");
         if (view.getId() == R.id.item_date_button) {
             new DatePickerDialog.Builder(EntryActivity.this)
                     .listener(mOnDateSetListener)
@@ -139,6 +140,16 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.entry_submit) {
+            if (mNameField.getText().toString().isEmpty()) {
+                invalidField("must enter food name.");
+                return false;
+            }
+            if (mQuantityField.getText().toString().isEmpty()) {
+                invalidField("must enter quantity.");
+                return false;
+            }
+
+
             FoodItem foodItem = new FoodItem();
 //            Category category = mCategoryButton.getText();
 //            Category c = adapter.getCategory(spinner.getSelectedItemPosition());
@@ -147,10 +158,10 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
             }
 
             // TODO still need to set image and category
-            Bitmap bitmap = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
-            if (null != bitmap) {
-
-            }
+//            Bitmap bitmap = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
+//            if (null != bitmap) {
+//
+//            }
 
             foodItem.setExpirationDate(mSelectedDate);
             foodItem.setName(mNameField.getText().toString());
@@ -159,8 +170,21 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
             finish();
             return true;
         }
+        else if (item.getItemId() == android.R.id.home) {
+            // When the back-arrow button is pressed in toolbar, finish
+            // the activity and go back to the previous one.
+            finish();
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void invalidField(String s) {
+        new MaterialDialog.Builder(this)
+                .content("One or more missing fields: " + s)
+                .title("Invalid Field")
+                .positiveText("dismiss")
+                .show();
     }
 
     private void dispatchTakePictureIntent(int actionCode) {

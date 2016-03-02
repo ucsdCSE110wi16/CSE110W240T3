@@ -16,18 +16,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.Theme;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseUser;
 import com.parse.ui.ParseLoginBuilder;
@@ -35,7 +32,6 @@ import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 
 import bolts.Continuation;
@@ -43,7 +39,6 @@ import bolts.Task;
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
 import edu.fe.util.ResUtils;
-import lib.material.picker.date.DatePickerDialog;
 
 public class MainActivity
         extends AppCompatActivity
@@ -262,7 +257,9 @@ public class MainActivity
 
     public boolean isLoggedIn() {
         ParseUser currentUser = ParseUser.getCurrentUser();
-        return currentUser != null && currentUser.isAuthenticated() && !ParseAnonymousUtils.isLinked(currentUser);
+        return currentUser != null
+                && currentUser.isAuthenticated()
+                && !ParseAnonymousUtils.isLinked(currentUser);
     }
 
     private void checkLoginInformation() {
@@ -300,64 +297,6 @@ public class MainActivity
                 .content(R.string.about_popup_content)
                 .positiveText("Close")
                 .show();
-    }
-
-    void showDialog() {
-        final View customView;
-        try {
-            customView = LayoutInflater.from(this).inflate(R.layout.fragment_entry, null);
-        } catch (InflateException e) {
-            throw new IllegalStateException("This device does not support Web Views.");
-        }
-
-        if (customView == null) return;
-
-        final Spinner spinner = (Spinner) customView.findViewById(R.id.spinner);
-//        final EditText nameField = (EditText)customView.findViewById(R.id.itemEditText);
-
-        final SpinAdapter adapter = new SpinAdapter(this, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        final TextView textView = (TextView) customView.findViewById(R.id.editText2);
-        final DatePickerDialog.OnDateSetListener onDateSetListener =
-                new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePickerDialog.DateAttributeSet set) {
-                String date = String.format("%d/%d/%d", set.day, set.month + 1, set.year);
-                textView.setText(date);
-            }
-        };
-
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog.Builder(MainActivity.this)
-                        .listener(onDateSetListener)
-                        .setCalendar(Calendar.getInstance())
-                        .show();
-            }
-        });
-
-        new MaterialDialog.Builder(this)
-                .theme(Theme.LIGHT)
-                .title(R.string.entryPopUp)
-                .customView(customView, true)
-                .positiveText(android.R.string.ok)
-                .negativeText(android.R.string.cancel)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        FoodItem f = new FoodItem();
-                        Category c = adapter.getCategory(spinner.getSelectedItemPosition());
-                        f.setCategory(c);
-//                        f.setName(nameField.getText().toString());
-                        f.pinInBackground();
-                        f.saveEventually();
-                    }
-                })
-                .show();
-
     }
 
     @Override

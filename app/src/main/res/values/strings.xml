@@ -13,16 +13,21 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="navigation_drawer_categories">Categories</string>
     <string name="navigation_drawer_expiring">Expiring Soon</string>
-
     <string name="navigation_drawer_login">Login</string>
     <string name="navigation_drawer_signout">Sign Out</string>
     <string name="navigation_drawer_about">About</string>
-
     <string name="navigation_drawer_default_name">Local User</string>
     <string name="navigation_drawer_default_email">Please login or sign up</string>
+
+    <string name="entry_food_name">Enter your food</string>
+    <string name="entry_food_quantity">Enter a quantity</string>
+    <string name="entry_selectable_category">Select a category</string>
+    <string name="entry_selectable_thumbnail">Select your thumbnail</string>
+    <string name="entry_expiration_date">Expiration date</string>
+    <string name="entry_selectable_date">MM/DD/YY</string>
+
 
     <string name="entryPopUp">Input a food item</string>\
     <string name="foodEntry">Enter a food item</string>
@@ -34,7 +39,7 @@
     <string name="expirationEntryDate">MM/DD/YY</string>
     <string name="quantityText">Enter quantity</string>
     <string name="enterHereText">Enter Here</string>
-    <string name="takePicture">Add a photo</string>
+    <string name="takePicture">Tap to add a photo</string>
     <string name="about_popup_title">About Project FE</string>
     <string name="about_popup_content">
         General Development:\n
@@ -49,6 +54,9 @@
         Jimmy Gong\n
         Theano Georgoulakis
     </string>
+
+    <string name="new_item_fail">Failed to save item</string>
+    <string name="new_item_success">Successfully saved item</string>
 
     <string-array name="category_array">
         <item>Meat</item>

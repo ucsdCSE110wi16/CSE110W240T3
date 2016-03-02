@@ -6,19 +6,25 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Activity;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatImageButton;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,94 +32,174 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
 import lib.material.picker.date.DatePickerDialog;
-import lib.material.util.TypefaceHelper;
 
-public class EntryActivity extends AppCompatActivity {
+public class EntryActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public static final int RESULT_FAIL = RESULT_FIRST_USER;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int ACTION_TAKE_PHOTO_B = 1;
-    private static final String JPEG_FILE_PREFIX = "IMG_";
-    private static final String JPEG_FILE_SUFFIX = ".jpg";
     private static final String TAG = EntryActivity.class.getSimpleName();
 
-    private ImageButton mImageView;
+    private ImageView mImageView;
     private String mCurrentPhotoPath;
+
+    Button mCategoryButton;
+    AppCompatImageButton mDateButton;
+    AppCompatImageButton mCameraButton;
+    EditText mNameField;
+    EditText mQuantityField;
+    TextView mDateText;
+
+    Date mSelectedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry);
+
+        Log.d("DEBUG", "[Entry] Initializing entry");
+
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.entry_toolbar);
+        mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         setTitle("Add an item");
 
+        mImageView = (ImageView) findViewById(R.id.entry_thumbnail);
 
-        final Spinner spinner = (Spinner) findViewById(R.id.categorySpinner);
-        final EditText nameField = (EditText) findViewById(R.id.itemEditText);
-        final EditText quantityField = (EditText) findViewById(R.id.quantityAmtEditText);
-        final TextView dateField = (TextView) findViewById(R.id.expirationDateTextView);
-        final Button sbtBtn = (Button) findViewById(R.id.sbtBtn);
-        final Button cncBtn = (Button) findViewById(R.id.cancelBtn);
-        final Button imgBtn = (Button) findViewById(R.id.imageButton);
-        mImageView = (ImageButton) findViewById(R.id.foodImageView);
-        String currentDateTimeString = DateFormat.getDateInstance().format(new Date());
-        dateField.setText(currentDateTimeString);
-        dateField.setTypeface(null, Typeface.BOLD);
+        // Set the current date to the Date Field.
+        mSelectedDate = new Date();
+        String currentDateTime = DateFormat.getDateInstance().format(new Date());
+        mDateText = (TextView) findViewById(R.id.item_date_text);
+        mDateText.setText(currentDateTime);
+        mDateText.setTypeface(null, Typeface.BOLD);
 
-        final SpinAdapter adapter = new SpinAdapter(this, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        mNameField = (EditText) findViewById(R.id.item_name_edit);
+        mQuantityField = (EditText) findViewById(R.id.item_quantity_edit);
 
-        mImageView.getLayoutParams().height = 800;
-        mImageView.getLayoutParams().width = 600;
+        mCategoryButton = (Button) findViewById(R.id.item_select_category);
+        mCameraButton = (AppCompatImageButton) findViewById(R.id.item_camera_button);
+        mDateButton = (AppCompatImageButton) findViewById(R.id.item_date_button);
 
-        final DatePickerDialog.OnDateSetListener onDateSetListener =
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePickerDialog.DateAttributeSet set) {
-                        String date = String.format("%d/%d/%d", set.month + 1, set.day, set.year);
-                        dateField.setText(date);
-                    }
-                };
+        mCategoryButton.setOnClickListener(this);
+        mCameraButton.setOnClickListener(this);
+        mDateButton.setOnClickListener(this);
+    }
 
-        dateField.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog.Builder(EntryActivity.this)
-                        .listener(onDateSetListener)
-                        .setCalendar(Calendar.getInstance())
-                        .show();
+    final DatePickerDialog.OnDateSetListener mOnDateSetListener =
+            new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePickerDialog.DateAttributeSet set) {
+            Calendar c = new GregorianCalendar(set.year, set.month, set.day);
+            mSelectedDate = c.getTime();
+            DateFormat df = new SimpleDateFormat("MMM d, yyyy");
+            mDateText.setText(df.format(mSelectedDate));
+        }
+    };
+
+    // Handles all onClick requests:
+    @Override
+    public void onClick(View view) {
+        Log.d("DEBUG", "calling nav");
+        if (view.getId() == R.id.item_date_button) {
+            new DatePickerDialog.Builder(EntryActivity.this)
+                    .listener(mOnDateSetListener)
+                    .setCalendar(Calendar.getInstance())
+                    .show();
+        }
+        else if (view.getId() == R.id.item_camera_button) {
+            dispatchTakePictureIntent(ACTION_TAKE_PHOTO_B);
+        }
+        else if (view.getId() == R.id.item_select_category) {
+            new MaterialDialog.Builder(EntryActivity.this)
+                    .theme(Theme.LIGHT)
+                    .title(R.string.entry_selectable_category)
+                    .items(R.array.category_array)
+                    .itemsCallback(new MaterialDialog.ListCallback() {
+                        @Override
+                        public void onSelection(MaterialDialog dialog,
+                                                View view,
+                                                int which,
+                                                CharSequence text) {
+                            mCategoryButton.setText(text);
+                        }
+                    }).show();
+        }
+        else if (view.getId() == R.id.entry_toolbar) {
+            finish();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_entry, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.entry_submit) {
+            if (mNameField.getText().toString().isEmpty()) {
+                invalidField("must enter food name.");
+                return false;
             }
-        });
-
-        sbtBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                FoodItem f = new FoodItem();
-                Category c = adapter.getCategory(spinner.getSelectedItemPosition());
-                f.setCategory(c);
-                f.setName(nameField.getText().toString());
-                f.pinInBackground();
-                f.saveEventually();
-                finish();
+            if (mQuantityField.getText().toString().isEmpty()) {
+                invalidField("must enter quantity.");
+                return false;
             }
-        });
 
-        cncBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                finish();
+            FoodItem foodItem = new FoodItem();
+//            Category category = mCategoryButton.getText();
+//            Category c = adapter.getCategory(spinner.getSelectedItemPosition());
+            if(mQuantityField.getText().toString().trim().length() >0) {
+                foodItem.setQuantity(Integer.parseInt(mQuantityField.getText().toString()));
             }
-        });
 
-        imgBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                dispatchTakePictureIntent(ACTION_TAKE_PHOTO_B);
+            // TODO still need to set image and category
+//            Bitmap bitmap = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
+//            if (null != bitmap) {
+//
+//            }
+
+            ParseQuery<Category> q = ParseQuery.getQuery(Category.class);
+            q.fromLocalDatastore();
+            q.whereEqualTo(Category.NAME, mCategoryButton.getText());
+            try {
+                Category c = q.getFirst();
+                foodItem.setCategory(c);
+                foodItem.setName(mNameField.getText().toString());
+                foodItem.pinInBackground();
+                foodItem.saveEventually();
+                setResult(RESULT_OK);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                setResult(RESULT_FAIL);
             }
-        });
+
+            finish();
+            return true;
+        }
+        else if (item.getItemId() == android.R.id.home) {
+            // When the back-arrow button is pressed in toolbar, finish
+            // the activity and go back to the previous one.
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void invalidField(String s) {
+        new MaterialDialog.Builder(this)
+                .content("One or more missing fields: " + s)
+                .title("Invalid Field")
+                .positiveText("dismiss")
+                .show();
     }
 
     private void dispatchTakePictureIntent(int actionCode) {
@@ -129,18 +215,15 @@ public class EntryActivity extends AppCompatActivity {
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                     } catch (IOException e) {
                         e.printStackTrace();
-                        f = null;
                         mCurrentPhotoPath = null;
                     }
                     break;
 
                 default:
                     break;
-            } // switch
+            }
 
-            //startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             startActivityForResult(takePictureIntent, actionCode);
-
         }
     }
 
@@ -156,7 +239,6 @@ public class EntryActivity extends AppCompatActivity {
     }
 
     private File createImageFile() throws IOException {
-        // Create an image file name
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
@@ -229,7 +311,7 @@ public class EntryActivity extends AppCompatActivity {
 
 		/* Set bitmap options to scale the image decode target */
         bmOptions.inJustDecodeBounds = false;
-        //bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inSampleSize = scaleFactor;
 
 		/* Decode the JPEG file into a Bitmap */
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);

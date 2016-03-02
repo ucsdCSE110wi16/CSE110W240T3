@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,19 +16,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.Theme;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseUser;
 import com.parse.ui.ParseLoginBuilder;
@@ -35,7 +32,6 @@ import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 
 import bolts.Continuation;
@@ -43,7 +39,6 @@ import bolts.Task;
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
 import edu.fe.util.ResUtils;
-import lib.material.picker.date.DatePickerDialog;
 
 public class MainActivity
         extends AppCompatActivity
@@ -57,6 +52,9 @@ public class MainActivity
     TextView loginEmailView;
     MenuItem loginMenuItem;
     MenuItem signoutMenuItem;
+
+    final static int LOGIN_REQUEST_CODE = 0;
+    final static int NEW_ITEM_REQUEST_CODE = 1;
 
     boolean mIsCategorySelected = false;
     Category mSelectedCategory = null;
@@ -83,9 +81,8 @@ public class MainActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //showDialog();
-                Intent i = new Intent(getApplicationContext(), EntryActivity.class);
-                startActivity(i);
+                Intent intent = new Intent(MainActivity.this, EntryActivity.class);
+                startActivityForResult(intent, NEW_ITEM_REQUEST_CODE);
             }
         });
 
@@ -128,6 +125,18 @@ public class MainActivity
         });
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // OnOrientationChanges:
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            this.getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+        else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            this.getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+    }
 
 
     @Override
@@ -139,31 +148,31 @@ public class MainActivity
         }
 
         int count = getFragmentManager().getBackStackEntryCount();
-        if(count > 0) {
+        boolean hasAtLeastOneBackEntry = count > 0;
+        if (hasAtLeastOneBackEntry) {
             getFragmentManager().popBackStackImmediate();
         } else {
             super.onBackPressed();
         }
-}
+    }
 
     private void loadExpiringSoon() {
-        FragmentManager fm = getFragmentManager();
-        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        FragmentTransaction transaction = fm.beginTransaction();
+        FragmentManager fragmentManager = getFragmentManager();
+
         Fragment itemFragment = new ItemListFragment.Builder()
-                                    .setQueryLimit(10) // set max date
-                                    .build();
+                                            .setQueryLimit(10) // set max date
+                                            .build();
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.container, itemFragment, "expiringList").commit();
     }
 
     private void loadCategories() {
-        FragmentManager fm = getFragmentManager();
-        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        fm.beginTransaction();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        FragmentManager fragmentManager = getFragmentManager();
+
         Fragment categoryFragment = new CategoryListFragment();
-        fragmentTransaction.replace(R.id.container, categoryFragment, "categoryList").
-                commit();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container, categoryFragment, "categoryList").commit();
     }
 
     @Override
@@ -187,8 +196,6 @@ public class MainActivity
 
         return super.onOptionsItemSelected(item);
     }
-
-    final static int LOGIN_REQUEST_CODE = 0;
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -245,12 +252,20 @@ public class MainActivity
                 if(resultCode == RESULT_OK) {
                     checkLoginInformation();
                 }
+            case NEW_ITEM_REQUEST_CODE:
+                if(resultCode == RESULT_OK) {
+                    Alert.snackLong(mContainerView, getString(R.string.new_item_success));
+                } else if(resultCode == EntryActivity.RESULT_FAIL) {
+                    Alert.snackLong(mContainerView, getString(R.string.new_item_fail));
+                }
         }
     }
 
     public boolean isLoggedIn() {
         ParseUser currentUser = ParseUser.getCurrentUser();
-        return currentUser != null && currentUser.isAuthenticated() && !ParseAnonymousUtils.isLinked(currentUser);
+        return currentUser != null
+                && currentUser.isAuthenticated()
+                && !ParseAnonymousUtils.isLinked(currentUser);
     }
 
     private void checkLoginInformation() {
@@ -288,64 +303,6 @@ public class MainActivity
                 .content(R.string.about_popup_content)
                 .positiveText("Close")
                 .show();
-    }
-
-    void showDialog() {
-        final View customView;
-        try {
-            customView = LayoutInflater.from(this).inflate(R.layout.fragment_entry, null);
-        } catch (InflateException e) {
-            throw new IllegalStateException("This device does not support Web Views.");
-        }
-
-        if (customView == null) return;
-
-        final Spinner spinner = (Spinner) customView.findViewById(R.id.spinner);
-        final EditText nameField = (EditText)customView.findViewById(R.id.editText);
-
-        final SpinAdapter adapter = new SpinAdapter(this, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        final TextView textView = (TextView) customView.findViewById(R.id.editText2);
-        final DatePickerDialog.OnDateSetListener onDateSetListener =
-                new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePickerDialog.DateAttributeSet set) {
-                String date = String.format("%d/%d/%d", set.day, set.month + 1, set.year);
-                textView.setText(date);
-            }
-        };
-
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog.Builder(MainActivity.this)
-                        .listener(onDateSetListener)
-                        .setCalendar(Calendar.getInstance())
-                        .show();
-            }
-        });
-
-        new MaterialDialog.Builder(this)
-                .theme(Theme.LIGHT)
-                .title(R.string.entryPopUp)
-                .customView(customView, true)
-                .positiveText(android.R.string.ok)
-                .negativeText(android.R.string.cancel)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        FoodItem f = new FoodItem();
-                        Category c = adapter.getCategory(spinner.getSelectedItemPosition());
-                        f.setCategory(c);
-                        f.setName(nameField.getText().toString());
-                        f.pinInBackground();
-                        f.saveEventually();
-                    }
-                })
-                .show();
-
     }
 
     @Override

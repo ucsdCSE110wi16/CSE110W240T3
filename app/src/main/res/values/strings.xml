@@ -34,7 +34,7 @@
     <string name="expirationEntryDate">MM/DD/YY</string>
     <string name="quantityText">Enter quantity</string>
     <string name="enterHereText">Enter Here</string>
-    <string name="takePicture">Add a photo</string>
+    <string name="takePicture">Tap to add a photo</string>
     <string name="about_popup_title">About Project FE</string>
     <string name="about_popup_content">
         General Development:\n

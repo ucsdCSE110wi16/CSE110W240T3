@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -30,6 +31,26 @@
         <item name="colorControlHighlight">@color/indigo_100</item>
         <item name="colorButtonNormal">@color/indigo_400</item>
     </style>
+
+    <style name="customToolbar" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="actionBarTheme">@style/MyApp.ActionBarTheme</item>
+        <item name="android:textColorPrimary">#ffff</item>
+    </style>
+
+    <style name="MyApp.ActionBarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">@color/white</item>
+    </style>
+
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#FFFF</item>
+    </style>
+
+    <style name="ToolbarColoredBackArrow" parent="AppTheme">
+        <item name="colorControlNormal">@color/white</item>
+    </style>
+
 
 
 </resources>

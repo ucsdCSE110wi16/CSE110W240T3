@@ -55,6 +55,9 @@
         Theano Georgoulakis
     </string>
 
+    <string name="new_item_fail">Failed to save item</string>
+    <string name="new_item_success">Successfully saved item</string>
+
     <string-array name="category_array">
         <item>Meat</item>
         <item>Poultry</item>

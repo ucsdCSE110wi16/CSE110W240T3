@@ -58,6 +58,9 @@ public class MainActivity
     MenuItem loginMenuItem;
     MenuItem signoutMenuItem;
 
+    final static int LOGIN_REQUEST_CODE = 0;
+    final static int NEW_ITEM_REQUEST_CODE = 1;
+
     boolean mIsCategorySelected = false;
     Category mSelectedCategory = null;
 
@@ -85,7 +88,8 @@ public class MainActivity
             public void onClick(View view) {
                 //showDialog();
                 Intent i = new Intent(getApplicationContext(), EntryActivity.class);
-                startActivity(i);
+                //startActivity(i);
+                startActivityForResult(i, NEW_ITEM_REQUEST_CODE);
             }
         });
 
@@ -204,8 +208,6 @@ public class MainActivity
         return super.onOptionsItemSelected(item);
     }
 
-    final static int LOGIN_REQUEST_CODE = 0;
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -260,6 +262,12 @@ public class MainActivity
             case LOGIN_REQUEST_CODE:
                 if(resultCode == RESULT_OK) {
                     checkLoginInformation();
+                }
+            case NEW_ITEM_REQUEST_CODE:
+                if(resultCode == RESULT_OK) {
+                    Alert.snackLong(mContainerView, getString(R.string.new_item_success));
+                } else if(resultCode == EntryActivity.RESULT_FAIL) {
+                    Alert.snackLong(mContainerView, getString(R.string.new_item_fail));
                 }
         }
     }

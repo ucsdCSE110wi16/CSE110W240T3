@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,11 +33,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
 import lib.material.picker.date.DatePickerDialog;
 
 public class EntryActivity extends AppCompatActivity {
-
+    public static final int RESULT_FAIL = RESULT_FIRST_USER;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int ACTION_TAKE_PHOTO_B = 1;
     private static final String TAG = EntryActivity.class.getSimpleName();
@@ -151,10 +154,20 @@ public class EntryActivity extends AppCompatActivity {
                 foodItem.setQuantity(Integer.parseInt(mQuantityField.getText().toString()));
             }
 //            foodItem.setCategory(category);
-            foodItem.setExpirationDate(mSelectedDate);
-            foodItem.setName(mNameField.getText().toString());
-            foodItem.pinInBackground();
-            foodItem.saveEventually();
+            ParseQuery<Category> q = ParseQuery.getQuery(Category.class);
+            q.fromLocalDatastore();
+            q.whereEqualTo(Category.NAME, mCategoryButton.getText());
+            try {
+                Category c = q.getFirst();
+                foodItem.setCategory(c);
+                foodItem.setName(mNameField.getText().toString());
+                foodItem.pinInBackground();
+                foodItem.saveEventually();
+                setResult(RESULT_OK);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                setResult(RESULT_FAIL);
+            }
             finish();
             return true;
         }

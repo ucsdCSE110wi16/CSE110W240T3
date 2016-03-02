@@ -67,9 +67,10 @@ public class EntryActivity extends AppCompatActivity {
         dateField.setText(currentDateTimeString);
         dateField.setTypeface(null, Typeface.BOLD);
 
+
         Toolbar mToolbar = (Toolbar) findViewById(R.id.entryToolbar);
         setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        mToolbar.setNavigationIcon(R.drawable.back_button);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 

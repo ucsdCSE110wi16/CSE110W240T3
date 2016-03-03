@@ -23,8 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseUser;
 import com.parse.ui.ParseLoginBuilder;
@@ -39,6 +37,8 @@ import bolts.Task;
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
 import edu.fe.util.ResUtils;
+import lib.material.dialogs.DialogAction;
+import lib.material.dialogs.MaterialDialog;
 
 public class MainActivity
         extends AppCompatActivity

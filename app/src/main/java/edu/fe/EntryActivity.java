@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,10 +22,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.Theme;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.vorph.anim.AnimUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +35,8 @@ import java.util.Date;
 
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
+import lib.material.dialogs.MaterialDialog;
+import lib.material.dialogs.Theme;
 import lib.material.picker.date.DatePickerDialog;
 
 public class EntryActivity extends AppCompatActivity implements View.OnClickListener {
@@ -53,6 +55,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
     EditText mNameField;
     EditText mQuantityField;
     TextView mDateText;
+    TextView mSelectThumbnailText;
 
     Date mSelectedDate;
 
@@ -62,6 +65,8 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_entry);
 
         Log.d("DEBUG", "[Entry] Initializing entry");
+
+        AnimUtils.init(this);
 
         Toolbar mToolbar = (Toolbar) findViewById(R.id.entry_toolbar);
         mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
@@ -77,6 +82,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         mDateText = (TextView) findViewById(R.id.item_date_text);
         mDateText.setText(currentDateTime);
         mDateText.setTypeface(null, Typeface.BOLD);
+        mSelectThumbnailText = (TextView) findViewById(R.id.item_thumbnail_text);
 
         mNameField = (EditText) findViewById(R.id.item_name_edit);
         mQuantityField = (EditText) findViewById(R.id.item_quantity_edit);
@@ -84,6 +90,8 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         mCategoryButton = (Button) findViewById(R.id.item_select_category);
         mCameraButton = (AppCompatImageButton) findViewById(R.id.item_camera_button);
         mDateButton = (AppCompatImageButton) findViewById(R.id.item_date_button);
+
+
 
         mCategoryButton.setOnClickListener(this);
         mCameraButton.setOnClickListener(this);
@@ -104,7 +112,6 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
     // Handles all onClick requests:
     @Override
     public void onClick(View view) {
-        Log.d("DEBUG", "calling nav");
         if (view.getId() == R.id.item_date_button) {
             new DatePickerDialog.Builder(EntryActivity.this)
                     .listener(mOnDateSetListener)
@@ -117,7 +124,6 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         else if (view.getId() == R.id.item_select_category) {
             new MaterialDialog.Builder(EntryActivity.this)
                     .theme(Theme.LIGHT)
-                    .title(R.string.entry_selectable_category)
                     .items(R.array.category_array)
                     .itemsCallback(new MaterialDialog.ListCallback() {
                         @Override
@@ -154,8 +160,6 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
             }
 
             FoodItem foodItem = new FoodItem();
-//            Category category = mCategoryButton.getText();
-//            Category c = adapter.getCategory(spinner.getSelectedItemPosition());
             if(mQuantityField.getText().toString().trim().length() >0) {
                 foodItem.setQuantity(Integer.parseInt(mQuantityField.getText().toString()));
             }
@@ -191,6 +195,15 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mImageView.getDrawable() != null) {
+            Bitmap bitmap = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
+            bitmap.recycle();
+        }
     }
 
     private void invalidField(String s) {
@@ -262,7 +275,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
 
     private void handleCameraPhoto() {
         if (mCurrentPhotoPath != null) {
-            setPic();
+            setPicture();
             galleryAddPic();
             mCurrentPhotoPath = null;
         }
@@ -276,7 +289,11 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         this.sendBroadcast(mediaScanIntent);
     }
 
-    private void setPic() {
+    private void setPicture() {
+        if (mSelectThumbnailText.getVisibility() == View.VISIBLE) {
+            mSelectThumbnailText.setVisibility(View.GONE);
+//            AnimUtils.fadeOut(mSelectThumbnailText);
+        }
 
 		/* There isn't enough memory to open up more than a couple camera photos */
 		/* So pre-scale the target bitmap into which the file is decoded */

@@ -25,7 +25,7 @@ public class ResUtils {
     public static void formatExpirationDate(Context context, TextView textView, Date date) {
         Date current = new Date();
 
-        if(current.compareTo(date) <= 0) {
+        if(current.after(date)) {
             // expired already
             textView.setText("Expired");
             textView.setTextColor(context.getResources().getColor(R.color.red_500));
@@ -41,7 +41,10 @@ public class ResUtils {
         } else if (delta > ONEDAY_MS){
             // find how many days we have
             long numDays = delta / ONEDAY_MS;
-            textView.setText("Expires in " + numDays + " days");
+            if(numDays > 1)
+                textView.setText("Expires in " + numDays + " days");
+            else
+                textView.setText("Expires in 1 day");
             textView.setTextColor(context.getResources().getColor(R.color.grey_500));
             return;
         } else {

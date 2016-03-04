@@ -32,6 +32,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
@@ -102,10 +103,10 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
             new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePickerDialog.DateAttributeSet set) {
-            mSelectedDate.setDate(set.day);
-            mSelectedDate.setMonth(set.month + 1);
-            mSelectedDate.setYear(set.year);
-            mDateText.setText(DateFormat.getDateInstance().format(mSelectedDate));
+            Calendar c = new GregorianCalendar(set.year, set.month, set.day);
+            mSelectedDate = c.getTime();
+            DateFormat df = new SimpleDateFormat("MMM d, yyyy");
+            mDateText.setText(df.format(mSelectedDate));
         }
     };
 

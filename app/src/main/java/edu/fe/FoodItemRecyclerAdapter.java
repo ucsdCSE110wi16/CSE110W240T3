@@ -61,8 +61,6 @@ public class FoodItemRecyclerAdapter
             //[holder.expirationView.setText(item.getExpirationDate().toString());
             ResUtils.formatExpirationDate(mContext, holder.expirationView, item.getExpirationDate());
         }
-        holder.extraInfoView.setText("Extra Info");
-
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +77,7 @@ public class FoodItemRecyclerAdapter
         if (!holder.isDisplayed) {
             holder.isDisplayed = true;
             holder.view.setVisibility(View.INVISIBLE);
-
+gi
             // Card/item is ready to be displayed to screen: load animation
             AnimUtils.fadeIn(mContext)
                     .delay(ANIM_DELAY_INCREMENTER)
@@ -116,7 +114,6 @@ public class FoodItemRecyclerAdapter
         public final ParseImageView imageView;
         public final TextView nameView;
         public final TextView expirationView;
-        public final TextView extraInfoView;
         public edu.fe.backend.FoodItem foodItem;
 
         // Makes it so that it does not fade the item in again
@@ -128,7 +125,6 @@ public class FoodItemRecyclerAdapter
             this.imageView = (ParseImageView) view.findViewById(R.id.food_image);
             this.nameView = (TextView) view.findViewById(R.id.header);
             this.expirationView = (TextView) view.findViewById(R.id.header_2);
-            this.extraInfoView = (TextView) view.findViewById(R.id.header_3);
         }
 
     }

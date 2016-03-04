@@ -68,7 +68,6 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
         // Load all information to card
         holder.nameView.setText(item.getHeaderText());
         holder.expirationView.setText(item.getHeaderText2());
-        holder.extraInfoView.setText(item.getHeaderText3());
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,7 +135,6 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
         public final ImageView imageView;
         public final TextView nameView;
         public final TextView expirationView;
-        public final TextView extraInfoView;
         public FoodItem foodItem;
 
         // Makes it so that it does not fade the item in again
@@ -148,7 +146,6 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
             this.imageView = (ImageView) view.findViewById(R.id.food_image);
             this.nameView = (TextView) view.findViewById(R.id.header);
             this.expirationView = (TextView) view.findViewById(R.id.header_2);
-            this.extraInfoView = (TextView) view.findViewById(R.id.header_3);
         }
 
         @Override

@@ -28,6 +28,10 @@
     <string name="entry_expiration_date">Expiration date</string>
     <string name="entry_selectable_date">MM/DD/YY</string>
 
+    <string name="title">Title</string>
+    <string name="body">Body</string>
+    <string name="extra">Extra info</string>
+
 
     <string name="entryPopUp">Input a food item</string>\
     <string name="foodEntry">Enter a food item</string>

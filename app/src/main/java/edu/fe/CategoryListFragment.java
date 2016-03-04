@@ -113,6 +113,6 @@ public class CategoryListFragment extends Fragment {
     }
 
     public interface OnCategorySelectedHandler {
-        public void onCategorySelected(Category category);
+        void onCategorySelected(Category category);
     }
 }

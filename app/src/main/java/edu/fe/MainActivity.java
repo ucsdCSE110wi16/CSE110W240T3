@@ -158,17 +158,20 @@ public class MainActivity
 
     private void loadExpiringSoon() {
         FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         Fragment itemFragment = new ItemListFragment.Builder()
                                             .setQueryLimit(10) // set max date
                                             .build();
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.container, itemFragment, "expiringList").commit();
+        transaction.replace(R.id.container, itemFragment, "expiringList")
+                    .commit();
     }
 
     private void loadCategories() {
         FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         Fragment categoryFragment = new CategoryListFragment();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

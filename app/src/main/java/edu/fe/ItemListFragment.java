@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -107,6 +108,8 @@ public class ItemListFragment extends Fragment {
     public View onCreateView
             (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.AppTheme_ListFragment);
+        inflater = inflater.from(contextThemeWrapper);
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
         mAdapter = new FoodItemRecyclerAdapter(new ParseQueryAdapter.QueryFactory<FoodItem>() {

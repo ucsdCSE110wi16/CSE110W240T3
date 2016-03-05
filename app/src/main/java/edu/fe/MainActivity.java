@@ -164,6 +164,7 @@ public class MainActivity
                                             .build();
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         transaction.replace(R.id.container, itemFragment, "expiringList").commit();
     }
 
@@ -171,6 +172,7 @@ public class MainActivity
         FragmentManager fragmentManager = getFragmentManager();
 
         Fragment categoryFragment = new CategoryListFragment();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container, categoryFragment, "categoryList").commit();
     }

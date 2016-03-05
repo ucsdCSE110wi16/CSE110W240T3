@@ -165,6 +165,10 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
                 foodItem.setQuantity(Integer.parseInt(mQuantityField.getText().toString()));
             }
 
+            if(mSelectedDate != null) {
+                foodItem.setExpirationDate(mSelectedDate);
+            }
+
             // TODO still need to set image and category
 //            Bitmap bitmap = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
 //            if (null != bitmap) {

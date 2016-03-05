@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import edu.fe.R;
@@ -22,6 +24,42 @@ public class ResUtils {
     final static int SEVENDAYS_MS = SEVENDAYS * 1000;
     final static int ONEDAY_MS = ONEDAY * 1000;
 
+    public static void formatExpirationDateEx(Context context, TextView textView, Date date) {
+        Calendar current = new GregorianCalendar();
+        Calendar expiration = new GregorianCalendar();
+        expiration.setTime(date);
+
+        if(current.after(expiration)) {
+            // expired already
+            textView.setText("Expired");
+            textView.setTextColor(context.getResources().getColor(R.color.red_500));
+            return;
+        }
+
+        // check if more than 1 week
+        int daysLeft = expiration.get(Calendar.DAY_OF_YEAR) - current.get(Calendar.DAY_OF_YEAR);
+        if(daysLeft > 7) {
+            // more than a week
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy");
+            textView.setText("Expires on " + sdf.format(date));
+            textView.setTextColor(context.getResources().getColor(R.color.grey_500));
+            return;
+        } else if(daysLeft > 1) {
+            // format days until expiration
+            textView.setText("Expires in " + daysLeft + " days");
+            textView.setTextColor(context.getResources().getColor(R.color.grey_500));
+        } else if(daysLeft > 0) {
+            textView.setText("Expires Tomorrow");
+            textView.setTextColor(context.getResources().getColor(R.color.grey_500));
+        } else {
+            textView.setText("Expires Today");
+            textView.setTextColor(context.getResources().getColor(R.color.red_300));
+        }
+
+
+    }
+
+    @Deprecated
     public static void formatExpirationDate(Context context, TextView textView, Date date) {
         Date current = new Date();
 
@@ -44,10 +82,11 @@ public class ResUtils {
             if(numDays > 1)
                 textView.setText("Expires in " + numDays + " days");
             else
-                textView.setText("Expires in 1 day");
+                textView.setText("Expires in Tomorrow");
             textView.setTextColor(context.getResources().getColor(R.color.grey_500));
             return;
         } else {
+
             textView.setText("Expires Today");
             textView.setTextColor(context.getResources().getColor(R.color.red_300));
         }

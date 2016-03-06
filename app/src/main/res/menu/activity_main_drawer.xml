@@ -19,6 +19,13 @@
             android:title="@string/navigation_drawer_signout"
             android:visible="false"/>
     </group>
+    
+    <group android:id="@+id/nav_find_recipes_group" android:checkableBehavior="none">
+        <item android:id="@+id/nav_find_recipes"
+              android:icon ="@drawable/ic_menu_gallery"
+              android:title="@string/navigation_drawer_find_recipes" />
+    </group>          
+     
     <group android:id="@+id/nav_about_group">
         <item android:id="@+id/nav_about"
               android:icon ="@drawable/ic_menu_manage"

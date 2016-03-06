@@ -42,6 +42,7 @@ import bolts.Continuation;
 import bolts.Task;
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
+import lib.material.Material;
 import lib.material.dialogs.MaterialDialog;
 import lib.material.dialogs.Theme;
 import lib.material.picker.date.DatePickerDialog;
@@ -186,6 +187,12 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         foodItem.setName(mNameField.getText().toString());
 
         if(mCurrentPhotoPath != null) {
+            final MaterialDialog dlg = new MaterialDialog.Builder(this)
+                    .title("Saving Item")
+                    .content("Please Wait")
+                    .progress(true, 0)
+                    .build();
+            dlg.show();
             final ParseFile image = FoodItem.createUnsavedImage(mCurrentPhotoPath);
             // this will happen after the save below happens. We don't want to block on image saving.
             image.saveInBackground().onSuccess(new Continuation<Void, Void>() {
@@ -194,6 +201,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
                     foodItem.put(FoodItem.IMAGE, image);
                     foodItem.pinInBackground();
                     foodItem.saveEventually();
+                    dlg.dismiss();
                     setResult(RESULT_OK);
                     finish();
                     return null;
@@ -308,7 +316,6 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         if (mCurrentPhotoPath != null) {
             setPicture();
             galleryAddPic();
-            mCurrentPhotoPath = null;
         }
     }
 

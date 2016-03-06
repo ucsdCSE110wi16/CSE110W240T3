@@ -80,6 +80,8 @@ public class MainActivity
 
         mPrimaryColor = R.color.colorPrimary;
         mPrimaryColorDark = R.color.colorPrimaryDark;
+        mLastTranslationColor = mPrimaryColor;
+        mLastTranslationColorDark = mPrimaryColorDark;
 
         Log.d("DEBUG", "Initializing variables");
         // Initialize and resolves variables
@@ -175,16 +177,18 @@ public class MainActivity
     }
 
     private void loadExpiringSoon() {
-        resetToolbar();
+        mToolbarHasChanged = true;
+        AnimUtils.translateColor(this, mToolbar, mLastTranslationColor, R.color.red_700, 300);
+        AnimUtils.translateWindowStatusBarColor(this, mLastTranslationColorDark, R.color.red_900, 300);
+        mLastTranslationColor = R.color.red_700;
+        mLastTranslationColorDark = R.color.red_900;
 
         FragmentManager fragmentManager = getFragmentManager();
-
         Fragment itemFragment = new ItemListFragment.Builder()
                                             .setQueryLimit(10) // set max date
                                             .build();
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         transaction.replace(R.id.container, itemFragment, "expiringList").commit();
     }
@@ -351,27 +355,34 @@ public class MainActivity
         int fromColorDarkAttr = mPrimaryColorDark;
         int translateToColorAttr = 0;
         int translateStatusBarToColorAttr = 0;
-        if (category.getName().equals(categories[0])) {
+
+        String name = category.getName();
+
+        if (name.equals(categories[0])) {
             changeColor = true;
             translateToColorAttr = R.color.red_300;
             translateStatusBarToColorAttr = R.color.red_500;
         }
-        else if (category.getName().equals(categories[2])) {
+        else if (name.equals(categories[2])) {
             changeColor = true;
             translateToColorAttr = R.color.indigo_500;
             translateStatusBarToColorAttr = R.color.indigo_700;
         }
-        else if (category.getName().equals(categories[4])) {
+        else if (name.equals(categories[4])
+                || name.equals(categories[3])) {
             changeColor = true;
             translateToColorAttr = R.color.green_500;
             translateStatusBarToColorAttr = R.color.green_700;
         }
-        else if (category.getName().equals(categories[8])) {
+        else if (name.equals(categories[8])
+                || name.equals(categories[7])
+                || name.equals(categories[5]))
+        {
             changeColor = true;
             translateToColorAttr = R.color.grey_500;
             translateStatusBarToColorAttr = R.color.grey_700;
         }
-        else if (category.getName().equals(categories[9])) {
+        else if (name.equals(categories[9])) {
             changeColor = true;
             translateToColorAttr = R.color.brown_500;
             translateStatusBarToColorAttr = R.color.brown_700;

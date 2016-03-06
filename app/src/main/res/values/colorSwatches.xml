@@ -331,7 +331,11 @@
     <color name="ssd_brown">#A1847A</color>
     <color name="ssd_gray">#C1BEB1</color>
 
-
+    <color name="cc_blue_grey">#575F6C</color>
+    <color name="cc_white">#EEF0F2</color>
+    <color name="cc_orange">#F1966D</color>
+    <color name="cc_dark_grey">#989AA0</color>
+    <color name="cc_grey">#BDBDBF</color>
 
 
 </resources>

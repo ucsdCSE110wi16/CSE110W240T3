@@ -227,7 +227,7 @@ public class AnimUtils {
 //		animateToolbar(toolbarAnim, toolbar, reveal, color, 300, 0);
 //	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@TargetApi(Build.VERSION_CODES.KITKAT)
 	public static void animateToolbar(final Animation toolAnim,
 									  final Toolbar toolbar,
 									  final boolean reveal,

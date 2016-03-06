@@ -103,6 +103,12 @@ public class ItemListFragment extends Fragment {
 
     }
 
+    public void refreshObjects() {
+        if(mAdapter != null) {
+            mAdapter.loadObjects();
+        }
+    }
+
     @Override
     public View onCreateView
             (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -130,7 +136,6 @@ public class ItemListFragment extends Fragment {
                 return query;
             }
         }, false, mListener, getActivity());
-
 
         if (view instanceof RecyclerView) {
             RecyclerView recyclerView = (RecyclerView) view;

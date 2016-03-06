@@ -254,13 +254,21 @@ public class MainActivity
                 if(resultCode == RESULT_OK) {
                     checkLoginInformation();
                 }
+                break;
             case NEW_ITEM_REQUEST_CODE:
                 if(resultCode == RESULT_OK) {
                     Alert.snackLong(mContainerView, getString(R.string.new_item_success));
                 } else if(resultCode == EntryActivity.RESULT_FAIL) {
                     Alert.snackLong(mContainerView, getString(R.string.new_item_fail));
                 }
+                break;
         }
+        Fragment f = getFragmentManager().findFragmentByTag("itemList");
+        if(f instanceof ItemListFragment) {
+            ItemListFragment ilf = (ItemListFragment)f;
+            ilf.refreshObjects();
+        }
+
     }
 
     public boolean isLoggedIn() {
@@ -312,7 +320,7 @@ public class MainActivity
         ItemListFragment fragment = new ItemListFragment.Builder().setCategory(category).build();
         getFragmentManager()
                 .beginTransaction()
-                .add(R.id.container, fragment, "item-list")
+                .add(R.id.container, fragment, "itemList")
                 .addToBackStack(null)
                 .commit();
     }

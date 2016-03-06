@@ -87,6 +87,10 @@ public class MainActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, EntryActivity.class);
+                // try and get hint
+                if(mSelectedCategory != null) {
+                    intent.putExtra(EntryActivity.ITEM_CATEGORY_HINT, mSelectedCategory.getName());
+                }
                 startActivityForResult(intent, NEW_ITEM_REQUEST_CODE);
             }
         });
@@ -162,6 +166,7 @@ public class MainActivity
     }
 
     private void loadExpiringSoon() {
+        mSelectedCategory = null;
         FragmentManager fragmentManager = getFragmentManager();
 
         Fragment itemFragment = new ItemListFragment.Builder()
@@ -175,6 +180,7 @@ public class MainActivity
     }
 
     private void loadCategories() {
+        mSelectedCategory = null;
         FragmentManager fragmentManager = getFragmentManager();
 
         Fragment categoryFragment = new CategoryListFragment();
@@ -352,6 +358,7 @@ public class MainActivity
 
     @Override
     public void onCategorySelected(Category category) {
+        mSelectedCategory = category;
         ItemListFragment fragment = new ItemListFragment.Builder().setCategory(category).build();
         getFragmentManager()
                 .beginTransaction()

@@ -45,6 +45,7 @@ import lib.material.picker.date.DatePickerDialog;
 
 public class EntryActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public static final String ITEM_CATEGORY_HINT = "item-category-hint";
     public static final String EDIT_ITEM_ID = "edit-item-id";
     public static final int RESULT_FAIL = RESULT_FIRST_USER;
     public static final int RESULT_DELETED = RESULT_FAIL + 1;
@@ -122,6 +123,11 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
                     mImageView.loadInBackground();
                 } catch (ParseException e) {
                     invalidField("Failed to load existing item for editing");
+                }
+            } else {
+                String categoryHint = extras.getString(ITEM_CATEGORY_HINT);
+                if(categoryHint != null && !categoryHint.isEmpty()) {
+                    mCategoryButton.setText(categoryHint);
                 }
             }
         }

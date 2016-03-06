@@ -13,8 +13,8 @@
         android:name="edu.fe.CategoryListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp"
         app:layoutManager="GridLayoutManager"
         tools:context="edu.fe.CategoryListFragment"
         tools:listitem="@layout/entity_category" />

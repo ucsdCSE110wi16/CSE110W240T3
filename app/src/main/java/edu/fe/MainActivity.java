@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseUser;
 import com.parse.ui.ParseLoginBuilder;
+import com.vorph.anim.AnimUtils;
 import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 
@@ -53,13 +54,22 @@ public class MainActivity
     TextView loginEmailView;
     MenuItem loginMenuItem;
     MenuItem signoutMenuItem;
+    Category mSelectedCategory = null;
+    Toolbar mToolbar;
+
 
     final static int LOGIN_REQUEST_CODE = 0;
     final static int NEW_ITEM_REQUEST_CODE = 1;
 
+    String[] mCategoriesStringArray;
+
+    int mPrimaryColor = 0;
+    int mPrimaryColorDark = 0;
+    int mLastTranslationColor = 0;
+    int mLastTranslationColorDark = 0;
+
     boolean mIsCategorySelected = false;
-    Category mSelectedCategory = null;
-    Toolbar mToolbar;
+    boolean mToolbarHasChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +77,9 @@ public class MainActivity
         // Captures and forwards all log calls to DEBUG tagged in LogCat.
         ExceptionHandler.Embed(ExceptionHandler.DEFAULT_LOG_TYPE);
         setContentView(R.layout.activity_main);
+
+        mPrimaryColor = R.color.colorPrimary;
+        mPrimaryColorDark = R.color.colorPrimaryDark;
 
         Log.d("DEBUG", "Initializing variables");
         // Initialize and resolves variables
@@ -154,6 +167,7 @@ public class MainActivity
         int count = getFragmentManager().getBackStackEntryCount();
         boolean hasAtLeastOneBackEntry = count > 0;
         if (hasAtLeastOneBackEntry) {
+            this.resetToolbar();
             getFragmentManager().popBackStackImmediate();
         } else {
             super.onBackPressed();
@@ -161,6 +175,8 @@ public class MainActivity
     }
 
     private void loadExpiringSoon() {
+        resetToolbar();
+
         FragmentManager fragmentManager = getFragmentManager();
 
         Fragment itemFragment = new ItemListFragment.Builder()
@@ -174,6 +190,8 @@ public class MainActivity
     }
 
     private void loadCategories() {
+        resetToolbar();
+
         FragmentManager fragmentManager = getFragmentManager();
 
         Fragment categoryFragment = new CategoryListFragment();
@@ -182,13 +200,6 @@ public class MainActivity
         fragmentTransaction
                 .replace(R.id.container, categoryFragment, "categoryList")
                 .commit();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
     }
 
     @Override
@@ -332,11 +343,50 @@ public class MainActivity
 
     @Override
     public void onCategorySelected(Category category) {
+        final String[] categories = getResources().getStringArray(R.array.category_array);
+
+        mToolbarHasChanged = true;
+        boolean changeColor = false;
+        int fromColorAttr = mPrimaryColor;
+        int fromColorDarkAttr = mPrimaryColorDark;
+        int translateToColorAttr = 0;
+        int translateStatusBarToColorAttr = 0;
+        if (category.getName().equals(categories[4])) {
+            changeColor = true;
+            translateToColorAttr = R.color.green_500;
+            translateStatusBarToColorAttr = R.color.green_700;
+        }
+        else if (category.getName().equals(categories[8])) {
+            changeColor = true;
+            translateToColorAttr = R.color.red_500;
+            translateStatusBarToColorAttr = R.color.red_700;
+        }
+        else if (category.getName().equals(categories[9])) {
+            changeColor = true;
+            translateToColorAttr = R.color.brown_500;
+            translateStatusBarToColorAttr = R.color.brown_700;
+        }
+
+        if (changeColor) {
+            mLastTranslationColor = translateToColorAttr;
+            mLastTranslationColorDark = translateStatusBarToColorAttr;
+            AnimUtils.translateColor(this, mToolbar, fromColorAttr, translateToColorAttr, 300);
+            AnimUtils.translateWindowStatusBarColor(this, fromColorDarkAttr, translateStatusBarToColorAttr, 300);
+        }
+
         ItemListFragment fragment = new ItemListFragment.Builder().setCategory(category).build();
         getFragmentManager()
                 .beginTransaction()
                 .add(R.id.container, fragment, "itemList")
                 .addToBackStack(null)
                 .commit();
+    }
+
+    private void resetToolbar() {
+        if (mToolbarHasChanged) {
+            AnimUtils.translateColor(this, mToolbar, mLastTranslationColor, mPrimaryColor, 300);
+            AnimUtils.translateWindowStatusBarColor(this, mLastTranslationColorDark, mPrimaryColorDark, 300);
+            mToolbarHasChanged = false;
+        }
     }
 }

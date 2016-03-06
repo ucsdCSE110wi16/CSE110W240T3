@@ -1,11 +1,16 @@
 package edu.fe.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.support.annotation.ColorRes;
 import android.util.TypedValue;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -114,6 +119,24 @@ public class ResUtils {
         int color = a.getColor(0, 0);
         a.recycle();
         return color;
+    }
+
+    public static void changeStatusBarColor(Activity activity, int attr) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = activity.getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(activity.getResources().getColor(attr));
+        }
+    }
+
+    public static int getColor(Context context, @ColorRes int colorId) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            //noinspection deprecation
+            return context.getResources().getColor(colorId);
+        } else {
+            return context.getColor(colorId);
+        }
     }
 
     // Calculated Required sampled image

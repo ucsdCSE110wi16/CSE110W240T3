@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
@@ -38,7 +39,6 @@ import bolts.Continuation;
 import bolts.Task;
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
-import lib.material.dialogs.MaterialDialog;
 import lib.material.dialogs.Theme;
 import lib.material.picker.date.DatePickerDialog;
 
@@ -126,17 +126,17 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         }
         else if (view.getId() == R.id.item_select_category) {
             new MaterialDialog.Builder(EntryActivity.this)
-                    .theme(Theme.LIGHT)
-                    .items(R.array.category_array)
-                    .itemsCallback(new MaterialDialog.ListCallback() {
-                        @Override
-                        public void onSelection(MaterialDialog dialog,
-                                                View view,
-                                                int which,
-                                                CharSequence text) {
-                            mCategoryButton.setText(text);
-                        }
-                    }).show();
+                            .theme(com.afollestad.materialdialogs.Theme.LIGHT)
+                            .items(R.array.category_array)
+                            .itemsCallback(new MaterialDialog.ListCallback() {
+                                @Override
+                                public void onSelection(MaterialDialog dialog,
+                                                        View view,
+                                                        int which,
+                                                        CharSequence text) {
+                                    mCategoryButton.setText(text);
+                                }
+                            }).show();
         }
         else if (view.getId() == R.id.entry_toolbar) {
             finish();

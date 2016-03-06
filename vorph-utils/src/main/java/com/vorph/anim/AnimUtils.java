@@ -1,5 +1,7 @@
 package com.vorph.anim;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
@@ -7,8 +9,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.AnimRes;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -155,6 +159,15 @@ public class AnimUtils {
 		return fadeOut;
 	}
 
+	public static void changeStatusBarColor(Activity activity, int attr) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			Window window = activity.getWindow();
+			window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+			window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+			window.setStatusBarColor(activity.getResources().getColor(attr));
+		}
+	}
+
 	public static void translateColor(Context context,
 									  final View view,
 									  int colorFromAttr,
@@ -213,30 +226,37 @@ public class AnimUtils {
 //				: toolbar.getResources().getColor(colorNon;
 //		animateToolbar(toolbarAnim, toolbar, reveal, color, 300, 0);
 //	}
-//
-//	public static void animateToolbar(final Animation toolAnim,
-//									  final Toolbar toolbar,
-//									  final boolean reveal,
-//									  final int color,
-//									  final int duration,
-//									  final int delay)
-//	{
-//		toolbar.setAnimation(toolAnim);
-//		toolbar.animate()
-//				.setDuration(duration)
-//				.setStartDelay(delay)
-//				.setListener(new AnimatorListenerAdapter() {
-//					@Override
-//					public void onAnimationEnd(Animator animation) {
-//						super.onAnimationEnd(animation);
-//						toolbar.setTitleTextColor(color);
-//
-//						// TODO Current animate toolbar needs some work on animation colors.
-////						toolbar.setBackgroundColor(reveal
-////								? toolbar.getResources().getColor(R.color.recyclerBackground)
-////								: toolbar.getResources().getColor(R.color.blue_400));
-//					}
-//				}).start();
-//	}
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public static void animateToolbar(final Animation toolAnim,
+									  final Toolbar toolbar,
+									  final boolean reveal,
+									  final int color,
+									  final int duration,
+									  final int delay,
+									  final int revealColorAttr)
+	{
+		toolbar.setAnimation(toolAnim);
+		toolbar.animate()
+				.setDuration(duration)
+				.setStartDelay(delay)
+				.setListener(new AnimatorListenerAdapter() {
+					@Override
+					public void onAnimationEnd(Animator animation) {
+						super.onAnimationEnd(animation);
+						toolbar.setTitleTextColor(color);
+						toolbar.setBackgroundColor(getColor(toolbar.getContext(), revealColorAttr));
+					}
+				}).start();
+	}
+
+	private static int getColor(Context context, @ColorRes int colorId) {
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
+			//noinspection deprecation
+			return context.getResources().getColor(colorId);
+		} else {
+			return context.getColor(colorId);
+		}
+	}
 
 }

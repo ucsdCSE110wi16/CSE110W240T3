@@ -351,15 +351,25 @@ public class MainActivity
         int fromColorDarkAttr = mPrimaryColorDark;
         int translateToColorAttr = 0;
         int translateStatusBarToColorAttr = 0;
-        if (category.getName().equals(categories[4])) {
+        if (category.getName().equals(categories[0])) {
+            changeColor = true;
+            translateToColorAttr = R.color.red_300;
+            translateStatusBarToColorAttr = R.color.red_500;
+        }
+        else if (category.getName().equals(categories[2])) {
+            changeColor = true;
+            translateToColorAttr = R.color.indigo_500;
+            translateStatusBarToColorAttr = R.color.indigo_700;
+        }
+        else if (category.getName().equals(categories[4])) {
             changeColor = true;
             translateToColorAttr = R.color.green_500;
             translateStatusBarToColorAttr = R.color.green_700;
         }
         else if (category.getName().equals(categories[8])) {
             changeColor = true;
-            translateToColorAttr = R.color.red_500;
-            translateStatusBarToColorAttr = R.color.red_700;
+            translateToColorAttr = R.color.grey_500;
+            translateStatusBarToColorAttr = R.color.grey_700;
         }
         else if (category.getName().equals(categories[9])) {
             changeColor = true;

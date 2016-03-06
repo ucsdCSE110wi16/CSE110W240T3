@@ -193,7 +193,6 @@ public class AnimUtils {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			final Window window = activity.getWindow();
 			window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-			window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
 			int colorFrom = activity.getResources().getColor(colorFromAttr);
 			int colorTo = activity.getResources().getColor(colorAttr);

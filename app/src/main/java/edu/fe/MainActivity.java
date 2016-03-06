@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.parse.ParseAnonymousUtils;
@@ -56,6 +57,7 @@ public class MainActivity
     MenuItem signoutMenuItem;
     Category mSelectedCategory = null;
     Toolbar mToolbar;
+    FloatingActionButton mFab;
 
 
     final static int LOGIN_REQUEST_CODE = 0;
@@ -96,8 +98,8 @@ public class MainActivity
         ThemeUtils.setDefaultTheme(this);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, EntryActivity.class);
@@ -120,7 +122,7 @@ public class MainActivity
 
         // hack because of an AppCompat Change https://code.google.com/p/android/issues/detail?id=190786
         // http://stackoverflow.com/questions/33161345/android-support-v23-1-0-update-breaks-navigationview-get-find-header
-        View header = LayoutInflater.from(this).inflate(R.layout.nav_header_dust, null);
+        View header = LayoutInflater.from(this).inflate(R.layout.nav_header, null);
         navigationView.addHeaderView(header);
         Menu menu = navigationView.getMenu();
         loginNameView = (TextView)header.findViewById(R.id.drawer_parse_name);
@@ -177,11 +179,10 @@ public class MainActivity
     }
 
     private void loadExpiringSoon() {
-        mToolbarHasChanged = true;
-        AnimUtils.translateColor(this, mToolbar, mLastTranslationColor, R.color.red_700, 300);
-        AnimUtils.translateWindowStatusBarColor(this, mLastTranslationColorDark, R.color.red_900, 300);
-        mLastTranslationColor = R.color.red_700;
-        mLastTranslationColorDark = R.color.red_900;
+        if (mFab.getVisibility() == View.VISIBLE)
+            mFab.hide();
+
+        translateToolbar();
 
         FragmentManager fragmentManager = getFragmentManager();
         Fragment itemFragment = new ItemListFragment.Builder()
@@ -194,10 +195,11 @@ public class MainActivity
     }
 
     private void loadCategories() {
+        if (mFab.getVisibility() == View.GONE)
+            mFab.show();
         resetToolbar();
 
         FragmentManager fragmentManager = getFragmentManager();
-
         Fragment categoryFragment = new CategoryListFragment();
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -407,7 +409,16 @@ public class MainActivity
         if (mToolbarHasChanged) {
             AnimUtils.translateColor(this, mToolbar, mLastTranslationColor, mPrimaryColor, 300);
             AnimUtils.translateWindowStatusBarColor(this, mLastTranslationColorDark, mPrimaryColorDark, 300);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             mToolbarHasChanged = false;
         }
+    }
+
+    private void translateToolbar() {
+        mToolbarHasChanged = true;
+        AnimUtils.translateColor(this, mToolbar, mLastTranslationColor, R.color.red_700, 300);
+        AnimUtils.translateWindowStatusBarColor(this, mLastTranslationColorDark, R.color.red_900, 300);
+        mLastTranslationColor = R.color.red_700;
+        mLastTranslationColorDark = R.color.red_900;
     }
 }

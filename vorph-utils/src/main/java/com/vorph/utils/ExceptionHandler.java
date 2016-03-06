@@ -28,6 +28,7 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
         Log.d(DEFAULT_LOG_TYPE, "Message: " + e.getMessage());
         Log.d(DEFAULT_LOG_TYPE, "\nStackTrace:\n" + sw.toString());
 
+        throw new RuntimeException();
     }
 
     private ExceptionHandler() {}

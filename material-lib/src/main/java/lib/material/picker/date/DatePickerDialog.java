@@ -35,7 +35,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TabHost;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -152,17 +151,17 @@ public class DatePickerDialog
     private String mYearPickerDescription;
     private String mSelectYear;
 
-    private TabHost tabHost;
-    private LinearLayout mMonthAndDayViewEnd;
-    private TextView mSelectedMonthTextViewEnd;
-    private TextView mSelectedDayTextViewEnd;
-    private TextView mYearViewEnd;
-    private SimpleDayPickerView mDayPickerViewEnd;
-    private YearPickerView mYearPickerViewEnd;
-    private AccessibleDateAnimator mAnimatorEnd;
+//    private TabHost tabHost;
+//    private LinearLayout mMonthAndDayViewEnd;
+//    private TextView mSelectedMonthTextViewEnd;
+//    private TextView mSelectedDayTextViewEnd;
+//    private TextView mYearViewEnd;
+//    private SimpleDayPickerView mDayPickerViewEnd;
+//    private YearPickerView mYearPickerViewEnd;
+//    private AccessibleDateAnimator mAnimatorEnd;
     private int tabTag=1;
     private String startTitle;
-    private String endTitle;
+//    private String endTitle;
 
     /**
      * The callback used to indicate the user is done filling in the date.
@@ -267,9 +266,9 @@ public class DatePickerDialog
         mCalendar.set(Calendar.YEAR, year);
         mCalendar.set(Calendar.MONTH, monthOfYear);
         mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        mCalendarEnd.set(Calendar.YEAR, year);
-        mCalendarEnd.set(Calendar.MONTH, monthOfYear);
-        mCalendarEnd.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+//        mCalendarEnd.set(Calendar.YEAR, year);
+//        mCalendarEnd.set(Calendar.MONTH, monthOfYear);
+//        mCalendarEnd.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
         mThemeDark = false;
         mAccentColor = -1;
@@ -287,9 +286,9 @@ public class DatePickerDialog
             mCalendar.set(Calendar.YEAR, savedInstanceState.getInt(KEY_SELECTED_YEAR));
             mCalendar.set(Calendar.MONTH, savedInstanceState.getInt(KEY_SELECTED_MONTH));
             mCalendar.set(Calendar.DAY_OF_MONTH, savedInstanceState.getInt(KEY_SELECTED_DAY));
-            mCalendarEnd.set(Calendar.YEAR, savedInstanceState.getInt(KEY_SELECTED_YEAR_END));
-            mCalendarEnd.set(Calendar.MONTH, savedInstanceState.getInt(KEY_SELECTED_MONTH_END));
-            mCalendarEnd.set(Calendar.DAY_OF_MONTH, savedInstanceState.getInt(KEY_SELECTED_DAY_END));
+//            mCalendarEnd.set(Calendar.YEAR, savedInstanceState.getInt(KEY_SELECTED_YEAR_END));
+//            mCalendarEnd.set(Calendar.MONTH, savedInstanceState.getInt(KEY_SELECTED_MONTH_END));
+//            mCalendarEnd.set(Calendar.DAY_OF_MONTH, savedInstanceState.getInt(KEY_SELECTED_DAY_END));
         }
     }
 
@@ -301,37 +300,37 @@ public class DatePickerDialog
         outState.putInt(KEY_SELECTED_DAY, mCalendar.get(Calendar.DAY_OF_MONTH));
         outState.putInt(KEY_WEEK_START, mWeekStart);
         outState.putInt(KEY_YEAR_START, mMinYear);
-        outState.putInt(KEY_YEAR_END, mMaxYear);
+//        outState.putInt(KEY_YEAR_END, mMaxYear);
         outState.putInt(KEY_CURRENT_VIEW, mCurrentView);
-        outState.putInt(KEY_SELECTED_YEAR_END, mCalendarEnd.get(Calendar.YEAR));
-        outState.putInt(KEY_SELECTED_MONTH_END, mCalendarEnd.get(Calendar.MONTH));
-        outState.putInt(KEY_SELECTED_DAY_END, mCalendarEnd.get(Calendar.DAY_OF_MONTH));
-        outState.putInt(KEY_WEEK_START_END, mWeekStartEnd);
-        outState.putInt(KEY_YEAR_START_END, mMinYear);
-        outState.putInt(KEY_YEAR_END_END, mMaxYear);
-        outState.putInt(KEY_CURRENT_VIEW_END, mCurrentViewEnd);
+//        outState.putInt(KEY_SELECTED_YEAR_END, mCalendarEnd.get(Calendar.YEAR));
+//        outState.putInt(KEY_SELECTED_MONTH_END, mCalendarEnd.get(Calendar.MONTH));
+//        outState.putInt(KEY_SELECTED_DAY_END, mCalendarEnd.get(Calendar.DAY_OF_MONTH));
+//        outState.putInt(KEY_WEEK_START_END, mWeekStartEnd);
+//        outState.putInt(KEY_YEAR_START_END, mMinYear);
+//        outState.putInt(KEY_YEAR_END_END, mMaxYear);
+//        outState.putInt(KEY_CURRENT_VIEW_END, mCurrentViewEnd);
         int listPosition = -1;
-        int listPositionEnd = -1;
+//        int listPositionEnd = -1;
         if (mCurrentView == MONTH_AND_DAY_VIEW||mCurrentViewEnd==MONTH_AND_DAY_VIEW) {
             listPosition = mDayPickerView.getMostVisiblePosition();
-            listPositionEnd = mDayPickerViewEnd.getMostVisiblePosition();
+//            listPositionEnd = mDayPickerViewEnd.getMostVisiblePosition();
 
         } else if (mCurrentView == YEAR_VIEW||mCurrentViewEnd==YEAR_VIEW) {
             listPosition = mYearPickerView.getFirstVisiblePosition();
-            listPositionEnd = mYearPickerViewEnd.getFirstVisiblePosition();
+//            listPositionEnd = mYearPickerViewEnd.getFirstVisiblePosition();
             outState.putInt(KEY_LIST_POSITION_OFFSET, mYearPickerView.getFirstPositionOffset());
-            outState.putInt(KEY_LIST_POSITION_OFFSET_END, mYearPickerViewEnd.getFirstPositionOffset());
+//            outState.putInt(KEY_LIST_POSITION_OFFSET_END, mYearPickerViewEnd.getFirstPositionOffset());
         }
         outState.putInt(KEY_LIST_POSITION, listPosition);
-        outState.putInt(KEY_LIST_POSITION_END, listPositionEnd);
+//        outState.putInt(KEY_LIST_POSITION_END, listPositionEnd);
         outState.putSerializable(KEY_MIN_DATE, mMinDate);
         outState.putSerializable(KEY_MAX_DATE, mMaxDate);
-        outState.putSerializable(KEY_MIN_DATE_END, mMinDateEnd);
-        outState.putSerializable(KEY_MAX_DATE_END, mMaxDateEnd);
+//        outState.putSerializable(KEY_MIN_DATE_END, mMinDateEnd);
+//        outState.putSerializable(KEY_MAX_DATE_END, mMaxDateEnd);
         outState.putSerializable(KEY_HIGHLIGHTED_DAYS, highlightedDays);
         outState.putSerializable(KEY_SELECTABLE_DAYS, selectableDays);
-        outState.putSerializable(KEY_HIGHLIGHTED_DAYS_END, highlightedDaysEnd);
-        outState.putSerializable(KEY_SELECTABLE_DAYS_END, selectableDaysEnd);
+//        outState.putSerializable(KEY_HIGHLIGHTED_DAYS_END, highlightedDaysEnd);
+//        outState.putSerializable(KEY_SELECTABLE_DAYS_END, selectableDaysEnd);
         outState.putBoolean(KEY_THEME_DARK, mThemeDark);
         outState.putInt(KEY_ACCENT, mAccentColor);
         outState.putBoolean(KEY_VIBRATE, mVibrate);
@@ -345,65 +344,65 @@ public class DatePickerDialog
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         View view = inflater.inflate(R.layout.range_date_picker_dialog, null);
 
-        tabHost = (TabHost) view.findViewById(R.id.tabHost);
-        tabHost.findViewById(R.id.tabHost);
-        tabHost.setup();
+//        tabHost = (TabHost) view.findViewById(R.id.tabHost);
+//        tabHost.findViewById(R.id.tabHost);
+//        tabHost.setup();
 
         final Activity activity = getActivity();
 
-        TabHost.TabSpec startDatePage = tabHost.newTabSpec("start");
-        startDatePage.setContent(R.id.start_date_group);
-        startDatePage.setIndicator((startTitle != null && !startTitle.isEmpty()) ? startTitle : activity.getResources().getString(R.string.mdtp_from));
+//        TabHost.TabSpec startDatePage = tabHost.newTabSpec("start");
+//        startDatePage.setContent(R.id.start_date_group);
+//        startDatePage.setIndicator((startTitle != null && !startTitle.isEmpty()) ? startTitle : activity.getResources().getString(R.string.mdtp_from));
 
-        TabHost.TabSpec endDatePage = tabHost.newTabSpec("end");
-        endDatePage.setContent(R.id.end_date_group);
-        endDatePage.setIndicator((endTitle!=null&&!endTitle.isEmpty())?endTitle:activity.getResources().getString(R.string.mdtp_to));
+//        TabHost.TabSpec endDatePage = tabHost.newTabSpec("end");
+//        endDatePage.setContent(R.id.end_date_group);
+//        endDatePage.setIndicator((endTitle!=null&&!endTitle.isEmpty())?endTitle:activity.getResources().getString(R.string.mdtp_to));
 
-        tabHost.addTab(startDatePage);
-        tabHost.addTab(endDatePage);
+//        tabHost.addTab(startDatePage);
+//        tabHost.addTab(endDatePage);
 
         mDayOfWeekView = (TextView) view.findViewById(R.id.date_picker_header);
         mMonthAndDayView = (LinearLayout) view.findViewById(R.id.date_picker_month_and_day);
-        mMonthAndDayViewEnd = (LinearLayout) view.findViewById(R.id.date_picker_month_and_day_end);
+//        mMonthAndDayViewEnd = (LinearLayout) view.findViewById(R.id.date_picker_month_and_day_end);
         mMonthAndDayView.setOnClickListener(this);
-        mMonthAndDayViewEnd.setOnClickListener(this);
+//        mMonthAndDayViewEnd.setOnClickListener(this);
 
         mSelectedMonthTextView = (TextView) view.findViewById(R.id.date_picker_month);
-        mSelectedMonthTextViewEnd = (TextView) view.findViewById(R.id.date_picker_month_end);
+//        mSelectedMonthTextViewEnd = (TextView) view.findViewById(R.id.date_picker_month_end);
 
         mSelectedDayTextView = (TextView) view.findViewById(R.id.date_picker_day);
-        mSelectedDayTextViewEnd = (TextView) view.findViewById(R.id.date_picker_day_end);
+//        mSelectedDayTextViewEnd = (TextView) view.findViewById(R.id.date_picker_day_end);
 
         mYearView = (TextView) view.findViewById(R.id.date_picker_year);
-        mYearViewEnd = (TextView) view.findViewById(R.id.date_picker_year_end);
+//        mYearViewEnd = (TextView) view.findViewById(R.id.date_picker_year_end);
         mYearView.setOnClickListener(this);
-        mYearViewEnd.setOnClickListener(this);
+//        mYearViewEnd.setOnClickListener(this);
 
         int listPosition = -1;
         int listPositionOffset = 0;
-        int listPositionEnd = -1;
-        int listPositionOffsetEnd = 0;
+//        int listPositionEnd = -1;
+//        int listPositionOffsetEnd = 0;
         int currentView = MONTH_AND_DAY_VIEW;
-        int currentViewEnd = MONTH_AND_DAY_VIEW;
+//        int currentViewEnd = MONTH_AND_DAY_VIEW;
         if (savedInstanceState != null) {
             mWeekStart = savedInstanceState.getInt(KEY_WEEK_START);
-            mWeekStartEnd = savedInstanceState.getInt(KEY_WEEK_START_END);
+//            mWeekStartEnd = savedInstanceState.getInt(KEY_WEEK_START_END);
             mMinYear = savedInstanceState.getInt(KEY_YEAR_START);
-            mMaxYear = savedInstanceState.getInt(KEY_YEAR_END);
+//            mMaxYear = savedInstanceState.getInt(KEY_YEAR_END);
             currentView = savedInstanceState.getInt(KEY_CURRENT_VIEW);
-            currentViewEnd = savedInstanceState.getInt(KEY_CURRENT_VIEW_END);
+//            currentViewEnd = savedInstanceState.getInt(KEY_CURRENT_VIEW_END);
             listPosition = savedInstanceState.getInt(KEY_LIST_POSITION);
             listPositionOffset = savedInstanceState.getInt(KEY_LIST_POSITION_OFFSET);
-            listPositionEnd = savedInstanceState.getInt(KEY_LIST_POSITION_END);
-            listPositionOffsetEnd = savedInstanceState.getInt(KEY_LIST_POSITION_OFFSET_END);
+//            listPositionEnd = savedInstanceState.getInt(KEY_LIST_POSITION_END);
+//            listPositionOffsetEnd = savedInstanceState.getInt(KEY_LIST_POSITION_OFFSET_END);
             mMinDate = (Calendar)savedInstanceState.getSerializable(KEY_MIN_DATE);
             mMaxDate = (Calendar)savedInstanceState.getSerializable(KEY_MAX_DATE);
-            mMinDateEnd = (Calendar)savedInstanceState.getSerializable(KEY_MIN_DATE_END);
-            mMaxDateEnd= (Calendar)savedInstanceState.getSerializable(KEY_MAX_DATE_END);
+//            mMinDateEnd = (Calendar)savedInstanceState.getSerializable(KEY_MIN_DATE_END);
+//            mMaxDateEnd= (Calendar)savedInstanceState.getSerializable(KEY_MAX_DATE_END);
             highlightedDays = (Calendar[])savedInstanceState.getSerializable(KEY_HIGHLIGHTED_DAYS);
             selectableDays = (Calendar[])savedInstanceState.getSerializable(KEY_SELECTABLE_DAYS);
-            highlightedDaysEnd = (Calendar[])savedInstanceState.getSerializable(KEY_HIGHLIGHTED_DAYS_END);
-            selectableDaysEnd = (Calendar[])savedInstanceState.getSerializable(KEY_SELECTABLE_DAYS_END);
+//            highlightedDaysEnd = (Calendar[])savedInstanceState.getSerializable(KEY_HIGHLIGHTED_DAYS_END);
+//            selectableDaysEnd = (Calendar[])savedInstanceState.getSerializable(KEY_SELECTABLE_DAYS_END);
             mThemeDark = savedInstanceState.getBoolean(KEY_THEME_DARK);
             mAccentColor = savedInstanceState.getInt(KEY_ACCENT);
             mVibrate = savedInstanceState.getBoolean(KEY_VIBRATE);
@@ -412,8 +411,8 @@ public class DatePickerDialog
 
         mDayPickerView = new SimpleDayPickerView(activity, this);
         mYearPickerView = new YearPickerView(activity, this);
-        mDayPickerViewEnd = new SimpleDayPickerView(activity, this);
-        mYearPickerViewEnd = new YearPickerView(activity, this);
+//        mDayPickerViewEnd = new SimpleDayPickerView(activity, this);
+//        mYearPickerViewEnd = new YearPickerView(activity, this);
 
 
         Resources res = getResources();
@@ -428,7 +427,7 @@ public class DatePickerDialog
         view.setBackgroundColor(activity.getResources().getColor(bgColorResource));
 
         mAnimator = (AccessibleDateAnimator) view.findViewById(R.id.animator);
-        mAnimatorEnd = (AccessibleDateAnimator) view.findViewById(R.id.animator_end);
+//        mAnimatorEnd = (AccessibleDateAnimator) view.findViewById(R.id.animator_end);
 
         mAnimator.addView(mDayPickerView);
         mAnimator.addView(mYearPickerView);
@@ -442,17 +441,17 @@ public class DatePickerDialog
         animation2.setDuration(ANIMATION_DURATION);
         mAnimator.setOutAnimation(animation2);
 
-        mAnimatorEnd.addView(mDayPickerViewEnd);
-        mAnimatorEnd.addView(mYearPickerViewEnd);
-        mAnimatorEnd.setDateMillis(mCalendarEnd.getTimeInMillis());
+//        mAnimatorEnd.addView(mDayPickerViewEnd);
+//        mAnimatorEnd.addView(mYearPickerViewEnd);
+//        mAnimatorEnd.setDateMillis(mCalendarEnd.getTimeInMillis());
         // TODO: Replace with animation decided upon by the design team.
         Animation animationEnd = new AlphaAnimation(0.0f, 1.0f);
-        animationEnd.setDuration(ANIMATION_DURATION);
-        mAnimatorEnd.setInAnimation(animation);
+//        animationEnd.setDuration(ANIMATION_DURATION);
+//        mAnimatorEnd.setInAnimation(animation);
         // TODO: Replace with animation decided upon by the design team.
         Animation animation2End = new AlphaAnimation(1.0f, 0.0f);
-        animation2End.setDuration(ANIMATION_DURATION);
-        mAnimatorEnd.setOutAnimation(animation2);
+//        animation2End.setDuration(ANIMATION_DURATION);
+//        mAnimatorEnd.setOutAnimation(animation2);
 
         Button okButton = (Button) view.findViewById(R.id.ok);
         okButton.setOnClickListener(new OnClickListener() {
@@ -466,9 +465,9 @@ public class DatePickerDialog
                     set.year = mCalendar.get(Calendar.YEAR);
                     set.month = mCalendar.get(Calendar.MONTH);
                     set.day = mCalendar.get(Calendar.DAY_OF_MONTH);
-                    set.yearEnd = mCalendarEnd.get(Calendar.YEAR);
-                    set.monthYearEnd = mCalendarEnd.get(Calendar.MONTH);
-                    set.dayOfMonthEnd = mCalendarEnd.get(Calendar.DAY_OF_MONTH);
+//                    set.yearEnd = mCalendarEnd.get(Calendar.YEAR);
+//                    set.monthYearEnd = mCalendarEnd.get(Calendar.MONTH);
+//                    set.dayOfMonthEnd = mCalendarEnd.get(Calendar.DAY_OF_MONTH);
                     mCallBack.onDateSet(set);
                 }
                 dismiss();
@@ -497,13 +496,13 @@ public class DatePickerDialog
         if (mAccentColor != -1) {
             if(mDayOfWeekView != null) mDayOfWeekView.setBackgroundColor(Utils.darkenColor(mAccentColor));
             view.findViewById(R.id.day_picker_selected_date_layout).setBackgroundColor(mAccentColor);
-            view.findViewById(R.id.day_picker_selected_date_layout_end).setBackgroundColor(mAccentColor);
+//            view.findViewById(R.id.day_picker_selected_date_layout_end).setBackgroundColor(mAccentColor);
             okButton.setTextColor(mAccentColor);
             cancelButton.setTextColor(mAccentColor);
             mYearPickerView.setAccentColor(mAccentColor);
             mDayPickerView.setAccentColor(mAccentColor);
-            mYearPickerViewEnd.setAccentColor(mAccentColor);
-            mDayPickerViewEnd.setAccentColor(mAccentColor);
+//            mYearPickerViewEnd.setAccentColor(mAccentColor);
+//            mDayPickerViewEnd.setAccentColor(mAccentColor);
         }
 
         updateDisplay(false);
@@ -517,31 +516,30 @@ public class DatePickerDialog
             }
         }
 
-        if (listPositionEnd != -1) {
-            if (currentViewEnd == MONTH_AND_DAY_VIEW) {
-                mDayPickerViewEnd.postSetSelection(listPositionEnd);
-            } else if (currentViewEnd == YEAR_VIEW) {
-                mYearPickerViewEnd.postSetSelectionFromTop(listPositionEnd, listPositionOffsetEnd);
-            }
-        }
+//        if (listPositionEnd != -1) {
+//            if (currentViewEnd == MONTH_AND_DAY_VIEW) {
+//                mDayPickerViewEnd.postSetSelection(listPositionEnd);
+//            } else if (currentViewEnd == YEAR_VIEW) {
+//                mYearPickerViewEnd.postSetSelectionFromTop(listPositionEnd, listPositionOffsetEnd);
+//            }
+//        }
 
         mHapticFeedbackController = new HapticFeedbackController(activity);
 
-        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-            @Override
-            public void onTabChanged(String tabId) {
-                MonthAdapter.CalendarDay calendarDay;
-                if(tabId == "start"){
-                    calendarDay = new MonthAdapter.CalendarDay(mCalendar.getTimeInMillis());
-                    mDayPickerView.goTo(calendarDay,true,true,false);
-                }
-                else{
-                    calendarDay = new MonthAdapter.CalendarDay(mCalendarEnd.getTimeInMillis());
-                    mDayPickerViewEnd.goTo(calendarDay,true,true,false);
-
-                }
-            }
-        });
+//        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+//            @Override
+//            public void onTabChanged(String tabId) {
+//                MonthAdapter.CalendarDay calendarDay;
+//                if(tabId == "start"){
+//                    calendarDay = new MonthAdapter.CalendarDay(mCalendar.getTimeInMillis());
+//                    mDayPickerView.goTo(calendarDay,true,true,false);
+//                }
+//                else{
+//                    calendarDay = new MonthAdapter.CalendarDay(mCalendarEnd.getTimeInMillis());
+//                    mDayPickerViewEnd.goTo(calendarDay,true,true,false);
+//                }
+//            }
+//        });
         return view;
     }
 
@@ -572,70 +570,70 @@ public class DatePickerDialog
 
     private void setCurrentView(final int viewIndex) {
         long millis = mCalendar.getTimeInMillis();
-        long millisEnd = mCalendarEnd.getTimeInMillis();
+//        long millisEnd = mCalendarEnd.getTimeInMillis();
 
         switch (viewIndex) {
             case MONTH_AND_DAY_VIEW:
                 ObjectAnimator pulseAnimator = Utils.getPulseAnimator(mMonthAndDayView, 0.9f,
                         1.05f);
-                ObjectAnimator pulseAnimatorTwo = Utils.getPulseAnimator(mMonthAndDayViewEnd, 0.9f,
-                        1.05f);
+//                ObjectAnimator pulseAnimatorTwo = Utils.getPulseAnimator(mMonthAndDayViewEnd, 0.9f,
+//                        1.05f);
                 if (mDelayAnimation) {
                     pulseAnimator.setStartDelay(ANIMATION_DELAY);
-                    pulseAnimatorTwo.setStartDelay(ANIMATION_DELAY);
+//                    pulseAnimatorTwo.setStartDelay(ANIMATION_DELAY);
                     mDelayAnimation = false;
                 }
                 mDayPickerView.onDateChanged();
                 if (mCurrentView != viewIndex) {
                     mMonthAndDayView.setSelected(true);
-                    mMonthAndDayViewEnd.setSelected(true);
+//                    mMonthAndDayViewEnd.setSelected(true);
                     mYearView.setSelected(false);
-                    mYearViewEnd.setSelected(false);
+//                    mYearViewEnd.setSelected(false);
                     mAnimator.setDisplayedChild(MONTH_AND_DAY_VIEW);
-                    mAnimatorEnd.setDisplayedChild(MONTH_AND_DAY_VIEW);
+//                    mAnimatorEnd.setDisplayedChild(MONTH_AND_DAY_VIEW);
                     mCurrentView = viewIndex;
                 }
                 pulseAnimator.start();
-                pulseAnimatorTwo.start();
+//                pulseAnimatorTwo.start();
 
                 int flags = DateUtils.FORMAT_SHOW_DATE;
                 String dayString = DateUtils.formatDateTime(getActivity(), millis, flags);
-                String dayStringEnd = DateUtils.formatDateTime(getActivity(), millisEnd, flags);
-                mAnimator.setContentDescription(mDayPickerDescription+": "+dayString);
-                mAnimatorEnd.setContentDescription(mDayPickerDescription+": "+dayStringEnd);
+//                String dayStringEnd = DateUtils.formatDateTime(getActivity(), millisEnd, flags);
+                mAnimator.setContentDescription(mDayPickerDescription + ": " + dayString);
+//                mAnimatorEnd.setContentDescription(mDayPickerDescription+": "+dayStringEnd);
                 Utils.tryAccessibilityAnnounce(mAnimator, mSelectDay);
-                Utils.tryAccessibilityAnnounce(mAnimatorEnd, mSelectDay);
+//                Utils.tryAccessibilityAnnounce(mAnimatorEnd, mSelectDay);
                 break;
             case YEAR_VIEW:
                 pulseAnimator = Utils.getPulseAnimator(mYearView, 0.85f, 1.1f);
-                pulseAnimatorTwo = Utils.getPulseAnimator(mYearViewEnd, 0.85f, 1.1f);
+//                pulseAnimatorTwo = Utils.getPulseAnimator(mYearViewEnd, 0.85f, 1.1f);
                 if (mDelayAnimation) {
                     pulseAnimator.setStartDelay(ANIMATION_DELAY);
-                    pulseAnimatorTwo.setStartDelay(ANIMATION_DELAY);
+//                    pulseAnimatorTwo.setStartDelay(ANIMATION_DELAY);
                     mDelayAnimation = false;
                 }
                 mYearPickerView.onDateChanged();
-                mYearPickerViewEnd.onDateChanged();
+//                mYearPickerViewEnd.onDateChanged();
                 if (mCurrentView != viewIndex) {
                     mMonthAndDayView.setSelected(false);
                     mYearView.setSelected(true);
                     mAnimator.setDisplayedChild(YEAR_VIEW);
                     mCurrentView = viewIndex;
 
-                    mMonthAndDayViewEnd.setSelected(false);
-                    mYearViewEnd.setSelected(true);
-                    mAnimatorEnd.setDisplayedChild(YEAR_VIEW);
+//                    mMonthAndDayViewEnd.setSelected(false);
+//                    mYearViewEnd.setSelected(true);
+//                    mAnimatorEnd.setDisplayedChild(YEAR_VIEW);
                     mCurrentViewEnd = viewIndex;
                 }
                 pulseAnimator.start();
-                pulseAnimatorTwo.start();
+//                pulseAnimatorTwo.start();
 
                 CharSequence yearString = YEAR_FORMAT.format(millis);
-                CharSequence yearStringEnd = YEAR_FORMAT.format(millisEnd);
-                mAnimator.setContentDescription(mYearPickerDescription+": "+yearString);
-                mAnimatorEnd.setContentDescription(mYearPickerDescription+": "+yearStringEnd);
+//                CharSequence yearStringEnd = YEAR_FORMAT.format(millisEnd);
+                mAnimator.setContentDescription(mYearPickerDescription + ": " + yearString);
+//                mAnimatorEnd.setContentDescription(mYearPickerDescription+": "+yearStringEnd);
                 Utils.tryAccessibilityAnnounce(mAnimator, mSelectYear);
-                Utils.tryAccessibilityAnnounce(mAnimatorEnd, mSelectYear);
+//                Utils.tryAccessibilityAnnounce(mAnimatorEnd, mSelectYear);
                 break;
         }
     }
@@ -648,30 +646,30 @@ public class DatePickerDialog
 
         mSelectedMonthTextView.setText(mCalendar.getDisplayName(Calendar.MONTH, Calendar.SHORT,
                 Locale.getDefault()).toUpperCase(Locale.getDefault()));
-        mSelectedMonthTextViewEnd.setText(mCalendarEnd.getDisplayName(Calendar.MONTH, Calendar.SHORT,
-                Locale.getDefault()).toUpperCase(Locale.getDefault()));
+//        mSelectedMonthTextViewEnd.setText(mCalendarEnd.getDisplayName(Calendar.MONTH, Calendar.SHORT,
+//                Locale.getDefault()).toUpperCase(Locale.getDefault()));
         mSelectedDayTextView.setText(DAY_FORMAT.format(mCalendar.getTime()));
-        mSelectedDayTextViewEnd.setText(DAY_FORMAT.format(mCalendarEnd.getTime()));
+//        mSelectedDayTextViewEnd.setText(DAY_FORMAT.format(mCalendarEnd.getTime()));
         mYearView.setText(YEAR_FORMAT.format(mCalendar.getTime()));
-        mYearViewEnd.setText(YEAR_FORMAT.format(mCalendarEnd.getTime()));
+//        mYearViewEnd.setText(YEAR_FORMAT.format(mCalendarEnd.getTime()));
 
         // Accessibility.
         long millis = mCalendar.getTimeInMillis();
         long millisEnd = mCalendarEnd.getTimeInMillis();
         mAnimator.setDateMillis(millis);
-        mAnimatorEnd.setDateMillis(millisEnd);
+//        mAnimatorEnd.setDateMillis(millisEnd);
         int flags = DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_NO_YEAR;
         String monthAndDayText = DateUtils.formatDateTime(getActivity(), millis, flags);
-        String monthAndDayTextEnd = DateUtils.formatDateTime(getActivity(), millisEnd, flags);
+//        String monthAndDayTextEnd = DateUtils.formatDateTime(getActivity(), millisEnd, flags);
         mMonthAndDayView.setContentDescription(monthAndDayText);
-        mMonthAndDayViewEnd.setContentDescription(monthAndDayTextEnd);
+//        mMonthAndDayViewEnd.setContentDescription(monthAndDayTextEnd);
 
         if (announce) {
             flags = DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR;
             String fullDateText = DateUtils.formatDateTime(getActivity(), millis, flags);
-            String fullDateTextEnd = DateUtils.formatDateTime(getActivity(), millisEnd, flags);
+//            String fullDateTextEnd = DateUtils.formatDateTime(getActivity(), millisEnd, flags);
             Utils.tryAccessibilityAnnounce(mAnimator, fullDateText);
-            Utils.tryAccessibilityAnnounce(mAnimatorEnd, fullDateTextEnd);
+//            Utils.tryAccessibilityAnnounce(mAnimatorEnd, fullDateTextEnd);
         }
     }
 
@@ -737,9 +735,9 @@ public class DatePickerDialog
             mDayPickerView.onChange();
         }
 
-        if (mDayPickerViewEnd != null) {
-            mDayPickerViewEnd.onChange();
-        }
+//        if (mDayPickerViewEnd != null) {
+//            mDayPickerViewEnd.onChange();
+//        }
     }
 
     @SuppressWarnings("unused")
@@ -750,9 +748,10 @@ public class DatePickerDialog
 
         mMinYear = startYear;
         mMaxYear = endYear;
-        if (mDayPickerView != null&&mDayPickerViewEnd!=null) {
+//        if (mDayPickerView != null && mDayPickerViewEnd!=null) {
+        if (mDayPickerView != null) {
             mDayPickerView.onChange();
-            mDayPickerViewEnd.onChange();
+//            mDayPickerViewEnd.onChange();
         }
     }
 
@@ -764,10 +763,10 @@ public class DatePickerDialog
     @SuppressWarnings("unused")
     public void setMinDate(Calendar calendar) {
         mMinDate = calendar;
-
-        if (mDayPickerView != null&&mDayPickerViewEnd!=null) {
+//        if (mDayPickerView != null && mDayPickerViewEnd!=null) {
+        if (mDayPickerView != null) {
             mDayPickerView.onChange();
-            mDayPickerViewEnd.onChange();
+//            mDayPickerViewEnd.onChange();
         }
     }
 
@@ -787,10 +786,10 @@ public class DatePickerDialog
     @SuppressWarnings("unused")
     public void setMaxDate(Calendar calendar) {
         mMaxDate = calendar;
-
-        if (mDayPickerView != null&&mDayPickerViewEnd!=null) {
+//        if (mDayPickerView != null && mDayPickerViewEnd!=null) {
+        if (mDayPickerView != null) {
             mDayPickerView.onChange();
-            mDayPickerViewEnd.onChange();
+//            mDayPickerViewEnd.onChange();
         }
     }
 
@@ -810,9 +809,9 @@ public class DatePickerDialog
     public void setHighlightedDays(Calendar[] highlightedDays,Calendar[] highlightedDaysEnd) {
         // Sort the array to optimize searching over it later on
         Arrays.sort(highlightedDays);
-        Arrays.sort(highlightedDaysEnd);
+//        Arrays.sort(highlightedDaysEnd);
         this.highlightedDays = highlightedDays;
-        this.highlightedDaysEnd = highlightedDaysEnd;
+//        this.highlightedDaysEnd = highlightedDaysEnd;
     }
 
     /**
@@ -835,12 +834,12 @@ public class DatePickerDialog
         this.selectableDays = selectableDays;
     }
 
-    @SuppressWarnings("unused")
-    public void setSelectableDaysEnd(Calendar[] selectableDaysEnd) {
-        // Sort the array to optimize searching over it later on
-        Arrays.sort(selectableDaysEnd);
-        this.selectableDaysEnd = selectableDaysEnd;
-    }
+//    @SuppressWarnings("unused")
+//    public void setSelectableDaysEnd(Calendar[] selectableDaysEnd) {
+//        // Sort the array to optimize searching over it later on
+//        Arrays.sort(selectableDaysEnd);
+//        this.selectableDaysEnd = selectableDaysEnd;
+//    }
 
     /**
      * @return an Array of Calendar objects containing the list with selectable items. null if no restriction is set
@@ -893,11 +892,12 @@ public class DatePickerDialog
         adjustDayInMonthIfNeeded(mCalendar);
         adjustDayInMonthIfNeeded(mCalendarEnd);
 
-        if(tabHost.getCurrentTab()==0){
-            mCalendar.set(Calendar.YEAR, year);
-        }else{
-            mCalendarEnd.set(Calendar.YEAR, year);
-        }
+        mCalendar.set(Calendar.YEAR, year);
+//        if(tabHost.getCurrentTab()==0){
+//            mCalendar.set(Calendar.YEAR, year);
+//        }else{
+//            mCalendarEnd.set(Calendar.YEAR, year);
+//        }
         updatePickers();
         setCurrentView(MONTH_AND_DAY_VIEW);
         updateDisplay(true);
@@ -905,17 +905,19 @@ public class DatePickerDialog
 
     @Override
     public void onDayOfMonthSelected(int year, int month, int day) {
-
-        if(tabHost.getCurrentTab()==0){
-            mCalendar.set(Calendar.YEAR, year);
-            mCalendar.set(Calendar.MONTH, month);
-            mCalendar.set(Calendar.DAY_OF_MONTH, day);
-        }
-       else{
-            mCalendarEnd.set(Calendar.YEAR, year);
-            mCalendarEnd.set(Calendar.MONTH, month);
-            mCalendarEnd.set(Calendar.DAY_OF_MONTH, day);
-        }
+        mCalendar.set(Calendar.YEAR, year);
+        mCalendar.set(Calendar.MONTH, month);
+        mCalendar.set(Calendar.DAY_OF_MONTH, day);
+//        if(tabHost.getCurrentTab()==0){
+//            mCalendar.set(Calendar.YEAR, year);
+//            mCalendar.set(Calendar.MONTH, month);
+//            mCalendar.set(Calendar.DAY_OF_MONTH, day);
+//        }
+//       else{
+//            mCalendarEnd.set(Calendar.YEAR, year);
+//            mCalendarEnd.set(Calendar.MONTH, month);
+//            mCalendarEnd.set(Calendar.DAY_OF_MONTH, day);
+//        }
 
         //updatePickers();
         updateDisplay(true);
@@ -928,12 +930,12 @@ public class DatePickerDialog
 
     @Override
     public MonthAdapter.CalendarDay getSelectedDay() {
-        if(tabHost.getCurrentTab()==0){
-            return new MonthAdapter.CalendarDay(mCalendar);
-        }else{
-            return new MonthAdapter.CalendarDay(mCalendarEnd);
-        }
-
+//        if(tabHost.getCurrentTab()==0){
+//            return new MonthAdapter.CalendarDay(mCalendar);
+//        }else{
+//            return new MonthAdapter.CalendarDay(mCalendarEnd);
+//        }
+        return new MonthAdapter.CalendarDay(mCalendar);
     }
 
     @Override
@@ -982,7 +984,7 @@ public class DatePickerDialog
      * setEndTitle
      * @param endTitle the title to display for end panel
      */ 
-    public void setEndTitle(String endTitle) {
-        this.endTitle = endTitle;
-    }
+//    public void setEndTitle(String endTitle) {
+//        this.endTitle = endTitle;
+//    }
 }

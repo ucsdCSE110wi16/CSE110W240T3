@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -108,10 +107,8 @@ public class ItemListFragment extends Fragment {
     public View onCreateView
             (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.AppTheme_ListFragment);
-        inflater = inflater.from(contextThemeWrapper);
-        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
+        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
         mAdapter = new FoodItemRecyclerAdapter(new ParseQueryAdapter.QueryFactory<FoodItem>() {
 
             @Override
@@ -133,6 +130,8 @@ public class ItemListFragment extends Fragment {
                 return query;
             }
         }, false, mListener, getActivity());
+
+
 
 
         if (view instanceof RecyclerView) {
@@ -175,6 +174,7 @@ public class ItemListFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         Log.d("DEBUG", "Attach[activity] - Class: " + activity.getClass());
+
         if (activity instanceof OnListFragmentInteractionListener) {
             Log.d("DEBUG", "Listener from MainActivity is connected to adapter");
             mListener = (OnListFragmentInteractionListener) activity;

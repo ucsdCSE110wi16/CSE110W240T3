@@ -37,6 +37,7 @@ import bolts.Task;
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
 import edu.fe.util.ResUtils;
+import edu.fe.util.ThemeUtils;
 import lib.material.dialogs.DialogAction;
 import lib.material.dialogs.MaterialDialog;
 
@@ -58,6 +59,7 @@ public class MainActivity
 
     boolean mIsCategorySelected = false;
     Category mSelectedCategory = null;
+    Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,13 +71,15 @@ public class MainActivity
         Log.d("DEBUG", "Initializing variables");
         // Initialize and resolves variables
         mContainerView = (ViewGroup) findViewById(R.id.container_content);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         // Load all sample resources.
         // TODO New Thread to initialize resources, since loading bitmaps and refactoring
         // TODO them to be a certain size takes a bit of time.
         ResUtils.initialize(this);
+        ThemeUtils.setDefaultTheme(this);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +94,7 @@ public class MainActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle =
                 new ActionBarDrawerToggle(
-                    this, drawer, toolbar,
+                    this, drawer, mToolbar,
                     R.string.navigation_drawer_open,
                     R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -175,7 +179,9 @@ public class MainActivity
 
         Fragment categoryFragment = new CategoryListFragment();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container, categoryFragment, "categoryList").commit();
+        fragmentTransaction
+                .replace(R.id.container, categoryFragment, "categoryList")
+                .commit();
     }
 
     @Override
@@ -287,6 +293,10 @@ public class MainActivity
             loginMenuItem.setVisible(true);
             signoutMenuItem.setVisible(false);
         }
+    }
+
+    public Toolbar getToolbar() {
+        return mToolbar;
     }
 
     @Override

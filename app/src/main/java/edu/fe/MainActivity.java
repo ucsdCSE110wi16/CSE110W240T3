@@ -227,14 +227,14 @@ public class MainActivity
                 break;
             }
             case R.id.nav_signout: {
-                new MaterialDialog.Builder(this)
+                new com.afollestad.materialdialogs.MaterialDialog.Builder(this)
                         .title("Are you sure?")
                         .positiveText(android.R.string.yes)
                         .negativeText(android.R.string.cancel)
                         .content("Your data will no longer be saved to the cloud")
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        .onPositive(new com.afollestad.materialdialogs.MaterialDialog.SingleButtonCallback() {
                             @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            public void onClick(@NonNull com.afollestad.materialdialogs.MaterialDialog dialog, @NonNull com.afollestad.materialdialogs.DialogAction which) {
                                 ParseUser.logOut();
                                 checkLoginInformation();
                             }
@@ -336,7 +336,7 @@ public class MainActivity
     }
 
     void showAboutDialog() {
-        new MaterialDialog.Builder(this)
+        new com.afollestad.materialdialogs.MaterialDialog.Builder(this)
                 .title("About Project FE")
                 .content(R.string.about_popup_content)
                 .positiveText("Close")

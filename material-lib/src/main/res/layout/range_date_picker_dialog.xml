@@ -20,20 +20,20 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <TabHost
-        android:id="@+id/tabHost"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+    <!--<TabHost-->
+        <!--android:id="@+id/tabHost"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content">-->
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+            <!--<TabWidget-->
+                <!--android:id="@android:id/tabs"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content" />-->
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
@@ -53,21 +53,21 @@
                     <include layout="@layout/mdtp_date_picker_view_animator" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/end_date_group"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/end_date_group"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="vertical">-->
 
 
-                    <include layout="@layout/mdtp_date_picker_selected_date_end" />
+                    <!--<include layout="@layout/mdtp_date_picker_selected_date_end" />-->
 
-                    <include layout="@layout/mdtp_date_picker_view_animator_end" />
-                </LinearLayout>
+                    <!--<include layout="@layout/mdtp_date_picker_view_animator_end" />-->
+                <!--</LinearLayout>-->
             </FrameLayout>
         </LinearLayout>
 
-    </TabHost>
+    <!--</TabHost>-->
 
     <include layout="@layout/mdtp_done_button" />
 

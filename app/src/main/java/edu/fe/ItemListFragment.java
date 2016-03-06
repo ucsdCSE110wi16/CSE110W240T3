@@ -103,12 +103,18 @@ public class ItemListFragment extends Fragment {
 
     }
 
+    public void refreshObjects() {
+        if(mAdapter != null) {
+            mAdapter.loadObjects();
+        }
+    }
+
     @Override
     public View onCreateView
             (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
+        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
         mAdapter = new FoodItemRecyclerAdapter(new ParseQueryAdapter.QueryFactory<FoodItem>() {
 
             @Override
@@ -172,6 +178,7 @@ public class ItemListFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         Log.d("DEBUG", "Attach[activity] - Class: " + activity.getClass());
+
         if (activity instanceof OnListFragmentInteractionListener) {
             Log.d("DEBUG", "Listener from MainActivity is connected to adapter");
             mListener = (OnListFragmentInteractionListener) activity;

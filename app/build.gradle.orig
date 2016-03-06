@@ -39,12 +39,15 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude module: 'recyclerview-v7'
     }
+<<<<<<< HEAD
+
+
+
+=======
     compile('com.github.afollestad.material-dialogs:core:0.8.5.4@aar') {
         transitive = true
     }
-
-
-
+>>>>>>> RecipeFinder
     compile project(':material-lib')
     compile project(':vorph-utils')
     compile 'com.android.support:appcompat-v7:23.1.1'

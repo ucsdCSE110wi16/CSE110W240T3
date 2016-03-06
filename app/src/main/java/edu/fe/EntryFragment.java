@@ -11,22 +11,15 @@ import android.support.annotation.NonNull;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.Theme;
-import com.parse.Parse;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
-import com.parse.ParseQueryAdapter;
-
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
+import lib.material.dialogs.DialogAction;
+import lib.material.dialogs.MaterialDialog;
+import lib.material.dialogs.Theme;
 
 
 /**

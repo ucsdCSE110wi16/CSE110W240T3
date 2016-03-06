@@ -92,6 +92,7 @@ public class FoodItem extends ParseObject {
 
     public Category getCategory() throws ParseException {
         Category o = (Category)getParseObject(CATEGORY);
+        o.fetchFromLocalDatastore();
         o.fetchIfNeeded();
         return o;
     }

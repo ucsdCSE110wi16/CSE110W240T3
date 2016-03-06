@@ -49,6 +49,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
 
     private ImageView mImageView;
     private String mCurrentPhotoPath;
+    private String photoPath;
 
     Button mCategoryButton;
     AppCompatImageButton mDateButton;
@@ -245,6 +246,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
     }
 
     //This is where we can use the image data captured by the camera
+    // Use photoPath to get source photo file.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
@@ -252,6 +254,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
             //Bitmap imageBitmap = (Bitmap) extras.get("data");
             //mImageView.setImageBitmap(imageBitmap);
             handleCameraPhoto();
+            Log.d(TAG, "CURRENT PHOTOPATH: " + photoPath );
         }
     }
 
@@ -318,6 +321,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         int photoH = bmOptions.outHeight;
 
         Log.d(TAG, "PHOTOPATH" + mCurrentPhotoPath);
+        photoPath = mCurrentPhotoPath;
 
         Log.d(TAG, "SIZE OF PHOTO W" + photoW);
         Log.d(TAG, "SIZE OF PHOTO H" + photoH);

@@ -162,22 +162,22 @@ public class MainActivity
 
     private void loadExpiringSoon() {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         Fragment itemFragment = new ItemListFragment.Builder()
                                             .setQueryLimit(10) // set max date
                                             .build();
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.container, itemFragment, "expiringList")
-                    .commit();
+
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        transaction.replace(R.id.container, itemFragment, "expiringList").commit();
     }
 
     private void loadCategories() {
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         Fragment categoryFragment = new CategoryListFragment();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction
                 .replace(R.id.container, categoryFragment, "categoryList")
@@ -261,12 +261,24 @@ public class MainActivity
                 if(resultCode == RESULT_OK) {
                     checkLoginInformation();
                 }
+                break;
             case NEW_ITEM_REQUEST_CODE:
                 if(resultCode == RESULT_OK) {
                     Alert.snackLong(mContainerView, getString(R.string.new_item_success));
                 } else if(resultCode == EntryActivity.RESULT_FAIL) {
                     Alert.snackLong(mContainerView, getString(R.string.new_item_fail));
                 }
+                break;
+        }
+        Fragment f = getFragmentManager().findFragmentByTag("itemList");
+        if(f instanceof ItemListFragment) {
+            ItemListFragment ilf = (ItemListFragment)f;
+            ilf.refreshObjects();
+        }
+        f  = getFragmentManager().findFragmentByTag("expiringList");
+        if(f instanceof  ItemListFragment) {
+            ItemListFragment ilf = (ItemListFragment)f;
+            ilf.refreshObjects();
         }
     }
 
@@ -323,7 +335,7 @@ public class MainActivity
         ItemListFragment fragment = new ItemListFragment.Builder().setCategory(category).build();
         getFragmentManager()
                 .beginTransaction()
-                .add(R.id.container, fragment, "item-list")
+                .add(R.id.container, fragment, "itemList")
                 .addToBackStack(null)
                 .commit();
     }

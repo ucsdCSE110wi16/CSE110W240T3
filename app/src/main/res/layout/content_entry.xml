@@ -45,6 +45,7 @@
                 android:id="@+id/item_quantity_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="number"
                 android:hint="@string/entry_food_quantity"
                 android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>
@@ -135,7 +136,7 @@
                 android:orientation="vertical"
                 android:weightSum="2" >
 
-                <ImageView
+                <com.parse.ParseImageView
                     android:id="@+id/entry_thumbnail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

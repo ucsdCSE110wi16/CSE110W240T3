@@ -59,7 +59,7 @@ public class FoodItemRecyclerAdapter
         holder.nameView.setText(item.getName());
         if(item.getExpirationDate() != null) {
             //[holder.expirationView.setText(item.getExpirationDate().toString());
-            ResUtils.formatExpirationDate(mContext, holder.expirationView, item.getExpirationDate());
+            ResUtils.formatExpirationDateEx(mContext, holder.expirationView, item.getExpirationDate());
         }
 
         holder.view.setOnClickListener(new View.OnClickListener() {

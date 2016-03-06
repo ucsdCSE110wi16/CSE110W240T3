@@ -173,22 +173,34 @@ public class MainActivity
         if (hasAtLeastOneBackEntry) {
             this.resetToolbar();
             getFragmentManager().popBackStackImmediate();
-        } else {
-            super.onBackPressed();
+
+            return;
         }
+
+        new MaterialDialog.Builder(this)
+                        .content("Your about to exit the application")
+                        .positiveText("Ok")
+                        .negativeText("Dismiss")
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog,
+                                                @NonNull DialogAction which) {
+                                MainActivity.super.onBackPressed();
+                            }
+                        }).show();
     }
 
     private void loadExpiringSoon() {
         if (mFab.getVisibility() == View.VISIBLE)
             mFab.hide();
 
-        translateToolbar();
+        this.translateToolbar();
 
-        FragmentManager fragmentManager = getFragmentManager();
         Fragment itemFragment = new ItemListFragment.Builder()
                                             .setQueryLimit(10) // set max date
                                             .build();
 
+        FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         transaction.replace(R.id.container, itemFragment, "expiringList").commit();

@@ -22,10 +22,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseImageView;
 import com.parse.ParseQuery;
 import com.vorph.anim.AnimUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -34,6 +38,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import bolts.Continuation;
+import bolts.Task;
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
 import lib.material.dialogs.MaterialDialog;
@@ -47,7 +53,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
     private static final int ACTION_TAKE_PHOTO_B = 1;
     private static final String TAG = EntryActivity.class.getSimpleName();
 
-    private ImageView mImageView;
+    private ParseImageView mImageView;
     private String mCurrentPhotoPath;
 
     Button mCategoryButton;
@@ -75,7 +81,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setTitle("Add an item");
 
-        mImageView = (ImageView) findViewById(R.id.entry_thumbnail);
+        mImageView = (ParseImageView) findViewById(R.id.entry_thumbnail);
 
         // Set the current date to the Date Field.
         mSelectedDate = new Date();
@@ -148,50 +154,71 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         return super.onCreateOptionsMenu(menu);
     }
 
+    private boolean saveItem() throws ParseException {
+        if (mNameField.getText().toString().isEmpty()) {
+            invalidField("must enter food name.");
+            return false;
+        }
+        if (mQuantityField.getText().toString().isEmpty()) {
+            invalidField("must enter quantity.");
+            return false;
+        }
+
+        final FoodItem foodItem = new FoodItem();
+        if(mQuantityField.getText().toString().trim().length() >0) {
+            foodItem.setQuantity(Integer.parseInt(mQuantityField.getText().toString()));
+        }
+
+        if(mSelectedDate != null) {
+            foodItem.setExpirationDate(mSelectedDate);
+        }
+
+        if(mCategoryButton.getText().toString().isEmpty() || mCategoryButton.getText().toString().equalsIgnoreCase("SELECT A CATEGORY")) {
+            invalidField("must enter a category.");
+            return false;
+        }
+
+        ParseQuery<Category> q = ParseQuery.getQuery(Category.class);
+        q.fromLocalDatastore();
+        q.whereEqualTo(Category.NAME, mCategoryButton.getText());
+        Category c = q.getFirst();
+        foodItem.setCategory(c);
+        foodItem.setName(mNameField.getText().toString());
+
+        if(mCurrentPhotoPath != null) {
+            final ParseFile image = FoodItem.createUnsavedImage(mCurrentPhotoPath);
+            // this will happen after the save below happens. We don't want to block on image saving.
+            image.saveInBackground().onSuccess(new Continuation<Void, Void>() {
+                @Override
+                public Void then(Task<Void> task) throws Exception {
+                    foodItem.put(FoodItem.IMAGE, image);
+                    foodItem.pinInBackground();
+                    foodItem.saveEventually();
+                    setResult(RESULT_OK);
+                    finish();
+                    return null;
+                }
+            });
+            return true;
+        } else {
+            foodItem.pin();
+            foodItem.saveEventually();
+            setResult(RESULT_OK);
+            finish();
+            return true;
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.entry_submit) {
-            if (mNameField.getText().toString().isEmpty()) {
-                invalidField("must enter food name.");
-                return false;
-            }
-            if (mQuantityField.getText().toString().isEmpty()) {
-                invalidField("must enter quantity.");
-                return false;
-            }
-
-            FoodItem foodItem = new FoodItem();
-            if(mQuantityField.getText().toString().trim().length() >0) {
-                foodItem.setQuantity(Integer.parseInt(mQuantityField.getText().toString()));
-            }
-
-            if(mSelectedDate != null) {
-                foodItem.setExpirationDate(mSelectedDate);
-            }
-
-            // TODO still need to set image and category
-//            Bitmap bitmap = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
-//            if (null != bitmap) {
-//
-//            }
-
-            ParseQuery<Category> q = ParseQuery.getQuery(Category.class);
-            q.fromLocalDatastore();
-            q.whereEqualTo(Category.NAME, mCategoryButton.getText());
             try {
-                Category c = q.getFirst();
-                foodItem.setCategory(c);
-                foodItem.setName(mNameField.getText().toString());
-                foodItem.pinInBackground();
-                foodItem.saveEventually();
-                setResult(RESULT_OK);
+                return saveItem();
             } catch (ParseException e) {
-                e.printStackTrace();
                 setResult(RESULT_FAIL);
+                finish();
+                return true;
             }
-
-            finish();
-            return true;
         }
         else if (item.getItemId() == android.R.id.home) {
             // When the back-arrow button is pressed in toolbar, finish
@@ -259,8 +286,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
+        File storageDir = getExternalFilesDir(null);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */

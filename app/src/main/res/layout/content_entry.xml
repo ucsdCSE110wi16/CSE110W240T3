@@ -135,7 +135,7 @@
                 android:orientation="vertical"
                 android:weightSum="2" >
 
-                <ImageView
+                <com.parse.ParseImageView
                     android:id="@+id/entry_thumbnail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

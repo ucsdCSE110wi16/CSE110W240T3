@@ -187,9 +187,10 @@ public class AnimUtils {
 	}
 
 	public static void translateWindowStatusBarColor(Activity activity,
-									  				 int colorFromAttr,
-									  				 int colorAttr,
-									  				 int duration) {
+													 int colorFromAttr,
+													 int colorAttr,
+													 int duration)
+	{
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			final Window window = activity.getWindow();
 			window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -207,6 +208,33 @@ public class AnimUtils {
 			});
 			colorAnimation.start();
 		}
+	}
+
+	public static ValueAnimator getWindowStatusBarTranslator(Activity activity,
+															 int colorFromAttr,
+															 int colorAttr,
+															 int duration)
+	{
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			final Window window = activity.getWindow();
+			window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+			int colorFrom = getColor(activity, colorFromAttr);
+			int colorTo = getColor(activity, colorAttr);
+
+			ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+			colorAnimation.setDuration(duration);
+			colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+				@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+				@Override
+				public void onAnimationUpdate(ValueAnimator animator) {
+					window.setStatusBarColor((int) animator.getAnimatedValue());
+				}
+			});
+			return colorAnimation;
+		}
+
+		return null;
 	}
 
 

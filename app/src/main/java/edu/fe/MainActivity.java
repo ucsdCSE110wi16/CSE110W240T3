@@ -1,10 +1,14 @@
 package edu.fe;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -41,6 +45,7 @@ import edu.fe.backend.FoodItem;
 import edu.fe.util.ResUtils;
 import edu.fe.util.ThemeUtils;
 import lib.material.dialogs.DialogAction;
+import lib.material.dialogs.GravityEnum;
 import lib.material.dialogs.MaterialDialog;
 
 public class MainActivity
@@ -178,7 +183,9 @@ public class MainActivity
         }
 
         new MaterialDialog.Builder(this)
-                        .content("Your about to exit the application")
+                        .content("You're about to exit the application")
+                        .contentGravity(GravityEnum.CENTER)
+                        .typeface(Typeface.DEFAULT_BOLD, Typeface.DEFAULT_BOLD)
                         .positiveText("Ok")
                         .negativeText("Dismiss")
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
@@ -191,9 +198,6 @@ public class MainActivity
     }
 
     private void loadExpiringSoon() {
-        if (mFab.getVisibility() == View.VISIBLE)
-            mFab.hide();
-
         this.translateToolbar();
 
         Fragment itemFragment = new ItemListFragment.Builder()
@@ -207,9 +211,7 @@ public class MainActivity
     }
 
     private void loadCategories() {
-        if (mFab.getVisibility() == View.GONE)
-            mFab.show();
-        resetToolbar();
+        this.resetToolbar();
 
         FragmentManager fragmentManager = getFragmentManager();
         Fragment categoryFragment = new CategoryListFragment();
@@ -383,7 +385,8 @@ public class MainActivity
             translateStatusBarToColorAttr = R.color.indigo_700;
         }
         else if (name.equals(categories[4])
-                || name.equals(categories[3])) {
+                || name.equals(categories[3]))
+        {
             changeColor = true;
             translateToColorAttr = R.color.green_500;
             translateStatusBarToColorAttr = R.color.green_700;
@@ -420,17 +423,50 @@ public class MainActivity
     private void resetToolbar() {
         if (mToolbarHasChanged) {
             AnimUtils.translateColor(this, mToolbar, mLastTranslationColor, mPrimaryColor, 300);
-            AnimUtils.translateWindowStatusBarColor(this, mLastTranslationColorDark, mPrimaryColorDark, 300);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            ValueAnimator colorAnimator =
+                    AnimUtils.getWindowStatusBarTranslator(
+                            this,
+                            mLastTranslationColorDark,
+                            mPrimaryColorDark,
+                            300
+                    );
+            if (colorAnimator != null) {
+                colorAnimator.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        if (mFab.getVisibility() == View.GONE) mFab.show();
+                    }
+                });
+                colorAnimator.start();
+            }
             mToolbarHasChanged = false;
         }
     }
 
     private void translateToolbar() {
+
         mToolbarHasChanged = true;
         AnimUtils.translateColor(this, mToolbar, mLastTranslationColor, R.color.red_700, 300);
-        AnimUtils.translateWindowStatusBarColor(this, mLastTranslationColorDark, R.color.red_900, 300);
+        ValueAnimator colorAnimator =
+                AnimUtils.getWindowStatusBarTranslator(
+                        this,
+                        mLastTranslationColorDark,
+                        R.color.red_900,
+                        300
+                );
+        if (colorAnimator != null) {
+            colorAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    if (mFab.getVisibility() == View.VISIBLE) mFab.hide();
+                }
+            });
+            colorAnimator.start();
+            mLastTranslationColorDark = R.color.red_900;
+        }
         mLastTranslationColor = R.color.red_700;
-        mLastTranslationColorDark = R.color.red_900;
     }
 }

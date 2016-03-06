@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.parse.ParseImageView;
 import com.parse.ParseQueryAdapter;
 
-import java.util.Date;
 import java.util.Random;
 
 import edu.fe.backend.FoodItem;
@@ -20,7 +19,8 @@ import edu.fe.util.ResUtils;
 /**
  * Created by david on 1/29/2016.
  */
-public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem, FoodItemRecyclerAdapter.FoodItemViewHolder> {
+public class FoodItemRecyclerAdapter
+        extends ParseRecyclerQueryAdapter<FoodItem, FoodItemRecyclerAdapter.FoodItemViewHolder> {
 
     private final ItemListFragment.OnListFragmentInteractionListener mListener;
     private final Random mRandom = new Random();
@@ -30,11 +30,12 @@ public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem,
     private static final int ANIM_DURATION = 400;
 
 
-    public FoodItemRecyclerAdapter(ParseQueryAdapter.QueryFactory<FoodItem> factory,
-                                   boolean hasStableIds,
-                                   final ItemListFragment.OnListFragmentInteractionListener listener,
-                                   final Context context
-                                   ) {
+    public FoodItemRecyclerAdapter
+            (ParseQueryAdapter.QueryFactory<FoodItem> factory,
+             boolean hasStableIds,
+             ItemListFragment.OnListFragmentInteractionListener listener,
+             Context context)
+    {
         super(factory, hasStableIds);
         mListener = listener;
         mContext = context;
@@ -58,10 +59,8 @@ public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem,
         holder.nameView.setText(item.getName());
         if(item.getExpirationDate() != null) {
             //[holder.expirationView.setText(item.getExpirationDate().toString());
-            ResUtils.formatExpirationDate(mContext, holder.expirationView, item.getExpirationDate());
+            ResUtils.formatExpirationDateEx(mContext, holder.expirationView, item.getExpirationDate());
         }
-        holder.extraInfoView.setText("Extra Info");
-
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +77,7 @@ public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem,
         if (!holder.isDisplayed) {
             holder.isDisplayed = true;
             holder.view.setVisibility(View.INVISIBLE);
-
+gi
             // Card/item is ready to be displayed to screen: load animation
             AnimUtils.fadeIn(mContext)
                     .delay(ANIM_DELAY_INCREMENTER)
@@ -111,12 +110,10 @@ public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem,
      */
     public static class FoodItemViewHolder extends RecyclerView.ViewHolder {
         // Layout containing all items.
-        // This is a CardView in the xml file.
         public final View view;
         public final ParseImageView imageView;
         public final TextView nameView;
         public final TextView expirationView;
-        public final TextView extraInfoView;
         public edu.fe.backend.FoodItem foodItem;
 
         // Makes it so that it does not fade the item in again
@@ -128,7 +125,6 @@ public class FoodItemRecyclerAdapter extends ParseRecyclerQueryAdapter<FoodItem,
             this.imageView = (ParseImageView) view.findViewById(R.id.food_image);
             this.nameView = (TextView) view.findViewById(R.id.header);
             this.expirationView = (TextView) view.findViewById(R.id.header_2);
-            this.extraInfoView = (TextView) view.findViewById(R.id.header_3);
         }
 
     }

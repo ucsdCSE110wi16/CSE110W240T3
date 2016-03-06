@@ -23,8 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseUser;
 import com.parse.ui.ParseLoginBuilder;
@@ -39,6 +37,9 @@ import bolts.Task;
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
 import edu.fe.util.ResUtils;
+import edu.fe.util.ThemeUtils;
+import lib.material.dialogs.DialogAction;
+import lib.material.dialogs.MaterialDialog;
 
 public class MainActivity
         extends AppCompatActivity
@@ -58,6 +59,7 @@ public class MainActivity
 
     boolean mIsCategorySelected = false;
     Category mSelectedCategory = null;
+    Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,13 +71,15 @@ public class MainActivity
         Log.d("DEBUG", "Initializing variables");
         // Initialize and resolves variables
         mContainerView = (ViewGroup) findViewById(R.id.container_content);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         // Load all sample resources.
         // TODO New Thread to initialize resources, since loading bitmaps and refactoring
         // TODO them to be a certain size takes a bit of time.
         ResUtils.initialize(this);
+        ThemeUtils.setDefaultTheme(this);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +94,7 @@ public class MainActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle =
                 new ActionBarDrawerToggle(
-                    this, drawer, toolbar,
+                    this, drawer, mToolbar,
                     R.string.navigation_drawer_open,
                     R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -164,6 +168,8 @@ public class MainActivity
                                             .build();
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         transaction.replace(R.id.container, itemFragment, "expiringList").commit();
     }
 
@@ -171,8 +177,11 @@ public class MainActivity
         FragmentManager fragmentManager = getFragmentManager();
 
         Fragment categoryFragment = new CategoryListFragment();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container, categoryFragment, "categoryList").commit();
+        fragmentTransaction
+                .replace(R.id.container, categoryFragment, "categoryList")
+                .commit();
     }
 
     private void loadRecipes() {
@@ -265,12 +274,24 @@ public class MainActivity
                 if(resultCode == RESULT_OK) {
                     checkLoginInformation();
                 }
+                break;
             case NEW_ITEM_REQUEST_CODE:
                 if(resultCode == RESULT_OK) {
                     Alert.snackLong(mContainerView, getString(R.string.new_item_success));
                 } else if(resultCode == EntryActivity.RESULT_FAIL) {
                     Alert.snackLong(mContainerView, getString(R.string.new_item_fail));
                 }
+                break;
+        }
+        Fragment f = getFragmentManager().findFragmentByTag("itemList");
+        if(f instanceof ItemListFragment) {
+            ItemListFragment ilf = (ItemListFragment)f;
+            ilf.refreshObjects();
+        }
+        f  = getFragmentManager().findFragmentByTag("expiringList");
+        if(f instanceof  ItemListFragment) {
+            ItemListFragment ilf = (ItemListFragment)f;
+            ilf.refreshObjects();
         }
     }
 
@@ -299,6 +320,10 @@ public class MainActivity
         }
     }
 
+    public Toolbar getToolbar() {
+        return mToolbar;
+    }
+
     @Override
     public void onListFragmentInteraction(FoodItem item) {
         Log.d("DEBUG", "Item " + item.getName());
@@ -323,7 +348,7 @@ public class MainActivity
         ItemListFragment fragment = new ItemListFragment.Builder().setCategory(category).build();
         getFragmentManager()
                 .beginTransaction()
-                .add(R.id.container, fragment, "item-list")
+                .add(R.id.container, fragment, "itemList")
                 .addToBackStack(null)
                 .commit();
     }

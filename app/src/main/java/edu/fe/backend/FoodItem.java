@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -11,8 +12,11 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -110,6 +114,12 @@ public class FoodItem extends ParseObject {
 
     public void setExpirationDate(Date date) {
         put(EXPIRATION_DATE, date);
+    }
+
+
+    public static ParseFile createUnsavedImage(String filePath) {
+        ParseFile file = new ParseFile(new File(filePath));
+        return file;
     }
 
     public Bitmap getImage() throws ParseException {

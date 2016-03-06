@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Project FE</string>
+    <string name="app_name">Pantree</string>
     <string name="action_settings">Settings</string>
     <string name="default_title">Title</string>
     <string name="default_body">Body</string>
@@ -28,6 +28,10 @@
     <string name="entry_selectable_thumbnail">Select your thumbnail</string>
     <string name="entry_expiration_date">Expiration date</string>
     <string name="entry_selectable_date">MM/DD/YY</string>
+
+    <string name="title">Title</string>
+    <string name="body">Body</string>
+    <string name="extra">Extra info</string>
 
 
     <string name="entryPopUp">Input a food item</string>\

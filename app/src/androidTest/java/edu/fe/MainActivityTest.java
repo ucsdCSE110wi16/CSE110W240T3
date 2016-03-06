@@ -112,7 +112,7 @@ public class MainActivityTest {
         // When I click the add button
         onView(withId(R.id.fab)).perform(click());
         // The new item popup shows
-        onView(withId(R.id.activity_entry)).check(matches(isDisplayed()));
+        onView(withId(R.id.content_entry)).check(matches(isDisplayed()));
 
         // When I click the done button
         // Then the item is saved

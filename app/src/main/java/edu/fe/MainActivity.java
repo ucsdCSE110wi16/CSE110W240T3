@@ -268,7 +268,11 @@ public class MainActivity
             ItemListFragment ilf = (ItemListFragment)f;
             ilf.refreshObjects();
         }
-
+        f  = getFragmentManager().findFragmentByTag("expiringList");
+        if(f instanceof  ItemListFragment) {
+            ItemListFragment ilf = (ItemListFragment)f;
+            ilf.refreshObjects();
+        }
     }
 
     public boolean isLoggedIn() {

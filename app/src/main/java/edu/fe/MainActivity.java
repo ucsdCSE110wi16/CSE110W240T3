@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.DropBoxManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -281,6 +282,8 @@ public class MainActivity
                     Alert.snackLong(mContainerView, getString(R.string.new_item_success));
                 } else if(resultCode == EntryActivity.RESULT_FAIL) {
                     Alert.snackLong(mContainerView, getString(R.string.new_item_fail));
+                } else if(resultCode == EntryActivity.RESULT_DELETED) {
+                    Alert.snackLong(mContainerView, getString(R.string.edit_item_deleted));
                 }
                 break;
         }
@@ -328,7 +331,10 @@ public class MainActivity
     @Override
     public void onListFragmentInteraction(FoodItem item) {
         Log.d("DEBUG", "Item " + item.getName());
-        Alert.snackLong(mContainerView, "Item: " + item.getName());
+        //Alert.snackLong(mContainerView, "Item: " + item.getName());
+        Intent intent = new Intent(MainActivity.this, EntryActivity.class);
+        intent.putExtra(EntryActivity.EDIT_ITEM_ID, item.getObjectId());
+        startActivityForResult(intent, NEW_ITEM_REQUEST_CODE);
     }
 
     @Override

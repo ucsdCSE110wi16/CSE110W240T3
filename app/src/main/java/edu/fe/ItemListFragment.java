@@ -14,6 +14,9 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 
 import edu.fe.backend.Category;
@@ -56,7 +59,7 @@ public class ItemListFragment extends Fragment {
         }
 
         public Builder setMaxDate(Date date) {
-            mMaxDate = date.toString();
+            mMaxDate = DateFormat.getDateInstance().format(date);
             return this;
         }
 
@@ -99,6 +102,11 @@ public class ItemListFragment extends Fragment {
             mCategoryId = getArguments().getString(ARG_CATEGORY_ID);
             mQueryLimit = getArguments().getInt(ARG_QUERY_LIMIT);
             mSearchTerm = getArguments().getString(ARG_SEARCH_TERM);
+            try {
+                mMaxDate = DateFormat.getDateInstance().parse(getArguments().getString(ARG_MAX_DATE));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
     }

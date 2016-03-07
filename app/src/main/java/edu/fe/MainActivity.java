@@ -31,6 +31,7 @@ import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 
 import bolts.Continuation;
@@ -169,8 +170,11 @@ public class MainActivity
         mSelectedCategory = null;
         FragmentManager fragmentManager = getFragmentManager();
 
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.WEEK_OF_YEAR, 1);
+
         Fragment itemFragment = new ItemListFragment.Builder()
-                                            .setQueryLimit(10) // set max date
+                                            .setMaxDate(c.getTime())
                                             .build();
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();

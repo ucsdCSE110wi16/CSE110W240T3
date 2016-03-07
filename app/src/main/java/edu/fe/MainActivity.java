@@ -183,7 +183,6 @@ public class MainActivity
         if (hasAtLeastOneBackEntry) {
             this.resetToolbar();
             getFragmentManager().popBackStackImmediate();
-
             return;
         }
 
@@ -227,6 +226,7 @@ public class MainActivity
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction
+                .setCustomAnimations(R.anim.popup_enter_obj, R.anim.popup_exit_obj)
                 .replace(R.id.container, categoryFragment, "categoryList")
                 .commit();
     }
@@ -407,21 +407,27 @@ public class MainActivity
             translateToColorAttr = R.color.red_300;
             translateStatusBarToColorAttr = R.color.red_500;
         }
+        else if (name.equals(categories[1])) {
+            changeColor = true;
+            translateToColorAttr = R.color.orange_400;
+            translateStatusBarToColorAttr = R.color.orange_600;
+        }
         else if (name.equals(categories[2])) {
             changeColor = true;
             translateToColorAttr = R.color.indigo_500;
             translateStatusBarToColorAttr = R.color.indigo_700;
         }
-        else if (name.equals(categories[4])
-                || name.equals(categories[3]))
+        else if (name.equals(categories[3])
+                || name.equals(categories[4]))
         {
             changeColor = true;
             translateToColorAttr = R.color.green_500;
             translateStatusBarToColorAttr = R.color.green_700;
         }
-        else if (name.equals(categories[8])
+        else if (name.equals(categories[5])
+                || name.equals(categories[6])
                 || name.equals(categories[7])
-                || name.equals(categories[5]))
+                || name.equals(categories[8]))
         {
             changeColor = true;
             translateToColorAttr = R.color.grey_500;
@@ -431,6 +437,11 @@ public class MainActivity
             changeColor = true;
             translateToColorAttr = R.color.brown_500;
             translateStatusBarToColorAttr = R.color.brown_700;
+        }
+        else if (name.equals(categories[10])) {
+            changeColor = true;
+            translateToColorAttr = R.color.cyan_500;
+            translateStatusBarToColorAttr = R.color.cyan_700;
         }
 
         if (changeColor) {
@@ -444,6 +455,11 @@ public class MainActivity
         ItemListFragment fragment = new ItemListFragment.Builder().setCategory(category).build();
         getFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(
+                        R.anim.popup_enter_obj,
+                        R.anim.popup_exit_obj,
+                        R.anim.popup_enter_obj,
+                        R.anim.popup_exit_obj)
                 .add(R.id.container, fragment, "itemList")
                 .addToBackStack(null)
                 .commit();

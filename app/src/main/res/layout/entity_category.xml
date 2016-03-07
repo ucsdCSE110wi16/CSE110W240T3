@@ -16,7 +16,7 @@
     <RelativeLayout
         android:id="@+id/category_layout"
         android:layout_width="match_parent"
-        android:layout_height="196dp"
+        android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:orientation="vertical">
 
@@ -26,28 +26,19 @@
             android:layout_height="136dp" />
 
         <LinearLayout
+            android:layout_below="@id/category_thumbnail"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content"
             android:background="@color/cc_blue_grey"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:padding="12dp" >
 
             <TextView
                 android:id="@+id/category_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:text="@string/default_title"
                 android:textAppearance="?attr/textAppearanceSearchResultTitle"
-                android:textColor="@color/white" />
-
-            <TextView
-                android:id="@+id/category_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/default_body"
-                android:textAppearance="?attr/textAppearanceListItem"
                 android:textColor="@color/white" />
 
         </LinearLayout>

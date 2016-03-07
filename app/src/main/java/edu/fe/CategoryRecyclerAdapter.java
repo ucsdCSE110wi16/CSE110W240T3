@@ -1,20 +1,16 @@
 package edu.fe;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.parse.ParseImageView;
 import com.parse.ParseQueryAdapter;
 
-import bolts.Continuation;
-import bolts.Task;
 import edu.fe.backend.Category;
 
 /**
@@ -54,7 +50,6 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
         String description = category.getDescription();
 
         holder.nameView.setText(name != null ? name : "");
-        holder.descriptionView.setText(description != null ? description : "");
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +69,6 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
         public final View view;
         public final ParseImageView thumbnailView;
         public final TextView nameView;
-        public final TextView descriptionView;
         public Category category;
 
         // Makes it so that it does not fade the item in again
@@ -85,7 +79,6 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
             this.view = view;
             this.thumbnailView = (ParseImageView) view.findViewById(R.id.category_thumbnail);
             this.nameView = (TextView) view.findViewById(R.id.category_name);
-            this.descriptionView = (TextView) view.findViewById(R.id.category_description);
         }
     }
 }

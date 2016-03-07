@@ -14,6 +14,8 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 
 import edu.fe.backend.Category;
@@ -56,7 +58,7 @@ public class ItemListFragment extends Fragment {
         }
 
         public Builder setMaxDate(Date date) {
-            mMaxDate = date.toString();
+            mMaxDate = DateFormat.getDateInstance().format(date);
             return this;
         }
 
@@ -99,6 +101,11 @@ public class ItemListFragment extends Fragment {
             mCategoryId = getArguments().getString(ARG_CATEGORY_ID);
             mQueryLimit = getArguments().getInt(ARG_QUERY_LIMIT);
             mSearchTerm = getArguments().getString(ARG_SEARCH_TERM);
+            try {
+                mMaxDate = DateFormat.getDateInstance().parse(getArguments().getString(ARG_MAX_DATE));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -107,6 +114,14 @@ public class ItemListFragment extends Fragment {
         if(mAdapter != null) {
             mAdapter.loadObjects();
         }
+    }
+
+    private View getRecyclerView() {
+        return getView().findViewById(R.id.item_list);
+    }
+
+    private View getEmptyTextView() {
+        return getView().findViewById(R.id.empty_text);
     }
 
     @Override
@@ -137,9 +152,26 @@ public class ItemListFragment extends Fragment {
             }
         }, false, mListener, getActivity());
 
+        mAdapter.addOnDataSetChangedListener(new ParseRecyclerQueryAdapter.OnDataSetChangedListener() {
+            @Override
+            public void onDataSetChanged() {
+                if(mAdapter.getItemCount() > 0) {
+                    View emptyTextView = getEmptyTextView();
+                    if(emptyTextView != null) {
+                        emptyTextView.setVisibility(View.GONE);
+                    }
+                } else {
+                    View emptyTextView = getEmptyTextView();
+                    if(emptyTextView != null) {
+                        emptyTextView.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
 
-        if (view instanceof RecyclerView) {
-            RecyclerView recyclerView = (RecyclerView) view;
+        View recycler = view.findViewById(R.id.item_list);
+        if (recycler instanceof RecyclerView) {
+            RecyclerView recyclerView = (RecyclerView) recycler;
             recyclerView.setAdapter(mAdapter);
         }
         return view;

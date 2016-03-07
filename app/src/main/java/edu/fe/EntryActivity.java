@@ -38,19 +38,24 @@ import bolts.Continuation;
 import bolts.Task;
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
+import lib.material.dialogs.DialogAction;
 import lib.material.dialogs.MaterialDialog;
 import lib.material.dialogs.Theme;
 import lib.material.picker.date.DatePickerDialog;
 
 public class EntryActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public static final String ITEM_CATEGORY_HINT = "item-category-hint";
+    public static final String EDIT_ITEM_ID = "edit-item-id";
     public static final int RESULT_FAIL = RESULT_FIRST_USER;
+    public static final int RESULT_DELETED = RESULT_FAIL + 1;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int ACTION_TAKE_PHOTO_B = 1;
     private static final String TAG = EntryActivity.class.getSimpleName();
 
     private ParseImageView mImageView;
     private String mCurrentPhotoPath;
+    private FoodItem mFoodItem;
 
     Button mCategoryButton;
     AppCompatImageButton mDateButton;
@@ -59,6 +64,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
     EditText mQuantityField;
     TextView mDateText;
     TextView mSelectThumbnailText;
+    MenuItem mDeleteMenuItem;
 
     Date mSelectedDate;
 
@@ -94,11 +100,44 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         mCameraButton = (AppCompatImageButton) findViewById(R.id.item_camera_button);
         mDateButton = (AppCompatImageButton) findViewById(R.id.item_date_button);
 
-
-
         mCategoryButton.setOnClickListener(this);
         mCameraButton.setOnClickListener(this);
         mDateButton.setOnClickListener(this);
+
+        Bundle extras = getIntent().getExtras();
+        if(extras != null) {
+            String editId = extras.getString(EDIT_ITEM_ID);
+            if(editId != null && !editId.isEmpty()) {
+                // we are editing an object
+                ParseQuery<FoodItem> q = ParseQuery.getQuery(FoodItem.class);
+                q.fromLocalDatastore();
+                try {
+                    mFoodItem = q.get(editId);
+                    mNameField.setText(mFoodItem.getName());
+                    mQuantityField.setText(Integer.toString(mFoodItem.getQuantity()));
+                    mSelectedDate = mFoodItem.getExpirationDate();
+                    setDateText(mSelectedDate);
+                    Category c = mFoodItem.getCategory();
+                    mCategoryButton.setText(c.getName());
+                    mImageView.setParseFile(mFoodItem.getImageLazy());
+                    mImageView.loadInBackground();
+                } catch (ParseException e) {
+                    invalidField("Failed to load existing item for editing");
+                }
+            } else {
+                String categoryHint = extras.getString(ITEM_CATEGORY_HINT);
+                if(categoryHint != null && !categoryHint.isEmpty()) {
+                    mCategoryButton.setText(categoryHint);
+                }
+            }
+        }
+    }
+
+    private void setDateText(Date date) {
+        if(mDateText != null && mSelectedDate != null) {
+            DateFormat df = new SimpleDateFormat("MMM d, yyyy");
+            mDateText.setText(df.format(date));
+        }
     }
 
     final DatePickerDialog.OnDateSetListener mOnDateSetListener =
@@ -107,8 +146,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         public void onDateSet(DatePickerDialog.DateAttributeSet set) {
             Calendar c = new GregorianCalendar(set.year, set.month, set.day);
             mSelectedDate = c.getTime();
-            DateFormat df = new SimpleDateFormat("MMM d, yyyy");
-            mDateText.setText(df.format(mSelectedDate));
+            setDateText(mSelectedDate);
         }
     };
 
@@ -126,17 +164,17 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         }
         else if (view.getId() == R.id.item_select_category) {
             new MaterialDialog.Builder(EntryActivity.this)
-                    .theme(Theme.LIGHT)
-                    .items(R.array.category_array)
-                    .itemsCallback(new MaterialDialog.ListCallback() {
-                        @Override
-                        public void onSelection(MaterialDialog dialog,
-                                                View view,
-                                                int which,
-                                                CharSequence text) {
-                            mCategoryButton.setText(text);
-                        }
-                    }).show();
+                            .theme(Theme.LIGHT)
+                            .items(R.array.category_array)
+                            .itemsCallback(new MaterialDialog.ListCallback() {
+                                @Override
+                                public void onSelection(MaterialDialog dialog,
+                                                        View view,
+                                                        int which,
+                                                        CharSequence text) {
+                                    mCategoryButton.setText(text);
+                                }
+                            }).show();
         }
         else if (view.getId() == R.id.entry_toolbar) {
             finish();
@@ -147,6 +185,10 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_entry, menu);
+        mDeleteMenuItem = menu.findItem(R.id.entry_delete);
+        if(mFoodItem != null) {
+            mDeleteMenuItem.setVisible(true);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -160,7 +202,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
             return false;
         }
 
-        final FoodItem foodItem = new FoodItem();
+        final FoodItem foodItem = mFoodItem == null ? new FoodItem() : mFoodItem;
         if (mQuantityField.getText().toString().trim().length() >0) {
             foodItem.setQuantity(Integer.parseInt(mQuantityField.getText().toString()));
         }
@@ -229,6 +271,30 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
             // When the back-arrow button is pressed in toolbar, finish
             // the activity and go back to the previous one.
             finish();
+        }
+        else if(item.getItemId() == R.id.entry_delete) {
+            new MaterialDialog.Builder(this)
+                    .title(R.string.item_delete_confirmation)
+                    .content(R.string.item_delete_content)
+                    .positiveText(android.R.string.yes)
+                    .negativeText(android.R.string.no)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog dialog, DialogAction which) {
+                            if(mFoodItem != null) {
+                                try {
+                                    mFoodItem.deleteEventually();
+                                    mFoodItem.unpin();
+                                    setResult(RESULT_DELETED);
+                                    finish();
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                    setResult(RESULT_FAIL);
+                                    finish();
+                                }
+                            }
+                        }
+                    }).show();
         }
 
         return super.onOptionsItemSelected(item);

@@ -6,7 +6,13 @@
     android:orientation="vertical"
     android:padding="14dp"
     android:background="@color/blue_grey_800"
+    android:id="@+id/content_entry"
     app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+    <!--android:paddingLeft="@dimen/activity_horizontal_margin"-->
+    <!--android:paddingRight="@dimen/activity_horizontal_margin"-->
+    <!--android:paddingBottom="@dimen/activity_vertical_margin"-->
+    <!--android:paddingTop="@dimen/activity_vertical_margin"-->
+
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -135,7 +141,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-
                     <!-- this particular LinearLayout is used to center the text -->
                     <LinearLayout
                         android:layout_width="0dp"
@@ -174,6 +179,5 @@
 
             </LinearLayout>
         </LinearLayout>
-
     </android.support.v7.widget.CardView>
 </LinearLayout>

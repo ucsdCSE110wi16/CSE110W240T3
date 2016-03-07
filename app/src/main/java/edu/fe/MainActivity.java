@@ -36,6 +36,7 @@ import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 
 import bolts.Continuation;
@@ -108,6 +109,10 @@ public class MainActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, EntryActivity.class);
+                // try and get hint
+                if(mSelectedCategory != null) {
+                    intent.putExtra(EntryActivity.ITEM_CATEGORY_HINT, mSelectedCategory.getName());
+                }
                 startActivityForResult(intent, NEW_ITEM_REQUEST_CODE);
             }
         });
@@ -200,8 +205,11 @@ public class MainActivity
     private void loadExpiringSoon() {
         this.translateToolbar();
 
+        mSelectedCategory = null;
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.WEEK_OF_YEAR, 1);
         Fragment itemFragment = new ItemListFragment.Builder()
-                                            .setQueryLimit(10) // set max date
+                                            .setMaxDate(c.getTime())
                                             .build();
 
         FragmentManager fragmentManager = getFragmentManager();
@@ -213,6 +221,7 @@ public class MainActivity
     private void loadCategories() {
         this.resetToolbar();
 
+        mSelectedCategory = null;
         FragmentManager fragmentManager = getFragmentManager();
         Fragment categoryFragment = new CategoryListFragment();
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -220,6 +229,14 @@ public class MainActivity
         fragmentTransaction
                 .replace(R.id.container, categoryFragment, "categoryList")
                 .commit();
+    }
+
+    private void loadRecipes() {
+        FragmentManager fragmentManager = getFragmentManager();
+
+        Fragment recipeFragment = new RecipeListFragment();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container, recipeFragment, "recipeList").commit();
     }
 
     @Override
@@ -257,7 +274,8 @@ public class MainActivity
                         .content("Your data will no longer be saved to the cloud")
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            public void onClick(@NonNull MaterialDialog dialog,
+                                                @NonNull DialogAction which) {
                                 ParseUser.logOut();
                                 checkLoginInformation();
                             }
@@ -276,6 +294,11 @@ public class MainActivity
             case R.id.nav_expiring: {
                 // clear fragment stacks and replace
                 loadExpiringSoon();
+                break;
+            }
+            case R.id.nav_find_recipes: {
+                // clear fragment stacks and replace
+                loadRecipes();
                 break;
             }
         }
@@ -298,6 +321,8 @@ public class MainActivity
                     Alert.snackLong(mContainerView, getString(R.string.new_item_success));
                 } else if(resultCode == EntryActivity.RESULT_FAIL) {
                     Alert.snackLong(mContainerView, getString(R.string.new_item_fail));
+                } else if(resultCode == EntryActivity.RESULT_DELETED) {
+                    Alert.snackLong(mContainerView, getString(R.string.edit_item_deleted));
                 }
                 break;
         }
@@ -345,7 +370,10 @@ public class MainActivity
     @Override
     public void onListFragmentInteraction(FoodItem item) {
         Log.d("DEBUG", "Item " + item.getName());
-        Alert.snackLong(mContainerView, "Item: " + item.getName());
+        //Alert.snackLong(mContainerView, "Item: " + item.getName());
+        Intent intent = new Intent(MainActivity.this, EntryActivity.class);
+        intent.putExtra(EntryActivity.EDIT_ITEM_ID, item.getObjectId());
+        startActivityForResult(intent, NEW_ITEM_REQUEST_CODE);
     }
 
     @Override
@@ -412,6 +440,7 @@ public class MainActivity
             AnimUtils.translateWindowStatusBarColor(this, fromColorDarkAttr, translateStatusBarToColorAttr, 300);
         }
 
+        mSelectedCategory = category;
         ItemListFragment fragment = new ItemListFragment.Builder().setCategory(category).build();
         getFragmentManager()
                 .beginTransaction()

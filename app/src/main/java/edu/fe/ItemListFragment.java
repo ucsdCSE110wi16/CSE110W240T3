@@ -103,7 +103,11 @@ public class ItemListFragment extends Fragment {
             mQueryLimit = getArguments().getInt(ARG_QUERY_LIMIT);
             mSearchTerm = getArguments().getString(ARG_SEARCH_TERM);
             try {
-                mMaxDate = DateFormat.getDateInstance().parse(getArguments().getString(ARG_MAX_DATE));
+                String dateStr = getArguments().getString(ARG_MAX_DATE);
+                if(dateStr != null && !dateStr.isEmpty())
+                {
+                    mMaxDate = DateFormat.getDateInstance().parse(getArguments().getString(ARG_MAX_DATE));
+                }
             } catch (ParseException e) {
                 e.printStackTrace();
             }

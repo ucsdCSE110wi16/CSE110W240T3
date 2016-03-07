@@ -109,6 +109,14 @@ public class ItemListFragment extends Fragment {
         }
     }
 
+    private View getRecyclerView() {
+        return getView().findViewById(R.id.item_list);
+    }
+
+    private View getEmptyTextView() {
+        return getView().findViewById(R.id.empty_text);
+    }
+
     @Override
     public View onCreateView
             (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -137,9 +145,26 @@ public class ItemListFragment extends Fragment {
             }
         }, false, mListener, getActivity());
 
+        mAdapter.addOnDataSetChangedListener(new ParseRecyclerQueryAdapter.OnDataSetChangedListener() {
+            @Override
+            public void onDataSetChanged() {
+                if(mAdapter.getItemCount() > 0) {
+                    View emptyTextView = getEmptyTextView();
+                    if(emptyTextView != null) {
+                        emptyTextView.setVisibility(View.GONE);
+                    }
+                } else {
+                    View emptyTextView = getEmptyTextView();
+                    if(emptyTextView != null) {
+                        emptyTextView.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
 
-        if (view instanceof RecyclerView) {
-            RecyclerView recyclerView = (RecyclerView) view;
+        View recycler = view.findViewById(R.id.item_list);
+        if (recycler instanceof RecyclerView) {
+            RecyclerView recyclerView = (RecyclerView) recycler;
             recyclerView.setAdapter(mAdapter);
         }
         return view;

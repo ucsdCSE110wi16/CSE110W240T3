@@ -67,6 +67,8 @@
     <string name="item_delete_confirmation">Are you sure?</string>
     <string name="item_delete_content">You cannot undo this.</string>
 
+    <string name="nothing_here">Nothing Here</string>
+
     <string-array name="category_array">
         <item>Meat</item>
         <item>Poultry</item>

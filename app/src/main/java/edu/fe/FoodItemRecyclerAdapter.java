@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.parse.ParseFile;
 import com.parse.ParseImageView;
 import com.parse.ParseQueryAdapter;
 
@@ -54,8 +55,13 @@ public class FoodItemRecyclerAdapter
     public void onBindViewHolder(final FoodItemViewHolder holder, int position) {
         FoodItem item = getItem(position);
         holder.foodItem = item;
-        holder.imageView.setParseFile(item.getImageLazy());
-        holder.imageView.loadInBackground();
+        ParseFile image = item.getImageLazy();
+        if(image != null) {
+            holder.imageView.setParseFile(item.getImageLazy());
+            holder.imageView.loadInBackground();
+        } else {
+            holder.imageView.setImageResource(R.drawable.ic_camera_alt_grey_300_24dp);
+        }
         holder.nameView.setText(item.getName());
         if(item.getExpirationDate() != null) {
             //[holder.expirationView.setText(item.getExpirationDate().toString());

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edu.fe.widget.LoadingDialog
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="24dp" >
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/avl_loading_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:indicator="LineScale"
+        app:indicator_color="@color/blue_grey_500"/>
+
+    <TextView
+        android:layout_marginLeft="40dp"
+        android:id="@+id/loading_dialog_text"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loading"
+        style="@style/Base.DialogWindowTitle.AppCompat"/>
+</edu.fe.widget.LoadingDialog>

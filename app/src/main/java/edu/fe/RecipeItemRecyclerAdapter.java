@@ -6,30 +6,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import edu.fe.backend.RecipeItem;
+import edu.fe.backend.Recipe;
 
 /**
  * Created by wongk on 3/2/2016.
  */
 public class RecipeItemRecyclerAdapter extends RecyclerView.Adapter<RecipeItemRecyclerAdapter.RecipeViewHolder> {
 
-    private RecipeItem[] recipeList;
+    private Recipe.Item[] mRecipeItems;
 
-    public RecipeItemRecyclerAdapter(RecipeItem[] recList) {
-        recipeList = recList;
+    public RecipeItemRecyclerAdapter(Recipe.Item[] items) {
+        if (items == null) items = new Recipe.Item[0];
+        setRecipeList(items);
+    }
+
+    public void setRecipeList(Recipe.Item[] items) {
+        mRecipeItems = items;
     }
 
     @Override
     public int getItemCount() {
-        return recipeList.length;
+        return mRecipeItems.length;
     }
 
     public void onBindViewHolder(RecipeViewHolder recipeViewHolder, int i) {
-        RecipeItem recipe = recipeList[i];
-        recipeViewHolder.vName.setText(recipe.getName());
-        recipeViewHolder.vUrl.setText(recipe.getUrl());
-        recipeViewHolder.vCookingTime.setText(recipe.getCookingTime());
-        recipeViewHolder.vMissIngs.setText(recipe.getMissingIngredients());
+        Recipe.Item recipe = mRecipeItems[i];
+        recipeViewHolder.uri.setText(recipe.url);
+        recipeViewHolder.name.setText(recipe.name);
+        recipeViewHolder.cookingTime.setText(recipe.cookingTime);
+        recipeViewHolder.missingIngredients.setText(recipe.missingIngredients);
     }
 
     public RecipeViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -42,17 +47,17 @@ public class RecipeItemRecyclerAdapter extends RecyclerView.Adapter<RecipeItemRe
 
     public static class RecipeViewHolder extends RecyclerView.ViewHolder {
 
-        protected TextView vName;
-        protected TextView vMissIngs;
-        protected TextView vUrl;
-        protected TextView vCookingTime;
+        public TextView name;
+        public TextView missingIngredients;
+        public TextView uri;
+        public TextView cookingTime;
 
         public RecipeViewHolder(View v) {
             super(v);
-            vName = (TextView) v.findViewById(R.id.txtName);
-            vMissIngs = (TextView) v.findViewById(R.id.txtMissingIngredients);
-            vUrl = (TextView) v.findViewById(R.id.txtUrl);
-            vCookingTime = (TextView) v.findViewById(R.id.txtCookingTime);
+            uri = (TextView) v.findViewById(R.id.txtUrl);
+            name = (TextView) v.findViewById(R.id.txtName);
+            missingIngredients = (TextView) v.findViewById(R.id.txtMissingIngredients);
+            cookingTime = (TextView) v.findViewById(R.id.txtCookingTime);
 
         }
     }

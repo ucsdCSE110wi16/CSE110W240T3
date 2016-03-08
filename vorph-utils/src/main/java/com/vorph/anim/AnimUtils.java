@@ -2,26 +2,30 @@ package com.vorph.anim;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.AnimRes;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.Toolbar;
-
-import com.vorph.utils.R;
 
 public class AnimUtils {
 
 	static Context context;
-	
 	public static void init(Context context) {
 		AnimUtils.context = context;
 	}
@@ -155,6 +159,84 @@ public class AnimUtils {
 		return fadeOut;
 	}
 
+	public static void changeStatusBarColor(Activity activity, int attr) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			Window window = activity.getWindow();
+			window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+			window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+			window.setStatusBarColor(activity.getResources().getColor(attr));
+		}
+	}
+
+	public static void translateColor(Context context,
+									  final View view,
+									  int colorFromAttr,
+									  int colorAttr,
+									  int duration) {
+		int colorFrom = context.getResources().getColor(colorFromAttr);
+		int colorTo = context.getResources().getColor(colorAttr);
+
+		ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+		colorAnimation.setDuration(duration);
+		colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+			@Override public void onAnimationUpdate(ValueAnimator animator) {
+				view.setBackgroundColor((int) animator.getAnimatedValue());
+			}
+		});
+		colorAnimation.start();
+	}
+
+	public static void translateWindowStatusBarColor(Activity activity,
+													 int colorFromAttr,
+													 int colorAttr,
+													 int duration)
+	{
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			final Window window = activity.getWindow();
+			window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+			int colorFrom = activity.getResources().getColor(colorFromAttr);
+			int colorTo = activity.getResources().getColor(colorAttr);
+
+			ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+			colorAnimation.setDuration(duration);
+			colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+				@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+				@Override public void onAnimationUpdate(ValueAnimator animator) {
+					window.setStatusBarColor((int) animator.getAnimatedValue());
+				}
+			});
+			colorAnimation.start();
+		}
+	}
+
+	public static ValueAnimator getWindowStatusBarTranslator(Activity activity,
+															 int colorFromAttr,
+															 int colorAttr,
+															 int duration)
+	{
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			final Window window = activity.getWindow();
+			window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+			int colorFrom = getColor(activity, colorFromAttr);
+			int colorTo = getColor(activity, colorAttr);
+
+			ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+			colorAnimation.setDuration(duration);
+			colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+				@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+				@Override
+				public void onAnimationUpdate(ValueAnimator animator) {
+					window.setStatusBarColor((int) animator.getAnimatedValue());
+				}
+			});
+			return colorAnimation;
+		}
+
+		return null;
+	}
+
 
 //	// TODO Needs some work, don't use
 //	@Deprecated
@@ -171,30 +253,37 @@ public class AnimUtils {
 //				: toolbar.getResources().getColor(colorNon;
 //		animateToolbar(toolbarAnim, toolbar, reveal, color, 300, 0);
 //	}
-//
-//	public static void animateToolbar(final Animation toolAnim,
-//									  final Toolbar toolbar,
-//									  final boolean reveal,
-//									  final int color,
-//									  final int duration,
-//									  final int delay)
-//	{
-//		toolbar.setAnimation(toolAnim);
-//		toolbar.animate()
-//				.setDuration(duration)
-//				.setStartDelay(delay)
-//				.setListener(new AnimatorListenerAdapter() {
-//					@Override
-//					public void onAnimationEnd(Animator animation) {
-//						super.onAnimationEnd(animation);
-//						toolbar.setTitleTextColor(color);
-//
-//						// TODO Current animate toolbar needs some work on animation colors.
-////						toolbar.setBackgroundColor(reveal
-////								? toolbar.getResources().getColor(R.color.recyclerBackground)
-////								: toolbar.getResources().getColor(R.color.blue_400));
-//					}
-//				}).start();
-//	}
+
+	@TargetApi(Build.VERSION_CODES.KITKAT)
+	public static void animateToolbar(final Animation toolAnim,
+									  final Toolbar toolbar,
+									  final boolean reveal,
+									  final int color,
+									  final int duration,
+									  final int delay,
+									  final int revealColorAttr)
+	{
+		toolbar.setAnimation(toolAnim);
+		toolbar.animate()
+				.setDuration(duration)
+				.setStartDelay(delay)
+				.setListener(new AnimatorListenerAdapter() {
+					@Override
+					public void onAnimationEnd(Animator animation) {
+						super.onAnimationEnd(animation);
+						toolbar.setTitleTextColor(color);
+						toolbar.setBackgroundColor(getColor(toolbar.getContext(), revealColorAttr));
+					}
+				}).start();
+	}
+
+	private static int getColor(Context context, @ColorRes int colorId) {
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
+			//noinspection deprecation
+			return context.getResources().getColor(colorId);
+		} else {
+			return context.getColor(colorId);
+		}
+	}
 
 }

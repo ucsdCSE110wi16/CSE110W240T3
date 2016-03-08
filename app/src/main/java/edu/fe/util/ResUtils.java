@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.support.annotation.ColorRes;
 import android.util.TypedValue;
 import android.widget.TextView;
 
@@ -32,7 +34,7 @@ public class ResUtils {
         if(current.after(expiration)) {
             // expired already
             textView.setText("Expired");
-            textView.setTextColor(context.getResources().getColor(R.color.red_500));
+            textView.setTextColor(getColor(context, R.color.red_500));
             return;
         }
 
@@ -42,18 +44,18 @@ public class ResUtils {
             // more than a week
             SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy");
             textView.setText("Expires on " + sdf.format(date));
-            textView.setTextColor(context.getResources().getColor(R.color.grey_500));
+            textView.setTextColor(getColor(context, R.color.grey_500));
             return;
         } else if(daysLeft > 1) {
             // format days until expiration
             textView.setText("Expires in " + daysLeft + " days");
-            textView.setTextColor(context.getResources().getColor(R.color.grey_500));
+            textView.setTextColor(getColor(context, R.color.grey_500));
         } else if(daysLeft > 0) {
             textView.setText("Expires Tomorrow");
-            textView.setTextColor(context.getResources().getColor(R.color.grey_500));
+            textView.setTextColor(getColor(context, R.color.grey_500));
         } else {
             textView.setText("Expires Today");
-            textView.setTextColor(context.getResources().getColor(R.color.red_300));
+            textView.setTextColor(getColor(context, R.color.red_300));
         }
 
 
@@ -66,7 +68,7 @@ public class ResUtils {
         if(current.after(date)) {
             // expired already
             textView.setText("Expired");
-            textView.setTextColor(context.getResources().getColor(R.color.red_500));
+            textView.setTextColor(getColor(context, R.color.red_500));
             return;
         }
 
@@ -74,7 +76,7 @@ public class ResUtils {
         if(delta > SEVENDAYS_MS) {
             SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy");
             textView.setText("Expires on " + sdf.format(date));
-            textView.setTextColor(context.getResources().getColor(R.color.grey_500));
+            textView.setTextColor(getColor(context, R.color.grey_500));
             return;
         } else if (delta > ONEDAY_MS){
             // find how many days we have
@@ -83,12 +85,12 @@ public class ResUtils {
                 textView.setText("Expires in " + numDays + " days");
             else
                 textView.setText("Expires in Tomorrow");
-            textView.setTextColor(context.getResources().getColor(R.color.grey_500));
+            textView.setTextColor(getColor(context, R.color.grey_500));
             return;
         } else {
 
             textView.setText("Expires Today");
-            textView.setTextColor(context.getResources().getColor(R.color.red_300));
+            textView.setTextColor(getColor(context, R.color.red_300));
         }
     }
 
@@ -114,6 +116,15 @@ public class ResUtils {
         int color = a.getColor(0, 0);
         a.recycle();
         return color;
+    }
+
+    public static int getColor(Context context, @ColorRes int colorId) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            //noinspection deprecation
+            return context.getResources().getColor(colorId);
+        } else {
+            return context.getColor(colorId);
+        }
     }
 
     // Calculated Required sampled image

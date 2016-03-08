@@ -1,10 +1,14 @@
 package edu.fe;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,15 +25,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseUser;
 import com.parse.ui.ParseLoginBuilder;
+import com.vorph.anim.AnimUtils;
 import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 
 import bolts.Continuation;
@@ -39,6 +46,7 @@ import edu.fe.backend.FoodItem;
 import edu.fe.util.ResUtils;
 import edu.fe.util.ThemeUtils;
 import lib.material.dialogs.DialogAction;
+import lib.material.dialogs.GravityEnum;
 import lib.material.dialogs.MaterialDialog;
 
 public class MainActivity
@@ -53,13 +61,23 @@ public class MainActivity
     TextView loginEmailView;
     MenuItem loginMenuItem;
     MenuItem signoutMenuItem;
+    Category mSelectedCategory = null;
+    Toolbar mToolbar;
+    FloatingActionButton mFab;
+
 
     final static int LOGIN_REQUEST_CODE = 0;
     final static int NEW_ITEM_REQUEST_CODE = 1;
 
+    String[] mCategoriesStringArray;
+
+    int mPrimaryColor = 0;
+    int mPrimaryColorDark = 0;
+    int mLastTranslationColor = 0;
+    int mLastTranslationColorDark = 0;
+
     boolean mIsCategorySelected = false;
-    Category mSelectedCategory = null;
-    Toolbar mToolbar;
+    boolean mToolbarHasChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +85,11 @@ public class MainActivity
         // Captures and forwards all log calls to DEBUG tagged in LogCat.
         ExceptionHandler.Embed(ExceptionHandler.DEFAULT_LOG_TYPE);
         setContentView(R.layout.activity_main);
+
+        mPrimaryColor = R.color.colorPrimary;
+        mPrimaryColorDark = R.color.colorPrimaryDark;
+        mLastTranslationColor = mPrimaryColor;
+        mLastTranslationColorDark = mPrimaryColorDark;
 
         Log.d("DEBUG", "Initializing variables");
         // Initialize and resolves variables
@@ -81,11 +104,15 @@ public class MainActivity
         ThemeUtils.setDefaultTheme(this);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, EntryActivity.class);
+                // try and get hint
+                if(mSelectedCategory != null) {
+                    intent.putExtra(EntryActivity.ITEM_CATEGORY_HINT, mSelectedCategory.getName());
+                }
                 startActivityForResult(intent, NEW_ITEM_REQUEST_CODE);
             }
         });
@@ -105,7 +132,7 @@ public class MainActivity
 
         // hack because of an AppCompat Change https://code.google.com/p/android/issues/detail?id=190786
         // http://stackoverflow.com/questions/33161345/android-support-v23-1-0-update-breaks-navigationview-get-find-header
-        View header = LayoutInflater.from(this).inflate(R.layout.nav_header_dust, null);
+        View header = LayoutInflater.from(this).inflate(R.layout.nav_header, null);
         navigationView.addHeaderView(header);
         Menu menu = navigationView.getMenu();
         loginNameView = (TextView)header.findViewById(R.id.drawer_parse_name);
@@ -154,32 +181,52 @@ public class MainActivity
         int count = getFragmentManager().getBackStackEntryCount();
         boolean hasAtLeastOneBackEntry = count > 0;
         if (hasAtLeastOneBackEntry) {
+            this.resetToolbar();
             getFragmentManager().popBackStackImmediate();
-        } else {
-            super.onBackPressed();
+            return;
         }
+
+        new MaterialDialog.Builder(this)
+                        .content("You're about to exit the application")
+                        .contentGravity(GravityEnum.CENTER)
+                        .typeface(Typeface.DEFAULT_BOLD, Typeface.DEFAULT_BOLD)
+                        .positiveText("Ok")
+                        .negativeText("Dismiss")
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog,
+                                                @NonNull DialogAction which) {
+                                MainActivity.super.onBackPressed();
+                            }
+                        }).show();
     }
 
     private void loadExpiringSoon() {
-        FragmentManager fragmentManager = getFragmentManager();
+        this.translateToolbar();
 
+        mSelectedCategory = null;
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.WEEK_OF_YEAR, 1);
         Fragment itemFragment = new ItemListFragment.Builder()
-                                            .setQueryLimit(10) // set max date
+                                            .setMaxDate(c.getTime())
                                             .build();
 
+        FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         transaction.replace(R.id.container, itemFragment, "expiringList").commit();
     }
 
     private void loadCategories() {
-        FragmentManager fragmentManager = getFragmentManager();
+        this.resetToolbar();
 
+        mSelectedCategory = null;
+        FragmentManager fragmentManager = getFragmentManager();
         Fragment categoryFragment = new CategoryListFragment();
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction
+                .setCustomAnimations(R.anim.popup_enter_obj, R.anim.popup_exit_obj)
                 .replace(R.id.container, categoryFragment, "categoryList")
                 .commit();
     }
@@ -192,14 +239,6 @@ public class MainActivity
         fragmentTransaction.replace(R.id.container, recipeFragment, "recipeList").commit();
     }
 
-    /*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-    */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -228,14 +267,15 @@ public class MainActivity
                 break;
             }
             case R.id.nav_signout: {
-                new com.afollestad.materialdialogs.MaterialDialog.Builder(this)
+                new MaterialDialog.Builder(this)
                         .title("Are you sure?")
                         .positiveText(android.R.string.yes)
                         .negativeText(android.R.string.cancel)
                         .content("Your data will no longer be saved to the cloud")
-                        .onPositive(new com.afollestad.materialdialogs.MaterialDialog.SingleButtonCallback() {
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
-                            public void onClick(@NonNull com.afollestad.materialdialogs.MaterialDialog dialog, @NonNull com.afollestad.materialdialogs.DialogAction which) {
+                            public void onClick(@NonNull MaterialDialog dialog,
+                                                @NonNull DialogAction which) {
                                 ParseUser.logOut();
                                 checkLoginInformation();
                             }
@@ -281,6 +321,8 @@ public class MainActivity
                     Alert.snackLong(mContainerView, getString(R.string.new_item_success));
                 } else if(resultCode == EntryActivity.RESULT_FAIL) {
                     Alert.snackLong(mContainerView, getString(R.string.new_item_fail));
+                } else if(resultCode == EntryActivity.RESULT_DELETED) {
+                    Alert.snackLong(mContainerView, getString(R.string.edit_item_deleted));
                 }
                 break;
         }
@@ -328,7 +370,10 @@ public class MainActivity
     @Override
     public void onListFragmentInteraction(FoodItem item) {
         Log.d("DEBUG", "Item " + item.getName());
-        Alert.snackLong(mContainerView, "Item: " + item.getName());
+        //Alert.snackLong(mContainerView, "Item: " + item.getName());
+        Intent intent = new Intent(MainActivity.this, EntryActivity.class);
+        intent.putExtra(EntryActivity.EDIT_ITEM_ID, item.getObjectId());
+        startActivityForResult(intent, NEW_ITEM_REQUEST_CODE);
     }
 
     @Override
@@ -337,8 +382,8 @@ public class MainActivity
     }
 
     void showAboutDialog() {
-        new com.afollestad.materialdialogs.MaterialDialog.Builder(this)
-                .title("About Project FE")
+        new MaterialDialog.Builder(this)
+                .title("About " + R.string.app_name)
                 .content(R.string.about_popup_content)
                 .positiveText("Close")
                 .show();
@@ -346,11 +391,127 @@ public class MainActivity
 
     @Override
     public void onCategorySelected(Category category) {
+        final String[] categories = getResources().getStringArray(R.array.category_array);
+
+        mToolbarHasChanged = true;
+        boolean changeColor = false;
+        int fromColorAttr = mPrimaryColor;
+        int fromColorDarkAttr = mPrimaryColorDark;
+        int translateToColorAttr = 0;
+        int translateStatusBarToColorAttr = 0;
+
+        String name = category.getName();
+
+        if (name.equals(categories[0])) {
+            changeColor = true;
+            translateToColorAttr = R.color.red_300;
+            translateStatusBarToColorAttr = R.color.red_500;
+        }
+        else if (name.equals(categories[1])) {
+            changeColor = true;
+            translateToColorAttr = R.color.orange_400;
+            translateStatusBarToColorAttr = R.color.orange_600;
+        }
+        else if (name.equals(categories[2])) {
+            changeColor = true;
+            translateToColorAttr = R.color.indigo_500;
+            translateStatusBarToColorAttr = R.color.indigo_700;
+        }
+        else if (name.equals(categories[3])
+                || name.equals(categories[4]))
+        {
+            changeColor = true;
+            translateToColorAttr = R.color.green_500;
+            translateStatusBarToColorAttr = R.color.green_700;
+        }
+        else if (name.equals(categories[5])
+                || name.equals(categories[6])
+                || name.equals(categories[7])
+                || name.equals(categories[8]))
+        {
+            changeColor = true;
+            translateToColorAttr = R.color.grey_500;
+            translateStatusBarToColorAttr = R.color.grey_700;
+        }
+        else if (name.equals(categories[9])) {
+            changeColor = true;
+            translateToColorAttr = R.color.brown_500;
+            translateStatusBarToColorAttr = R.color.brown_700;
+        }
+        else if (name.equals(categories[10])) {
+            changeColor = true;
+            translateToColorAttr = R.color.cyan_500;
+            translateStatusBarToColorAttr = R.color.cyan_700;
+        }
+
+        if (changeColor) {
+            mLastTranslationColor = translateToColorAttr;
+            mLastTranslationColorDark = translateStatusBarToColorAttr;
+            AnimUtils.translateColor(this, mToolbar, fromColorAttr, translateToColorAttr, 300);
+            AnimUtils.translateWindowStatusBarColor(this, fromColorDarkAttr, translateStatusBarToColorAttr, 300);
+        }
+
+        mSelectedCategory = category;
         ItemListFragment fragment = new ItemListFragment.Builder().setCategory(category).build();
         getFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(
+                        R.anim.popup_enter_obj,
+                        R.anim.popup_exit_obj,
+                        R.anim.popup_enter_obj,
+                        R.anim.popup_exit_obj)
                 .add(R.id.container, fragment, "itemList")
                 .addToBackStack(null)
                 .commit();
+    }
+
+    private void resetToolbar() {
+        if (mToolbarHasChanged) {
+            AnimUtils.translateColor(this, mToolbar, mLastTranslationColor, mPrimaryColor, 300);
+            ValueAnimator colorAnimator =
+                    AnimUtils.getWindowStatusBarTranslator(
+                            this,
+                            mLastTranslationColorDark,
+                            mPrimaryColorDark,
+                            300
+                    );
+            if (colorAnimator != null) {
+                colorAnimator.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        if (mFab.getVisibility() == View.GONE) mFab.show();
+                    }
+                });
+                colorAnimator.start();
+            }
+            mToolbarHasChanged = false;
+        }
+    }
+
+    private void translateToolbar() {
+
+        mToolbarHasChanged = true;
+        AnimUtils.translateColor(this, mToolbar, mLastTranslationColor, R.color.red_700, 300);
+        ValueAnimator colorAnimator =
+                AnimUtils.getWindowStatusBarTranslator(
+                        this,
+                        mLastTranslationColorDark,
+                        R.color.red_900,
+                        300
+                );
+        if (colorAnimator != null) {
+            colorAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    if (mFab.getVisibility() == View.VISIBLE) mFab.hide();
+                }
+            });
+            colorAnimator.start();
+            mLastTranslationColorDark = R.color.red_900;
+        }
+        mLastTranslationColor = R.color.red_700;
     }
 }

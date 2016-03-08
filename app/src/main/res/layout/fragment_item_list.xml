@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/item_list"
-    android:name="edu.fe.ItemListFragment"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
-    android:paddingTop="8dp"
-    app:layoutManager="LinearLayoutManager"
-    tools:context=".ItemListFragment"
-    tools:listitem="@layout/entity_food_item" />
+    android:layout_width="match_parent"
+    >
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/item_list"
+        android:name="edu.fe.ItemListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:paddingTop="8dp"
+        app:layoutManager="LinearLayoutManager"
+        tools:context=".ItemListFragment"
+        tools:listitem="@layout/entity_food_item" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/empty_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textSize="24dp"
+        android:text="@string/nothing_here"/>
+</FrameLayout>

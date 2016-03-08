@@ -62,6 +62,12 @@
 
     <string name="new_item_fail">Failed to save item</string>
     <string name="new_item_success">Successfully saved item</string>
+    <string name="edit_item_deleted">Successfully deleted item</string>
+    <string name="item_delete">Delete Item</string>
+    <string name="item_delete_confirmation">Are you sure?</string>
+    <string name="item_delete_content">You cannot undo this.</string>
+
+    <string name="nothing_here">Nothing Here</string>
 
     <string-array name="category_array">
         <item>Meat</item>

@@ -1,20 +1,21 @@
 package edu.fe;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.view.animation.Animation;
 import android.widget.TextView;
 
 import com.parse.ParseImageView;
 import com.parse.ParseQueryAdapter;
+import com.vorph.anim.AnimUtils;
 
-import bolts.Continuation;
-import bolts.Task;
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.fe.backend.Category;
 
 /**
@@ -24,6 +25,7 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
 
     private final Context mContext;
     private final CategoryListFragment.OnCategorySelectedHandler mListener;
+    private final List<View> mCategoryViewList;
 
     public CategoryRecyclerAdapter(ParseQueryAdapter.QueryFactory<Category> factory,
                                    boolean hasStableIds,
@@ -32,18 +34,19 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
         super(factory, hasStableIds);
         mListener = listener;
         mContext = context;
+        mCategoryViewList = new ArrayList<>();
     }
 
     @Override
     public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.entity_category,
-                                            parent, false);
+                parent, false);
         return new CategoryViewHolder(rootView);
     }
 
     @Override
     public void onBindViewHolder(final CategoryViewHolder holder, int position) {
-        Category category = getItem(position);
+        final Category category = getItem(position);
         holder.category = category;
         // TODO
         //holder.thumbnailView.setPlaceholder()
@@ -54,7 +57,7 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
         String description = category.getDescription();
 
         holder.nameView.setText(name != null ? name : "");
-        holder.descriptionView.setText(description != null ? description : "");
+        mCategoryViewList.add(holder.view);
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,11 +65,50 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onCategorySelected(holder.category);
+//                    performFadeout(holder.category, mListener);
+                    mListener.onCategorySelected(category);
                 }
             }
         });
     }
+
+    private void fadeOut
+            (View view,
+             int position,
+             boolean callListener,
+             final Category category,
+             final CategoryListFragment.OnCategorySelectedHandler listener)
+    {
+        AnimUtils.AnimBuilder builder = AnimUtils.fadeOut(mContext)
+                                                .view(view)
+                                                .delay(position * 50)
+                                                .duration(250);
+        if (callListener) {
+            builder.listener(new Animation.AnimationListener() {
+                @Override public void onAnimationStart(Animation animation) {}
+                @Override public void onAnimationRepeat(Animation animation) {}
+                @Override public void onAnimationEnd(Animation animation) {
+                    listener.onCategorySelected(category);
+                }
+            });
+        }
+
+        view.setVisibility(View.INVISIBLE);
+        builder.start();
+    }
+
+    // Unused
+    private void performFadeout(Category category,
+                                CategoryListFragment.OnCategorySelectedHandler listener) {
+        boolean callListener = false;
+        for (int i = 0; i < mCategoryViewList.size(); i++) {
+            if (i == mCategoryViewList.size() - 1) callListener = true;
+
+            View v = mCategoryViewList.get(i);
+            fadeOut(v, i, callListener, category, listener);
+        }
+    }
+
 
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
         // Layout containing all items.
@@ -74,7 +116,6 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
         public final View view;
         public final ParseImageView thumbnailView;
         public final TextView nameView;
-        public final TextView descriptionView;
         public Category category;
 
         // Makes it so that it does not fade the item in again
@@ -85,7 +126,6 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
             this.view = view;
             this.thumbnailView = (ParseImageView) view.findViewById(R.id.category_thumbnail);
             this.nameView = (TextView) view.findViewById(R.id.category_name);
-            this.descriptionView = (TextView) view.findViewById(R.id.category_description);
         }
     }
 }

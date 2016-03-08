@@ -1,31 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:id="@+id/nav_items_group" android:checkableBehavior="single">
+
         <item android:id="@+id/nav_categories"
-              android:icon="@drawable/ic_menu_gallery"
+              android:icon="@drawable/ic_view_list_white_24dp"
               android:title="@string/navigation_drawer_categories"
-              android:checked="true"
-              />
+              android:checked="true" />
+
         <item android:id="@+id/nav_expiring"
-              android:icon="@drawable/ic_menu_slideshow"
+              android:icon="@drawable/ic_priority_high_white_24dp"
               android:title="@string/navigation_drawer_expiring"/>
-    </group>
-    <group android:id="@+id/nav_account_group" android:checkableBehavior="none">
-        <item android:id="@+id/nav_login"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/navigation_drawer_login"/>
-        <item android:id="@+id/nav_signout"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/navigation_drawer_signout"
-            android:visible="false"/>
-    </group>
-    
-    <group android:id="@+id/nav_find_recipes_group" android:checkableBehavior="none">
+
         <item android:id="@+id/nav_find_recipes"
-              android:icon ="@drawable/ic_menu_gallery"
-              android:title="@string/navigation_drawer_find_recipes" />
-    </group>          
-     
+            android:icon ="@drawable/ic_menu_gallery"
+            android:title="@string/navigation_drawer_find_recipes" />
+    </group>
+	
+	<!--<group android:id="@+id/nav_find_recipes_group" android:checkableBehavior="none">-->
+        <!--<item android:id="@+id/nav_find_recipes"-->
+              <!--android:icon ="@drawable/ic_menu_gallery"-->
+              <!--android:title="@string/navigation_drawer_find_recipes" />-->
+    <!--</group>-->
+
+    <item
+        android:id="@+id/nav_account_group"
+        android:title="Account" >
+        <menu>
+            <item
+                android:id="@+id/nav_login"
+                android:icon="@drawable/ic_account_box_white_24dp"
+                android:title="@string/navigation_drawer_login" />
+            <item
+                android:id="@+id/nav_signout"
+                android:icon="@drawable/ic_account_box_white_24dp"
+                android:title="@string/navigation_drawer_signout"
+                android:visible="false" />
+        </menu>
+    </item>
+
     <group android:id="@+id/nav_about_group">
         <item android:id="@+id/nav_about"
               android:icon ="@drawable/ic_menu_manage"

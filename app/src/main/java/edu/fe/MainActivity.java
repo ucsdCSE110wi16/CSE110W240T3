@@ -215,6 +215,8 @@ public class MainActivity
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         transaction.replace(R.id.container, itemFragment, "expiringList").commit();
+
+
     }
 
     private void loadCategories() {

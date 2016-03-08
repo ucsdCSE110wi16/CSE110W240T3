@@ -37,13 +37,19 @@ public class Recipe {
     }
 
     public static class Finder {
-        private static class ParsingTask extends AsyncTask<String, Void, Void> {
+        public static class ParsingTask extends AsyncTask<String, Void, Void> {
 
             private static final String URI = "http://myfridgefood.com/?detailed=true";
             private OnRecipeRetrievedListener mOnRecipeRetrieveListener;
+            private OnUpdateQueryListener mOnUpdateQueryListener;
 
             public ParsingTask setOnRecipeRetrieveListener(OnRecipeRetrievedListener listener) {
                 this.mOnRecipeRetrieveListener = listener;
+                return this;
+            }
+
+            public ParsingTask setOnUpdateQueryListener(OnUpdateQueryListener listener) {
+                this.mOnUpdateQueryListener = listener;
                 return this;
             }
 
@@ -166,7 +172,12 @@ public class Recipe {
 
 
         Context mContext;
-        OnRecipeRetrievedListener mRetrieveListener;
+        OnRecipeRetrievedListener mRetrieveListener = new OnRecipeRetrievedListener() {
+            @Override public void onRecipeGet(Item[] items) { }
+        };
+        OnUpdateQueryListener mUpdateListener = new OnUpdateQueryListener() {
+            @Override public void onQueryUpdate(String s) { }
+        };
 
         public static Finder of(Context context) {
             Finder finder = new Finder();
@@ -179,8 +190,15 @@ public class Recipe {
             return this;
         }
 
-        public void search() {
-            Log.d("DEBUG", "Beginning search on recipes.");
+        public Finder setOnUpdateQueryListener(OnUpdateQueryListener listener) {
+            this.mUpdateListener = listener;
+            return this;
+        }
+
+        public ParsingTask search() {
+            String message = "Searching for recipes.";
+            mUpdateListener.onQueryUpdate(message);
+            Log.d("DEBUG", message);
 
             List<FoodItem> foodItemList;
             ParseObject.registerSubclass(FoodItem.class);
@@ -191,7 +209,7 @@ public class Recipe {
             }
             catch (ParseException e) {
                 Log.e("DEBUG", "ParseException thrown in Recipe.Finder.search()", e);
-                return;
+                return null;
             }
 
             if (foodItemList != null) {
@@ -203,12 +221,20 @@ public class Recipe {
                 for (FoodItem item : foodItemList)
                     names[index++] = item.getName();
 
-                new ParsingTask()
-                        .setOnRecipeRetrieveListener(mRetrieveListener)
-                        .execute(names);
+                ParsingTask task = new ParsingTask()
+                                    .setOnRecipeRetrieveListener(mRetrieveListener)
+                                    .setOnUpdateQueryListener(mUpdateListener);
+                task.execute(names);
+                return task;
             }
+
+            return null;
         }
 
+    }
+
+    public interface OnUpdateQueryListener {
+        void onQueryUpdate(String s);
     }
 
     public interface OnRecipeRetrievedListener {

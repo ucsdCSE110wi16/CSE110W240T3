@@ -25,6 +25,7 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
     private final Context mContext;
     private final CategoryListFragment.OnCategorySelectedHandler mListener;
 
+
     public CategoryRecyclerAdapter(ParseQueryAdapter.QueryFactory<Category> factory,
                                    boolean hasStableIds,
                                    CategoryListFragment.OnCategorySelectedHandler listener,
@@ -47,8 +48,9 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
         holder.category = category;
         // TODO
         //holder.thumbnailView.setPlaceholder()
-        holder.thumbnailView.setParseFile(category.getThumbnailLazy());
-        holder.thumbnailView.loadInBackground();
+        //holder.thumbnailView.setParseFile(category.getThumbnailLazy());
+        //holder.thumbnailView.loadInBackground();
+
 
         String name = category.getName();
         String description = category.getDescription();
@@ -72,7 +74,7 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
         // Layout containing all items.
         // This is a CardView in the xml file.
         public final View view;
-        public final ParseImageView thumbnailView;
+        //public final ParseImageView thumbnailView;
         public final TextView nameView;
         public final TextView descriptionView;
         public Category category;
@@ -83,7 +85,7 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
         public CategoryViewHolder(View view) {
             super(view);
             this.view = view;
-            this.thumbnailView = (ParseImageView) view.findViewById(R.id.category_thumbnail);
+            //this.thumbnailView = (ParseImageView) view.findViewById(R.id.category_thumbnail);
             this.nameView = (TextView) view.findViewById(R.id.category_name);
             this.descriptionView = (TextView) view.findViewById(R.id.category_description);
         }

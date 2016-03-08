@@ -383,7 +383,7 @@ public class MainActivity
 
     void showAboutDialog() {
         new MaterialDialog.Builder(this)
-                .title("About Project FE")
+                .title("About " + R.string.app_name)
                 .content(R.string.about_popup_content)
                 .positiveText("Close")
                 .show();

@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 
 import android.content.Context;
 import android.support.design.internal.NavigationMenuItemView;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
@@ -31,6 +32,7 @@ import edu.fe.backend.FoodItem;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -73,7 +75,8 @@ public class MainActivityTest {
     @Test
     public void TestScenario1() throws Exception {
         // Given is Logged in
-        Assert.assertTrue(mMainActivityRule.getActivity().isLoggedIn());
+        // Anon Parse Accounts means we don't need this
+        //Assert.assertTrue(mMainActivityRule.getActivity().isLoggedIn());
         Thread.sleep(2000);
         // and categories are loaded
         onView(withId(R.id.category_list)).check(matches(isDisplayed()));
@@ -86,7 +89,7 @@ public class MainActivityTest {
         onView(withId(R.id.item_list)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         // Then edit dialog pops up.
         // right now its just a snackbar
-        onView(allOf(withId(android.support.design.R.id.snackbar_text))).check(matches(isDisplayed()));
+        onView(withId(R.id.content_entry)).check(matches(isDisplayed()));
 
     }
 
@@ -98,24 +101,43 @@ public class MainActivityTest {
         // When I click the drawer button
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         // Then the drawer slides open
-        // When I click on Expiring Soon
-        //onView(withId(R.id.nav_expiring)).perform(click());
-        //onView(allOf(withId(R.id.nav_view), has))
-        //onView(withId(R.layout.fragment_item_list)).check(matches(isDisplayed()));
-
     }
 
     @Test
     public void TestScenario3() throws Exception {
         // Given I am logged in
-        Assert.assertTrue(mMainActivityRule.getActivity().isLoggedIn());
+        // Anonymous Parse accounts means we don't need this.
+        //Assert.assertTrue(mMainActivityRule.getActivity().isLoggedIn());
         // When I click the add button
         onView(withId(R.id.fab)).perform(click());
         // The new item popup shows
         onView(withId(R.id.content_entry)).check(matches(isDisplayed()));
 
-        // When I click the done button
-        // Then the item is saved
     }
 
+    @Test
+    public void TestScenario4() throws Exception {
+        Thread.sleep(2000);
+        // and categories are loaded
+        onView(withId(R.id.category_list)).check(matches(isDisplayed()));
+        // When I click the category
+        onView(withId(R.id.category_list)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        //  Then the items under that category should be shown
+        onView(withId(R.id.item_list)).check(matches(isDisplayed()));
+        // When I click on an item
+        onView(withId(R.id.fab)).perform(click());
+        // Then the new item popup shows
+        onView(withId(R.id.content_entry)).check(matches(isDisplayed()));
+
+        // Then the category is auto populated
+        onView(withId(R.id.content_entry)).check(matches(not(withText("SELECT A CATEGORY"))));
+
+        // When I type into the name field
+        onView(withId(R.id.item_name_edit)).perform(typeText("TEST ITEM"));
+        // The name field is populated
+
+        // When I type into the quantity field
+        onView(withId(R.id.item_quantity_edit)).perform(typeText("1"));
+        // Then teh quantity field is populated
+    }
 }

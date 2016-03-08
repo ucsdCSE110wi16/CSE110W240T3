@@ -14,6 +14,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.List;
 
+@Deprecated
 public class RecipeFinder {
 
     /* Parses the full page of ingredients and adds each valid inserted ingredient to the cookie,

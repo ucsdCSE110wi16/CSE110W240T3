@@ -1,9 +1,8 @@
 package edu.fe.backend;
-import java.net.URL;
-import java.io.IOException;
 /**
  * Created by wongk on 2/25/2016.
  */
+@Deprecated
 public class RecipeItem {
     private String name;
     private String missingIngredients;

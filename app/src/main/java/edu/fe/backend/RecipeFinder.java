@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
+import java.util.concurrent.Callable;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -28,6 +29,7 @@ public class RecipeFinder {
 
  //   private static String cString = "";
     private static int pageNumber;
+
     private class FoodParsingTask extends AsyncTask<String, String, String> {
 
         @Override
@@ -126,7 +128,7 @@ public class RecipeFinder {
 
     }
 
-    public RecipeItem[] getRecipes(int pageNum) throws IOException{
+    public RecipeItem[] getRecipes(int pageNum) throws Exception{
 
         RecipeItem[] recipeItems = null;
         pageNumber = pageNum;

@@ -17,7 +17,7 @@ public class RecipeViewHolder extends RecyclerView.ViewHolder {
         super(v);
         vName = (TextView) v.findViewById(R.id.txtName);
         vMissIngs = (TextView) v.findViewById(R.id.txtMissingIngredients);
-        vUrl = (TextView) v.findViewById(R.id.txtUrl);
+        vUrl = (TextView) v.findViewById(R.id.txtFat);
         vCookingTime = (TextView) v.findViewById(R.id.txtCookingTime);
 
     }

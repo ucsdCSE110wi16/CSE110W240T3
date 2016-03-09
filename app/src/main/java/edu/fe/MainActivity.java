@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.parse.ParseAnonymousUtils;
@@ -39,6 +40,7 @@ import java.util.Calendar;
 
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
+import edu.fe.backend.Recipe;
 import edu.fe.util.ResUtils;
 import edu.fe.util.ThemeUtils;
 import lib.material.dialogs.DialogAction;
@@ -50,7 +52,8 @@ public class MainActivity
         implements ItemListFragment.OnListFragmentInteractionListener,
         CategoryListFragment.OnCategorySelectedHandler,
         NavigationView.OnNavigationItemSelectedListener,
-        EntryFragment.OnFragmentInteractionListener {
+        EntryFragment.OnFragmentInteractionListener,
+        RecipeListFragment.OnRecipeSelectedHandler {
 
     ViewGroup mContainerView;
     TextView loginNameView;
@@ -375,6 +378,19 @@ public class MainActivity
                 .content(R.string.about_popup_content)
                 .positiveText("Close")
                 .show();
+    }
+
+    @Override
+    public void onRecipeSelected(Recipe.Item recipe) {
+        RecipeDisplayFragment fragment = new RecipeDisplayFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("key", recipe.url);
+        fragment.setArguments(bundle);
+        getFragmentManager()
+                .beginTransaction()
+                .add(R.id.container, fragment, "recipeDisplay")
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

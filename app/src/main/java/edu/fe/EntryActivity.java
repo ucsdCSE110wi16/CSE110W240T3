@@ -118,7 +118,9 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
                     mSelectedDate = mFoodItem.getExpirationDate();
                     setDateText(mSelectedDate);
                     Category c = mFoodItem.getCategory();
-                    mCategoryButton.setText(c.getName());
+                    if(c != null) {
+                        mCategoryButton.setText(c.getName());
+                    }
                     mImageView.setParseFile(mFoodItem.getImageLazy());
                     mImageView.loadInBackground();
                 } catch (ParseException e) {

@@ -70,7 +70,7 @@
     <string name="nothing_here">Nothing Here</string>
 
     <string name="expired_date">Expired</string>
-
+    <string name="search_hint">Search For Available Food</string>string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_entry">entryActivity</string>

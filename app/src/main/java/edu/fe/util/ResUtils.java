@@ -33,7 +33,11 @@ public class ResUtils {
 
         if(current.after(expiration)) {
             // expired already
-            textView.setText("Expired");
+            if(current.get(Calendar.DAY_OF_YEAR) > expiration.get(Calendar.DAY_OF_YEAR)) {
+                textView.setText("Expired");
+            } else {
+                textView.setText("Expires today");
+            }
             textView.setTextColor(getColor(context, R.color.red_500));
             return;
         }

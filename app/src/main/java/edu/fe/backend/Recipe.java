@@ -28,18 +28,43 @@ public class Recipe {
         public Bitmap image;
         public String missingIngredients;
         public String cookingTime = "";
+        public String fat;
 
         public Item(String name,
                     String missingIngredients,
                     String cookingTime,
                     String address,
-                    Bitmap img)
+                    Bitmap img,
+                    String cals,
+                    String fat)
         {
             this.url = address;
             this.name = name;
             this.missingIngredients = missingIngredients;
             this.cookingTime = cookingTime;
             image = img;
+            this.calories = cals;
+            this.fat = fat;
+        }
+    }
+
+    public static class Display {
+        public String pageTitle;
+        public String description;
+        public String details;
+        public String ingredients;
+        public String instructions;
+
+        public Display(String pgTitle,
+                       String desc,
+                       String dets,
+                       String ings,
+                       String instructs) {
+            pageTitle = pgTitle;
+            description = desc;
+            details = dets;
+            ingredients = ings;
+            instructions = instructs;
         }
     }
 
@@ -145,6 +170,8 @@ public class Recipe {
                                             .replace("</strong>", "");
                     String[] htmlSplitDetails = htmlDetails.split("<br>");
                     String cookingTime = htmlSplitDetails[1];
+                    String cals = htmlSplitDetails[2];
+                    String fat = htmlSplitDetails[3];
 
                     //parse the missing ingredients
                     Element missingIngredients = recipe.select("div[style=margin:0 0 20px;]").first();
@@ -162,7 +189,7 @@ public class Recipe {
                         }
                     }
 
-                    recipeItems[index++] = new Recipe.Item(name, missing, cookingTime, uri, img);
+                    recipeItems[index++] = new Recipe.Item(name, missing, cookingTime, uri, img, cals, fat);
                 }
                 return recipeItems;
             }

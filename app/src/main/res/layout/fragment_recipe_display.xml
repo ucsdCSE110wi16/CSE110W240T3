@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+<ScrollView 
+      android:id="@+id/scroll" 
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="#ffffff">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="0.6"
+    android:padding="16dp" >
+
+    <TextView
+	android:id="@+id/txtTitle"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_marginLeft="10dp"
+	android:textAppearance="?attr/textAppearanceSearchResultTitle" />
+
+    <TextView
+	android:id="@+id/txtDesc"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_marginLeft="10dp"
+	android:layout_below="@+id/txtTitle"
+	android:textAppearance="?attr/textAppearanceListItem" />
+
+
+    <TextView
+	android:id="@+id/txtDetails"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_marginLeft="10dp"
+	android:layout_below="@+id/txtDesc"
+	android:textAppearance="?attr/textAppearanceListItem" />
+
+    <ImageView
+	android:id="@+id/imgRecipeView"
+	android:gravity="right"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_marginRight="10dp"
+	android:layout_below="@id/txtDesc"
+	android:layout_toRightOf="@+id/txtDetails" />
+
+    <TextView
+	android:id="@+id/txtIngredients"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_marginLeft="10dp"
+	android:layout_below="@+id/txtDetails"
+	android:textAppearance="?attr/textAppearanceListItem" />
+
+    <TextView
+	android:id="@+id/txtInstructions"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_marginLeft="10dp"
+	android:layout_below="@+id/txtIngredients"
+	android:textAppearance="?attr/textAppearanceListItem" />
+
+</RelativeLayout>
+
+	
+</ScrollView>
+
+</LinearLayout>

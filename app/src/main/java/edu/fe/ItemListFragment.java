@@ -137,6 +137,7 @@ public class ItemListFragment extends Fragment {
             @Override
             public ParseQuery<FoodItem> create() {
                 ParseQuery<FoodItem> query = new ParseQuery<FoodItem>(FoodItem.class);
+                query.fromLocalDatastore();
                 if(mCategoryName != null && !mCategoryName.isEmpty()) {
                     Category c = Category.getCategoryByName(mCategoryName);
                     query.whereEqualTo(FoodItem.CATEGORY, c.getName());

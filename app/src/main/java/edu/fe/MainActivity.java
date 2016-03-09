@@ -172,6 +172,7 @@ public class MainActivity
         if (hasAtLeastOneBackEntry) {
             this.resetToolbar();
             getFragmentManager().popBackStackImmediate();
+            mSelectedCategory = null;
             return;
         }
 
@@ -382,7 +383,7 @@ public class MainActivity
 
     @Override
     public void onCategorySelected(Category category) {
-        final String[] categories = getResources().getStringArray(R.array.category_array);
+        final String[] categories = Category.getCategoryNames();
 
         mToolbarHasChanged = true;
         boolean changeColor = false;

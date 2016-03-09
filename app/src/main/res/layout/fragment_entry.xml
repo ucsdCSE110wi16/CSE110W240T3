@@ -42,7 +42,6 @@
         android:layout_height="wrap_content"
         android:spinnerMode="dropdown"
         android:minWidth="400dp"
-        android:entries="@array/category_array"
         android:layout_marginTop="20dp"
         android:layout_below="@id/textView2"
         />

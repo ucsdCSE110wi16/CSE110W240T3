@@ -63,13 +63,10 @@ public class RecipeListFragment extends Fragment
                     public void onClick(@NonNull MaterialDialog dialog,
                                         @NonNull DialogAction which) {
                         if (mParsingTask != null) {
+                            // Can't exactly cancel but I'll just leave this here.
                             boolean mayInterruptIfRunning = true;
                             mParsingTask.cancel(mayInterruptIfRunning);
                             Log.d("DEBUG", "Canceling recipe task");
-//                            if (mParsingTask.getStatus() == AsyncTask.Status.RUNNING
-//                                    || mParsingTask.getStatus() == AsyncTask.Status.PENDING) {
-//
-//                            }
                         }
                     }
                 })

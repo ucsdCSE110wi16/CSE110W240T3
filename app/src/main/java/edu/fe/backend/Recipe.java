@@ -63,6 +63,7 @@ public class Recipe {
                     return null;
                 }
 
+                if (this.isCancelled()) return null;
                 Elements ingredients = document.select("div[class=tile ingredient]");
                 for (String name : ingredientNames) {
                     for (Element ingredient : ingredients) {
@@ -104,6 +105,7 @@ public class Recipe {
                     return null;
                 }
 
+                if (this.isCancelled()) return null;
                 Elements recipes = recipeDocument.select("div[class=tile recipe]");
                 Recipe.Item[] recipeItems = new Recipe.Item[recipes.size()];
 
@@ -155,6 +157,7 @@ public class Recipe {
                 Log.d("DEBUG", "Querying food ingredients' cookie");
                 String cookie = queryFoodIngredients(ingredientNames);
                 if (cookie != null) {
+                    if (this.isCancelled()) return null;
                     Log.d("DEBUG", "Query for food ingredients' cookie passed");
                     Recipe.Item[] recipeItems = queryRecipes(cookie);
                     if (recipeItems == null) {
@@ -162,6 +165,7 @@ public class Recipe {
                         return null;
                     }
 
+                    if (this.isCancelled()) return null;
                     Log.d("DEBUG", "Executing onRecipeRetrieve listener");
                     mOnRecipeRetrieveListener.onRecipeGet(recipeItems);
                 }

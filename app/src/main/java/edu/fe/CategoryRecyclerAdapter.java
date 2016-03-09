@@ -21,17 +21,15 @@ import edu.fe.backend.Category;
 /**
  * Created by david on 2/8/2016.
  */
-public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category, CategoryRecyclerAdapter.CategoryViewHolder> {
+public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecyclerAdapter.CategoryViewHolder> {
 
     private final Context mContext;
     private final CategoryListFragment.OnCategorySelectedHandler mListener;
     private final List<View> mCategoryViewList;
 
-    public CategoryRecyclerAdapter(ParseQueryAdapter.QueryFactory<Category> factory,
-                                   boolean hasStableIds,
-                                   CategoryListFragment.OnCategorySelectedHandler listener,
+    public CategoryRecyclerAdapter(CategoryListFragment.OnCategorySelectedHandler listener,
                                    final Context context) {
-        super(factory, hasStableIds);
+
         mListener = listener;
         mContext = context;
         mCategoryViewList = new ArrayList<>();
@@ -46,15 +44,12 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
 
     @Override
     public void onBindViewHolder(final CategoryViewHolder holder, int position) {
-        final Category category = getItem(position);
+        final Category category = Category.getCategories().get(position);
+
         holder.category = category;
-        // TODO
-        //holder.thumbnailView.setPlaceholder()
-        holder.thumbnailView.setParseFile(category.getThumbnailLazy());
-        holder.thumbnailView.loadInBackground();
+        holder.thumbnailView.setImageResource(category.getThumbnailResId());
 
         String name = category.getName();
-        String description = category.getDescription();
 
         holder.nameView.setText(name != null ? name : "");
         mCategoryViewList.add(holder.view);
@@ -70,6 +65,11 @@ public class CategoryRecyclerAdapter extends ParseRecyclerQueryAdapter<Category,
                 }
             }
         });
+    }
+
+    @Override
+    public int getItemCount() {
+        return Category.getCategories().size();
     }
 
     private void fadeOut

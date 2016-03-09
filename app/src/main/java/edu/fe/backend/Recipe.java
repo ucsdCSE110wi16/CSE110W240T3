@@ -1,6 +1,8 @@
 package edu.fe.backend;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -14,6 +16,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 public class Recipe {
@@ -21,18 +24,22 @@ public class Recipe {
     public static class Item {
         public String url;
         public String name;
+        public String calories;
+        public Bitmap image;
         public String missingIngredients;
         public String cookingTime = "";
 
         public Item(String name,
                     String missingIngredients,
                     String cookingTime,
-                    String address)
+                    String address,
+                    Bitmap img)
         {
             this.url = address;
             this.name = name;
             this.missingIngredients = missingIngredients;
             this.cookingTime = cookingTime;
+            image = img;
         }
     }
 
@@ -116,6 +123,17 @@ public class Recipe {
                     //parse the name of the recipe
                     Element nameElm = element.select("img").first();
                     String name = nameElm.attr("alt");
+                    URL imgUri;
+                    Bitmap img;
+                    try {
+                        imgUri = new URL(nameElm.attr("abs:src"));
+                        img = BitmapFactory.decodeStream(imgUri.openConnection().getInputStream());
+                    }
+                    catch(Exception e) {
+                        e.printStackTrace();
+                        img = null;
+                    }
+
 
                     //parse desired details (currently just the cooking time)
                     Element detailElement = recipe.select("div[class=line-item-details]")
@@ -137,14 +155,14 @@ public class Recipe {
                         Elements missingIngs = missingIngredients.getElementsByTag("p");
                         for (Element missingIng : missingIngs) {
                             if (missing.equals("")) {
-                                missing += missingIng.text().substring(3);
+                                missing += "Missing Ingredients: " + missingIng.text().substring(3);
                             } else {
                                 missing += ", " + missingIng.text().substring(3);
                             }
                         }
                     }
 
-                    recipeItems[index++] = new Recipe.Item(name, missing, cookingTime, uri);
+                    recipeItems[index++] = new Recipe.Item(name, missing, cookingTime, uri, img);
                 }
                 return recipeItems;
             }

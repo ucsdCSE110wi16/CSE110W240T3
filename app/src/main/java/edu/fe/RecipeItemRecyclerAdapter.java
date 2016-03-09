@@ -1,10 +1,14 @@
 package edu.fe;
 
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.net.URL;
 
 import edu.fe.backend.Recipe;
 
@@ -35,6 +39,8 @@ public class RecipeItemRecyclerAdapter extends RecyclerView.Adapter<RecipeItemRe
         recipeViewHolder.name.setText(recipe.name);
         recipeViewHolder.cookingTime.setText(recipe.cookingTime);
         recipeViewHolder.missingIngredients.setText(recipe.missingIngredients);
+        recipeViewHolder.image.setImageBitmap(recipe.image);
+
     }
 
     public RecipeViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -51,6 +57,7 @@ public class RecipeItemRecyclerAdapter extends RecyclerView.Adapter<RecipeItemRe
         public TextView missingIngredients;
         public TextView uri;
         public TextView cookingTime;
+        public ImageView image;
 
         public RecipeViewHolder(View v) {
             super(v);
@@ -58,6 +65,7 @@ public class RecipeItemRecyclerAdapter extends RecyclerView.Adapter<RecipeItemRe
             name = (TextView) v.findViewById(R.id.txtName);
             missingIngredients = (TextView) v.findViewById(R.id.txtMissingIngredients);
             cookingTime = (TextView) v.findViewById(R.id.txtCookingTime);
+            image = (ImageView) v.findViewById(R.id.imgRecipe);
 
         }
     }

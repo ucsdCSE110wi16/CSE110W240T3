@@ -28,7 +28,5 @@ public class MainApplication extends Application {
         ParseACL.setDefaultACL(new ParseACL(), true);
 
         ParseObject.registerSubclass(FoodItem.class);
-        ParseObject.registerSubclass(Category.class);
-
     }
 }

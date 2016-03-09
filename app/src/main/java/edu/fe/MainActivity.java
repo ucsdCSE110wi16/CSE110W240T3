@@ -142,18 +142,7 @@ public class MainActivity
 
         checkLoginInformation();
 	    FoodItem.cacheToLocalDBInBackground();
-        Task<Void> loadCategoryTask = Category.cacheToLocalDBInBackground();
-        Task<Void> waitTimeOutTask = Task.delay(500);
-        Collection<Task<Void>> c = new ArrayList<>();
-        c.add(loadCategoryTask);
-        c.add(waitTimeOutTask);
-        Task.whenAny(c).continueWith(new Continuation<Task<?>, Void>() {
-            @Override
-            public Void then(Task<Task<?>> task) throws Exception {
-                loadCategories();
-                return null;
-            }
-        });
+        loadCategories();
     }
 
     @Override

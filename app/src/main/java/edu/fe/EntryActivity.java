@@ -218,10 +218,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
             return false;
         }
 
-        ParseQuery<Category> q = ParseQuery.getQuery(Category.class);
-        q.fromLocalDatastore();
-        q.whereEqualTo(Category.NAME, mCategoryButton.getText());
-        Category c = q.getFirst();
+        Category c = Category.getCategoryByName(mCategoryButton.getText().toString());
         foodItem.setCategory(c);
         foodItem.setName(mNameField.getText().toString());
 

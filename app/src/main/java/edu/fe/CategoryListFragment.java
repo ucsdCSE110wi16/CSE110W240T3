@@ -42,21 +42,6 @@ public class CategoryListFragment extends Fragment {
     {
         View view = inflater.inflate(R.layout.fragment_category_list, container, false);
 
-        mSwipeRefreshLayout =
-                (SwipeRefreshLayout) view.findViewById(R.id.category_swipe_refresh_layout);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                Log.d("DEBUG", "Refreshing categories");
-                // TODO data has changed
-                mAdapter.loadObjects();
-                mAdapter.notifyDataSetChanged();
-                mAdapter.fireOnDataSetChanged();
-                // TODO onFinishDataChanged, call
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        });
-
         Context context = view.getContext();
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.category_list);
 
@@ -65,16 +50,7 @@ public class CategoryListFragment extends Fragment {
         recyclerView.setLayoutManager(gridLayoutManager);
 
 
-        mAdapter = new CategoryRecyclerAdapter(
-                new ParseQueryAdapter.QueryFactory<Category>() {
-                    @Override
-                    public ParseQuery<Category> create() {
-                        ParseQuery<Category> query = new ParseQuery<>(Category.class);
-                        query.fromLocalDatastore();
-                        query.orderByAscending(Category.NAME);
-                        return query;
-                    }
-                }, false, mListener, this.getActivity());
+        mAdapter = new CategoryRecyclerAdapter(mListener, this.getActivity());
         recyclerView.setAdapter(mAdapter);
 
         return view;

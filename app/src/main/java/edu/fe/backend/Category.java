@@ -32,17 +32,17 @@ public class Category {
     public static List<Category> getCategories() {
         if(categories == null) {
             categories = new ArrayList<>();
-            categories.add(new Category("Grains/Carbs", 0));
-            categories.add(new Category("Herbs/Spices", 0));
-            categories.add(new Category("Fish", 0));
-            categories.add(new Category("Meat", 0));
-            categories.add(new Category("Alcohol", 0));
-            categories.add(new Category("Fruit", 0));
-            categories.add(new Category("Misc", 0));
-            categories.add(new Category("Condiments", 0));
-            categories.add(new Category("Vegetables", 0));
-            categories.add(new Category("Dairy", 0));
-            categories.add(new Category("Poultry", 0));
+            categories.add(new Category("Fruits",R.drawable.fruits1));
+            categories.add(new Category("Vegetables", R.drawable.vegetables1));
+            categories.add(new Category("Dairy", R.drawable.dairy1));
+            categories.add(new Category("Meat", R.drawable.meat1));
+            categories.add(new Category("Alcohol", R.drawable.alcohol1));
+            categories.add(new Category("Sugars", R.drawable.sweets1));
+            categories.add(new Category("Beverages", R.drawable.beverages1));
+            categories.add(new Category("Condiments", R.drawable.condiments1));
+            categories.add(new Category("Grains/Carbs", R.drawable.carbs1));
+            categories.add(new Category("Fish", R.drawable.fish1));
+            categories.add(new Category("Miscellaneous", R.drawable.misc1));
         }
 
         return categories;

@@ -1,23 +1,8 @@
 package edu.fe.backend;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
-import com.parse.FindCallback;
-import com.parse.ParseClassName;
-import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.SaveCallback;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import bolts.Continuation;
-import bolts.Task;
-import bolts.TaskCompletionSource;
 import edu.fe.R;
 
 /**
@@ -27,22 +12,25 @@ public class Category {
     private String mName;
     private int mThumbnailResId;
 
+    public int colorId;
+    public int colorDarkId;
+
     private static List<Category> categories;
 
     public static List<Category> getCategories() {
         if(categories == null) {
             categories = new ArrayList<>();
-            categories.add(new Category("Fruits",R.drawable.fruits1));
-            categories.add(new Category("Vegetables", R.drawable.vegetables1));
-            categories.add(new Category("Dairy", R.drawable.dairy1));
-            categories.add(new Category("Meat", R.drawable.meat1));
-            categories.add(new Category("Alcohol", R.drawable.alcohol1));
-            categories.add(new Category("Sugars", R.drawable.sweets1));
-            categories.add(new Category("Beverages", R.drawable.beverages1));
-            categories.add(new Category("Condiments", R.drawable.condiments1));
-            categories.add(new Category("Grains/Carbs", R.drawable.carbs1));
-            categories.add(new Category("Fish", R.drawable.fish1));
-            categories.add(new Category("Miscellaneous", R.drawable.misc1));
+            categories.add(new Category("Fruits", R.drawable.fruit, R.color.green_300, R.color.green_500));
+            categories.add(new Category("Vegetables", R.drawable.vegetables, R.color.green_500, R.color.green_700));
+            categories.add(new Category("Dairy", R.drawable.dairy_2, R.color.grey_400, R.color.grey_500));
+            categories.add(new Category("Meat", R.drawable.meat, R.color.red_300, R.color.red_500));
+            categories.add(new Category("Alcohol", R.drawable.alcohol, R.color.brown_200, R.color.brown_500));
+            categories.add(new Category("Sugars", R.drawable.sweets, R.color.cyan_300, R.color.cyan_500));
+            categories.add(new Category("Beverages", R.drawable.coffee, R.color.brown_400, R.color.brown_600));
+            categories.add(new Category("Condiments", R.drawable.condiments, R.color.teal_400, R.color.teal_600));
+            categories.add(new Category("Grains/Carbs", R.drawable.carbs, R.color.grey_400, R.color.grey_600));
+            categories.add(new Category("Fish", R.drawable.fish, R.color.indigo_400, R.color.indigo_600));
+            categories.add(new Category("Miscellaneous", R.drawable.misc, R.color.grey_600, R.color.grey_800));
         }
 
         return categories;
@@ -57,9 +45,11 @@ public class Category {
         return result;
     }
 
-    protected Category(String name, int resId) {
+    protected Category(String name, int resId, int colorId, int colorDarkId) {
         mName = name;
         mThumbnailResId = resId;
+        this.colorId = colorId;
+        this.colorDarkId = colorDarkId;
     }
 
     public static Category getCategoryByName(String name) {

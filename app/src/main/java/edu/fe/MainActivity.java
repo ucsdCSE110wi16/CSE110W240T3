@@ -35,12 +35,8 @@ import com.vorph.anim.AnimUtils;
 import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 
-import bolts.Continuation;
-import bolts.Task;
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
 import edu.fe.util.ResUtils;
@@ -383,65 +379,13 @@ public class MainActivity
 
     @Override
     public void onCategorySelected(Category category) {
-        final String[] categories = Category.getCategoryNames();
-
-        mToolbarHasChanged = true;
-        boolean changeColor = false;
         int fromColorAttr = mPrimaryColor;
         int fromColorDarkAttr = mPrimaryColorDark;
-        int translateToColorAttr = 0;
-        int translateStatusBarToColorAttr = 0;
-
-        String name = category.getName();
-
-        if (name.equals(categories[0])) {
-            changeColor = true;
-            translateToColorAttr = R.color.red_300;
-            translateStatusBarToColorAttr = R.color.red_500;
-        }
-        else if (name.equals(categories[1])) {
-            changeColor = true;
-            translateToColorAttr = R.color.orange_400;
-            translateStatusBarToColorAttr = R.color.orange_600;
-        }
-        else if (name.equals(categories[2])) {
-            changeColor = true;
-            translateToColorAttr = R.color.indigo_500;
-            translateStatusBarToColorAttr = R.color.indigo_700;
-        }
-        else if (name.equals(categories[3])
-                || name.equals(categories[4]))
-        {
-            changeColor = true;
-            translateToColorAttr = R.color.green_500;
-            translateStatusBarToColorAttr = R.color.green_700;
-        }
-        else if (name.equals(categories[5])
-                || name.equals(categories[6])
-                || name.equals(categories[7])
-                || name.equals(categories[8]))
-        {
-            changeColor = true;
-            translateToColorAttr = R.color.grey_500;
-            translateStatusBarToColorAttr = R.color.grey_700;
-        }
-        else if (name.equals(categories[9])) {
-            changeColor = true;
-            translateToColorAttr = R.color.brown_500;
-            translateStatusBarToColorAttr = R.color.brown_700;
-        }
-        else if (name.equals(categories[10])) {
-            changeColor = true;
-            translateToColorAttr = R.color.cyan_500;
-            translateStatusBarToColorAttr = R.color.cyan_700;
-        }
-
-        if (changeColor) {
-            mLastTranslationColor = translateToColorAttr;
-            mLastTranslationColorDark = translateStatusBarToColorAttr;
-            AnimUtils.translateColor(this, mToolbar, fromColorAttr, translateToColorAttr, 300);
-            AnimUtils.translateWindowStatusBarColor(this, fromColorDarkAttr, translateStatusBarToColorAttr, 300);
-        }
+        mToolbarHasChanged = true;
+        mLastTranslationColor = category.colorId;
+        mLastTranslationColorDark = category.colorDarkId;
+        AnimUtils.translateColor(this, mToolbar, fromColorAttr, category.colorId, 300);
+        AnimUtils.translateWindowStatusBarColor(this, fromColorDarkAttr, category.colorDarkId, 300);
 
         mSelectedCategory = category;
         ItemListFragment fragment = new ItemListFragment.Builder().setCategory(category).build();

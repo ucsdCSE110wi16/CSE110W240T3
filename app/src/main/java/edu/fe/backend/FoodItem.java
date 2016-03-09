@@ -49,7 +49,7 @@ public class FoodItem extends ParseObject {
                     tcs.setError(e);
                     return;
                 } else {
-                    Category.pinAllInBackground("foodItems", objects, new SaveCallback() {
+                    FoodItem.pinAllInBackground("foodItems", objects, new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
                             if(e != null) {
@@ -82,23 +82,13 @@ public class FoodItem extends ParseObject {
         put(QUANTITY, quantity);
     }
 
-    public Task<Category> getCategoryInBackground() {
-        return getParseObject(CATEGORY).fetchInBackground();
-    }
-
-    public Category getCategoryLazy() {
-        return (Category)getParseObject(CATEGORY);
-    }
-
-    public Category getCategory() throws ParseException {
-        Category o = (Category)getParseObject(CATEGORY);
-        o.fetchFromLocalDatastore();
-        o.fetchIfNeeded();
-        return o;
+    public Category getCategory() {
+        String name = getString(CATEGORY);
+        return Category.getCategoryByName(name);
     }
 
     public void setCategory(Category category) {
-        put(FoodItem.CATEGORY, category);
+        put(FoodItem.CATEGORY, category.getName());
     }
 
     public Date getCreationDate() {
@@ -116,7 +106,6 @@ public class FoodItem extends ParseObject {
     public void setExpirationDate(Date date) {
         put(EXPIRATION_DATE, date);
     }
-
 
     public static ParseFile createUnsavedImage(String filePath) {
         ParseFile file = new ParseFile(new File(filePath));

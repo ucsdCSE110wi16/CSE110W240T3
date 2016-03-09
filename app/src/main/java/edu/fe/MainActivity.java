@@ -142,18 +142,7 @@ public class MainActivity
 
         checkLoginInformation();
 	    FoodItem.cacheToLocalDBInBackground();
-        Task<Void> loadCategoryTask = Category.cacheToLocalDBInBackground();
-        Task<Void> waitTimeOutTask = Task.delay(500);
-        Collection<Task<Void>> c = new ArrayList<>();
-        c.add(loadCategoryTask);
-        c.add(waitTimeOutTask);
-        Task.whenAny(c).continueWith(new Continuation<Task<?>, Void>() {
-            @Override
-            public Void then(Task<Task<?>> task) throws Exception {
-                loadCategories();
-                return null;
-            }
-        });
+        loadCategories();
     }
 
     @Override
@@ -183,6 +172,7 @@ public class MainActivity
         if (hasAtLeastOneBackEntry) {
             this.resetToolbar();
             getFragmentManager().popBackStackImmediate();
+            mSelectedCategory = null;
             return;
         }
 
@@ -385,7 +375,7 @@ public class MainActivity
 
     void showAboutDialog() {
         new MaterialDialog.Builder(this)
-                .title("About " + R.string.app_name)
+                .title("About " + getString(R.string.app_name))
                 .content(R.string.about_popup_content)
                 .positiveText("Close")
                 .show();
@@ -393,7 +383,7 @@ public class MainActivity
 
     @Override
     public void onCategorySelected(Category category) {
-        final String[] categories = getResources().getStringArray(R.array.category_array);
+        final String[] categories = Category.getCategoryNames();
 
         mToolbarHasChanged = true;
         boolean changeColor = false;

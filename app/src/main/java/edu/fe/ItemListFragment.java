@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 
@@ -30,7 +29,7 @@ import edu.fe.backend.FoodItem;
 public class ItemListFragment extends Fragment {
 
     public static class Builder {
-        private String mCategoryId = null;
+        private String mCategoryName = null;
         private int mLimit = 0;
         private String mSearchTerm = null;
         private String mMaxDate = null;
@@ -40,8 +39,7 @@ public class ItemListFragment extends Fragment {
 
         public Builder setCategory(Category category) {
             if(category != null)
-                mCategoryId = category.getObjectId();
-
+                mCategoryName = category.getName();
             return this;
         }
 
@@ -65,7 +63,7 @@ public class ItemListFragment extends Fragment {
         public ItemListFragment build() {
             ItemListFragment fragment = new ItemListFragment();
             Bundle args = new Bundle();
-            args.putString(ARG_CATEGORY_ID, mCategoryId);
+            args.putString(ARG_CATEGORY_NAME, mCategoryName);
             args.putInt(ARG_QUERY_LIMIT, mLimit);
             args.putString(ARG_SEARCH_TERM, mSearchTerm);
             args.putString(ARG_MAX_DATE, mMaxDate);
@@ -74,12 +72,12 @@ public class ItemListFragment extends Fragment {
         }
     }
 
-    private static final String ARG_CATEGORY_ID = "category-id";
+    private static final String ARG_CATEGORY_NAME = "category-name";
     private static final String ARG_QUERY_LIMIT = "query-limit";
     private static final String ARG_SEARCH_TERM = "search-term";
     private static final String ARG_MAX_DATE = "max-date";
 
-    private String mCategoryId = null;
+    private String mCategoryName = null;
     private String mSearchTerm = null;
     private Date mMaxDate = null;
     private int mQueryLimit = 0;
@@ -98,7 +96,7 @@ public class ItemListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         
         if (getArguments() != null) {
-            mCategoryId = getArguments().getString(ARG_CATEGORY_ID);
+            mCategoryName = getArguments().getString(ARG_CATEGORY_NAME);
             mQueryLimit = getArguments().getInt(ARG_QUERY_LIMIT);
             mSearchTerm = getArguments().getString(ARG_SEARCH_TERM);
             try {
@@ -139,10 +137,11 @@ public class ItemListFragment extends Fragment {
             @Override
             public ParseQuery<FoodItem> create() {
                 ParseQuery<FoodItem> query = new ParseQuery<FoodItem>(FoodItem.class);
-                Category c = ParseObject.createWithoutData(Category.class, mCategoryId);
                 query.fromLocalDatastore();
-                if(mCategoryId != null && !mCategoryId.isEmpty())
-                    query.whereEqualTo(FoodItem.CATEGORY, c);
+                if(mCategoryName != null && !mCategoryName.isEmpty()) {
+                    Category c = Category.getCategoryByName(mCategoryName);
+                    query.whereEqualTo(FoodItem.CATEGORY, c.getName());
+                }
                 if(mQueryLimit > 0) {
                     query.setLimit(mQueryLimit);
                 }

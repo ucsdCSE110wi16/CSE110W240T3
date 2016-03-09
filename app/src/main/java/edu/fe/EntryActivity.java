@@ -118,7 +118,9 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
                     mSelectedDate = mFoodItem.getExpirationDate();
                     setDateText(mSelectedDate);
                     Category c = mFoodItem.getCategory();
-                    mCategoryButton.setText(c.getName());
+                    if(c != null) {
+                        mCategoryButton.setText(c.getName());
+                    }
                     mImageView.setParseFile(mFoodItem.getImageLazy());
                     mImageView.loadInBackground();
                 } catch (ParseException e) {
@@ -165,7 +167,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         else if (view.getId() == R.id.item_select_category) {
             new MaterialDialog.Builder(EntryActivity.this)
                             .theme(Theme.LIGHT)
-                            .items(R.array.category_array)
+                            .items(Category.getCategoryNames())
                             .itemsCallback(new MaterialDialog.ListCallback() {
                                 @Override
                                 public void onSelection(MaterialDialog dialog,
@@ -218,10 +220,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
             return false;
         }
 
-        ParseQuery<Category> q = ParseQuery.getQuery(Category.class);
-        q.fromLocalDatastore();
-        q.whereEqualTo(Category.NAME, mCategoryButton.getText());
-        Category c = q.getFirst();
+        Category c = Category.getCategoryByName(mCategoryButton.getText().toString());
         foodItem.setCategory(c);
         foodItem.setName(mNameField.getText().toString());
 

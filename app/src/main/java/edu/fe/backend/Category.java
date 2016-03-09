@@ -48,6 +48,15 @@ public class Category {
         return categories;
     }
 
+    public static String[] getCategoryNames() {
+        List<Category> cats = getCategories();
+        String[] result = new String[cats.size()];
+        for(int i = 0; i < cats.size(); ++i) {
+            result[i] = cats.get(i).getName();
+        }
+        return result;
+    }
+
     protected Category(String name, int resId) {
         mName = name;
         mThumbnailResId = resId;

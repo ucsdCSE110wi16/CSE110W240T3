@@ -167,7 +167,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         else if (view.getId() == R.id.item_select_category) {
             new MaterialDialog.Builder(EntryActivity.this)
                             .theme(Theme.LIGHT)
-                            .items(R.array.category_array)
+                            .items(Category.getCategoryNames())
                             .itemsCallback(new MaterialDialog.ListCallback() {
                                 @Override
                                 public void onSelection(MaterialDialog dialog,

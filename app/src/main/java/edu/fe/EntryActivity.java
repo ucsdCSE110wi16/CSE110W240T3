@@ -20,10 +20,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.vorph.anim.AnimUtils;
 
 import java.io.File;
@@ -33,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -108,6 +112,14 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         if(extras != null) {
             String editId = extras.getString(EDIT_ITEM_ID);
             if(editId != null && !editId.isEmpty()) {
+
+                //Adding Notfication while adding item to parse
+                HashMap<String, Object> params = new HashMap<String, Object>();
+                params.put("foodName", mFoodItem.getName());
+                params.put("expireDate", mFoodItem.getExpirationDate());
+                params.put("userId", ParseUser.getCurrentUser());
+                ParseCloud.callFunctionInBackground("scheduleFoodExpiration", params);
+
                 // we are editing an object
                 ParseQuery<FoodItem> q = ParseQuery.getQuery(FoodItem.class);
                 q.fromLocalDatastore();

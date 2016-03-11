@@ -3,9 +3,12 @@ package edu.fe;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
@@ -36,6 +39,8 @@ import com.vorph.utils.Alert;
 import com.vorph.utils.ExceptionHandler;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.TimeZone;
 
 import edu.fe.backend.Category;
 import edu.fe.backend.FoodItem;
@@ -139,6 +144,10 @@ public class MainActivity
         checkLoginInformation();
 	    FoodItem.cacheToLocalDBInBackground();
         loadCategories();
+
+        Context context = MainActivity.this.getApplicationContext();
+        setRecurringAlarm(context);
+
     }
 
     @Override
@@ -226,6 +235,8 @@ public class MainActivity
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container, recipeFragment, "recipeList").commit();
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -399,6 +410,23 @@ public class MainActivity
                 .add(R.id.container, fragment, "itemList")
                 .addToBackStack(null)
                 .commit();
+    }
+    private void setRecurringAlarm(Context context) {
+
+        //Set Alarm at 23:00 so that notification can come at 0:00
+        Calendar updateTime = Calendar.getInstance();
+        updateTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+        updateTime.set(Calendar.HOUR_OF_DAY, 23);
+        updateTime.set(Calendar.MINUTE, 0);
+
+        Intent downloader = new Intent(context, AlarmReceiver.class);
+        PendingIntent recurringDownload = PendingIntent.getBroadcast(context,
+                0, downloader, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarms = (AlarmManager) MainActivity.this.getSystemService(
+                Context.ALARM_SERVICE);
+        alarms.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                updateTime.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, recurringDownload);
     }
 
     private void resetToolbar() {

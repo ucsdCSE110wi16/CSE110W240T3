@@ -113,13 +113,6 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
             String editId = extras.getString(EDIT_ITEM_ID);
             if(editId != null && !editId.isEmpty()) {
 
-                //Adding Notfication while adding item to parse
-                HashMap<String, Object> params = new HashMap<String, Object>();
-                params.put("foodName", mFoodItem.getName());
-                params.put("expireDate", mFoodItem.getExpirationDate());
-                params.put("userId", ParseUser.getCurrentUser());
-                ParseCloud.callFunctionInBackground("scheduleFoodExpiration", params);
-
                 // we are editing an object
                 ParseQuery<FoodItem> q = ParseQuery.getQuery(FoodItem.class);
                 q.fromLocalDatastore();

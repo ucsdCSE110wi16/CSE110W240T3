@@ -14,6 +14,9 @@ import com.parse.ParseUser;
 
 
 import com.parse.ParseException;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -40,10 +43,16 @@ import java.util.List;
                             long diff = expirationDate.getTime() - currentDate.getTime();
                             if((int)(diff/(24*60*60*1000)) < 3 )
                             {
+                                Calendar cal = Calendar.getInstance();
+                                cal.setTime(expirationDate);
+                                SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+                                String expirationD = format1.format(cal.getTime());
+                                expirationD = expirationD.substring(0,9) + "0" + expirationD.substring(9,expirationD.length()) + "T00:00:00";
+
                                 HashMap < String, Object > params = new HashMap<String, Object>();
-                                params.put("foodName", foods.getString("name"));
-                                params.put("expireDate", foods.getDate("expirationDate"));
-                                params.put("userId", ParseUser.getCurrentUser());
+                                params.put("name", foods.getString("name"));
+                                params.put("date", expirationD);
+                                params.put("user", ParseUser.getCurrentUser());
                                 ParseCloud.callFunctionInBackground("scheduleFoodExpiration", params);
                             }
                         }

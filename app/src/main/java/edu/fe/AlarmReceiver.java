@@ -52,7 +52,7 @@ import java.util.List;
                                 HashMap < String, Object > params = new HashMap<String, Object>();
                                 params.put("name", foods.getString("name"));
                                 params.put("date", expirationD);
-                                params.put("user", ParseUser.getCurrentUser());
+                                params.put("userId", ParseUser.getCurrentUser());
                                 ParseCloud.callFunctionInBackground("scheduleFoodExpiration", params);
                             }
                         }

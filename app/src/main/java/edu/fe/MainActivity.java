@@ -416,7 +416,7 @@ public class MainActivity
 
         //Set Alarm at 23:00 so that notification can come at 0:00
         Calendar updateTime = Calendar.getInstance();
-        updateTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+        updateTime.setTimeZone(TimeZone.getTimeZone("PST"));
         updateTime.set(Calendar.HOUR_OF_DAY, 23);
         updateTime.set(Calendar.MINUTE, 0);
 

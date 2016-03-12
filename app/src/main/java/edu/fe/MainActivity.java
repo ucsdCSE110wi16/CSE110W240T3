@@ -411,6 +411,7 @@ public class MainActivity
                 .addToBackStack(null)
                 .commit();
     }
+
     private void setRecurringAlarm(Context context) {
 
         //Set Alarm at 23:00 so that notification can come at 0:00
